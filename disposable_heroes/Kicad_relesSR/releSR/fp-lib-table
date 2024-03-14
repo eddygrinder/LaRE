@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Lib")(type "KiCad")(uri "/home/grinder/OneDrive/Tese/Unnamed-Thesis/Kicad_relesSR/Lib/74HC595N_112")(options "")(descr ""))
+)
