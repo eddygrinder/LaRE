@@ -1,14 +1,11 @@
 import os, sys
 
+ctrl_hardware_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'ctrl_hardware'))
+sys.path.append(ctrl_hardware_path)
+
 #from controlVB import read_Vcc_R
 from website import create_app
 from flask import send_from_directory, request
-
-# Obtém o diretório atual do script
-current_dir = os.path.dirname(__file__)
-# Adiciona o diretório ctrl_hardware ao caminho de busca de módulos do Python
-ctrl_hardware_dir = os.path.join(current_dir, 'ctrl_hardware')
-sys.path.append(ctrl_hardware_dir)
 
 app = create_app()
 app.config['SECRET_KEY'] = 'thisisasecretkey'

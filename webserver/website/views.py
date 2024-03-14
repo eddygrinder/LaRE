@@ -6,14 +6,13 @@ import json
 
 import os, sys
 
-# Obtém o diretório atual do script
+# Adiciona o diretório do projeto ao caminho de busca de módulos do Python
 current_dir = os.path.dirname(__file__)
-# Adiciona o diretório ctrl_hardware ao caminho de busca de módulos do Python
-ctrl_hardware_dir = os.path.join(current_dir, '..', 'ctrl_hardware')
-sys.path.append(ctrl_hardware_dir)
+parent_dir = os.path.dirname(os.path.dirname(current_dir))
+sys.path.append(parent_dir)
 
-from ctrl_hardware.configVB import config_VB_DMM
-from ctrl_hardware.configRelays import config_Parameters
+#from configVB import config_VB_DMM
+from ctrl_hardware import configRelays, configVB
 
 views = Blueprint('views', __name__)
 
@@ -37,8 +36,8 @@ def config_VirtualBench():
 
     print(f'measure_parameter: {measure_parameter}')
     
-    config_Parameters(Resistance, measure_parameter)
-    measurement_result = config_VB_DMM (Vcc, measure_parameter)
+    configRelays.config_Parameters(Resistance, measure_parameter)
+    measurement_result = configVB.config_VB_DMM (Vcc, measure_parameter)
 
     print(f'MeAsure: {measurement_result}')
 

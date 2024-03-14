@@ -27,12 +27,8 @@
 import random, socket, time
 import os, sys
 
-
-
 #from shift_register import SRoutput
-
 # This examples demonstrates how to make measurements using the Power
-
 def config_Parameters (Resistance: int, measeure_parameter: str):
     if measeure_parameter == "voltage":
         match Resistance:

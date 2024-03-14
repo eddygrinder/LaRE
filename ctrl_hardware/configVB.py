@@ -25,6 +25,12 @@
 # THE SOFTWARE.
 
 import os, sys
+
+# Caminho para o diretório ctrl_hardware
+ctrl_hardware_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'ctrl_hardware'))
+# Adiciona o diretório ao sys.path
+sys.path.append(ctrl_hardware_path)
+
 from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 
 # You will probably need to replace "myVirtualBench" with the name of your device.
