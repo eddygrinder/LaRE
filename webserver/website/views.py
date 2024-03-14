@@ -3,8 +3,17 @@ from flask_login import login_required, current_user
 from .models import Note
 from . import db
 import json
-from configVB import config_Parameters
-from configString import config_Relays
+
+import os, sys
+
+# Obtém o diretório atual do script
+current_dir = os.path.dirname(__file__)
+# Adiciona o diretório ctrl_hardware ao caminho de busca de módulos do Python
+ctrl_hardware_dir = os.path.join(current_dir, '..', 'ctrl_hardware')
+sys.path.append(ctrl_hardware_dir)
+
+from ctrl_hardware.configVB import config_VB_DMM
+from ctrl_hardware.configRelays import config_Parameters
 
 views = Blueprint('views', __name__)
 
@@ -28,18 +37,9 @@ def config_VirtualBench():
 
     print(f'measure_parameter: {measure_parameter}')
     
-    measurement_voltage = config_Parameters(Vcc, Resistance, measure_parameter)
+    config_Parameters(Resistance, measure_parameter)
+    measurement_result = config_VB_DMM (Vcc, measure_parameter)
 
-    print(f'MeAsure: {measurement_voltage}')
+    print(f'MeAsure: {measurement_result}')
 
-    return jsonify({'measurement_result': measurement_voltage})
-
-@views.route('/read_Voltage', methods=['GET', 'POST'])
-@login_required
-def read_Voltage():
-    Vcc = request.args.get('Vcc', 0, int)
-    Resistance = request.args.get('R',0, int)
-    print(f'MeAsure: {Vcc}')
-    print(Resistance)
-
-    return jsonify({'measurement_result': 12})
+    return jsonify({'measurement_result': measurement_result})

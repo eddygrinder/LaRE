@@ -24,71 +24,45 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import random, socket
+import os, sys
+from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 
-import os, sys, requests
-
-# Caminho para o diretório ctrl_hardware
-ctrl_hardware_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'ctrl_hardware'))
-# Adiciona o diretório ao sys.path
-sys.path.append(ctrl_hardware_path)
+# You will probably need to replace "myVirtualBench" with the name of your device.
+# By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+# You can see the device's name in the VirtualBench Application under File->About
+virtualbench = PyVirtualBench('VB8012-30A210F')
 
 #from shift_register import SRoutput
 
 # This examples demonstrates how to make measurements using the Power
-
-def config_Parameters (Vcc: int, Resistance: int, measeure_parameter: str):
-    Vcc = int(Vcc) # É passado o parâmetro em forma de string mas é necessária a conversão para int
-
-    if measeure_parameter == "voltage":
-        print("Voltage measurement")
-    elif measeure_parameter == "current":
-        print("Current measurement")
     
-    
-    measurement_result = Vcc*random.uniform(1, 5)
-    measurement_result = Vcc*random.uniform(1, 5)
+def config_VB_DMM (Vcc:int, configMeasure:str):
+    #Vcc = int(Vcc) # É passado o parâmetro em forma de string mas é necessária a conversão para int
+    #Resistence = int(Resistence)
 
-    print("Measurement: %f V" % (Vcc))
-    print("Measurement: %f V" % (measurement_result))
-    #print("Measurement: %f KOhm" % (Resistence))
-    
-    config_Relays(Resistance)
+    #############################
+    # Power Supply Configuration
+    #############################
+    channel = "ps/+25V"
+    voltage_level = Vcc
+    current_limit = 0.5
+    print(Vcc)
+    ps = virtualbench.acquire_power_supply()
 
+    ps.configure_voltage_output(channel, voltage_level, current_limit)
+    ps.enable_all_outputs(True)
+
+    dmm = virtualbench.acquire_digital_multimeter();
+    
+    if configMeasure == "voltage":
+        measurement_result = dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
+    elif configMeasure == "current":
+        measurement_result = dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 10.0) # Verificar Manual Range = 10.0
+
+    measurement_result = dmm.read()
+    print("MeasurementV: %f V" % (measurement_result))
+   
+    dmm.release()
+    ps.release()
+    
     return measurement_result
-
-def config_Relays(Resistance: int):
-    stringValue = "11011"
-            # Endereço IP e porta do Raspberry Pi
-    HOST = '192.168.1.75'  # Substitua pelo endereço IP do Raspberry Pi
-    PORT = 12345  # Porta de escuta no Raspberry Pi
-
-    match Resistance:
-        case 0:
-            print("ERROR: Resistence is 0")
-            stringValue = "000" # Valor de resistência inválido - relés OBRIGATORIAMENTE desligados
-
-        case 1:
-            Resistance = 1
-            stringValue = "100"
-        
-        case 2:
-            Resistance = 1.5
-            stringValue = "010"
-        
-        case 3:
-            Resistance = 2.2
-            stringValue = "001"
-
-        case _:
-            print("ERROR: Resistence is not 1, 1.5 or 2.2 KOhm")
-    
-        # Criar um socket TCP/IP
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        # Conectar-se ao servidor (Raspberry Pi)
-        s.connect((HOST, PORT))
-        
-        # Enviar a mensagem
-        s.sendall(stringValue.encode())
-        
-        print("Mensagem enviada com sucesso.")
