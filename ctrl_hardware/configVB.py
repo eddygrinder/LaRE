@@ -58,14 +58,16 @@ def config_VB_DMM (Vcc:int, configMeasure:str):
     ps.configure_voltage_output(channel, voltage_level, current_limit)
     ps.enable_all_outputs(True)
 
-    dmm = virtualbench.acquire_digital_multimeter();
+    dmm = virtualbench.acquire_digital_multimeter('',True);
     
     if configMeasure == "voltage":
-        measurement_result = dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
+        dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
     elif configMeasure == "current":
-        measurement_result = dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 10.0) # Verificar Manual Range = 10.0
-
+        dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1.0) # Verificar Manual Range = 10.0
+    
     measurement_result = dmm.read()
+
+
     print("MeasurementV: %f V" % (measurement_result))
    
     dmm.release()

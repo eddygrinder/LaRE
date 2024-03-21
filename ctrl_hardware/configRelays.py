@@ -37,17 +37,17 @@ def config_Parameters (Resistance: int, measeure_parameter: str):
                 config_Relays("00000000") # Valor de resistência inválido - relés OBRIGATORIAMENTE desligados
             case 1:
                 Resistance = 1
-                config_Relays("10011011")
+                config_Relays("11011001") # Relés - K8...|K1
                 # Atraso para medição?
                 # time.sleep(1)
             case 2:
                 Resistance = 1.5
-                config_Relays("01011011")
+                config_Relays("11011010")
                 # Atraso para medição?
                 # time.sleep(1)
             case 3:
                 Resistance = 2.2
-                config_Relays("00111011")
+                config_Relays("11011100")
                 # Atraso para medição?
                 # time.sleep(1)
             case _:
@@ -60,17 +60,17 @@ def config_Parameters (Resistance: int, measeure_parameter: str):
                 config_Relays("00000000") # Valor de resistência inválido - relés OBRIGATORIAMENTE desligados
             case 1:
                 Resistance = 1
-                config_Relays("10010101")
-                # Atraso para medição?
+                config_Relays("01101001")
+                print("Atraso para medição?")
                 # time.sleep(1)            
             case 2:
                 Resistance = 1.5
-                config_Relays("01010101")
+                config_Relays("01101010")
                 # Atraso para medição?
                 # time.sleep(1)            
             case 3:
                 Resistance = 2.2
-                config_Relays("00110101")
+                config_Relays("01101100")
                 # Atraso para medição?
                 # time.sleep(1)
             case _:
@@ -88,7 +88,7 @@ def config_Parameters (Resistance: int, measeure_parameter: str):
     
 def config_Relays(stringValue: str):
     # Endereço IP e porta do Raspberry Pi
-    HOST = '172.18.159.205'  # Substitua pelo endereço IP do Raspberry Pi
+    HOST = '172.16.0.11'  # Substitua pelo endereço IP do Raspberry Pi
     PORT = 12345  # Porta de escuta no Raspberry Pi 
     
         # Criar um socket TCP/IP

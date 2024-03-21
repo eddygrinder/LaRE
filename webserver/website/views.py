@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from .models import Note
 from . import db
-import json
+import json, time
 
 import os, sys
 
@@ -37,6 +37,7 @@ def config_VirtualBench():
     print(f'measure_parameter: {measure_parameter}')
     
     configRelays.config_Parameters(Resistance, measure_parameter)
+    time.sleep(1)
     measurement_result = configVB.config_VB_DMM (Vcc, measure_parameter)
 
     print(f'MeAsure: {measurement_result}')
