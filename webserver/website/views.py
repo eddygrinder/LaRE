@@ -12,7 +12,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 
 #from configVB import config_VB_DMM
-from ctrl_hardware import configRelays, configVB
+from ctrl_hardware import configRelays, configVB, ps, dmm
 
 views = Blueprint('views', __name__)
 
@@ -36,9 +36,11 @@ def config_VirtualBench():
 
     print(f'measure_parameter: {measure_parameter}')
     
+    ps.powerSource(Vcc)
+
     configRelays.config_Parameters(Resistance, measure_parameter)
-    time.sleep(1)
-    measurement_result = configVB.config_VB_DMM (Vcc, measure_parameter)
+    time.sleep(5)
+    measurement_result = dmm.digitalMultimeter (measure_parameter)
 
     print(f'MeAsure: {measurement_result}')
 

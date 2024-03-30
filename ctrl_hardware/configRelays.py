@@ -37,18 +37,21 @@ def config_Parameters (Resistance: int, measeure_parameter: str):
                 config_Relays("00000000") # Valor de resistência inválido - relés OBRIGATORIAMENTE desligados
             case 1:
                 Resistance = 1
-                config_Relays("11011001") # Relés - K8...|K1
+                config_Relays("10011011") # Relés - K1...|K8
+                #config_Relays("11011001") # Relés - K8...|K1
                 # Atraso para medição?
                 # time.sleep(1)
             case 2:
                 Resistance = 1.5
-                config_Relays("11011010")
+                config_Relays("01011011")
                 # Atraso para medição?
                 # time.sleep(1)
             case 3:
                 Resistance = 2.2
-                config_Relays("11011100")
-                # Atraso para medição?
+                config_Relays("00111011")
+                #config_Relays("11011100")
+
+                # Atraso para medição?  
                 # time.sleep(1)
             case _:
                 print("ERROR: Resistence is not 1, 1.5 or 2.2 KOhm")

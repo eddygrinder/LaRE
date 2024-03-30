@@ -49,28 +49,50 @@ def config_VB_DMM (Vcc:int, configMeasure:str):
     #############################
     # Power Supply Configuration
     #############################
-    channel = "ps/+25V"
-    voltage_level = Vcc
-    current_limit = 0.5
-    print(Vcc)
-    ps = virtualbench.acquire_power_supply()
+    try:
+        channel = "ps/+25V"
+        voltage_level = Vcc
+        current_limit = 0.5
+        print(Vcc)
+    
+        ps = virtualbench.acquire_power_supply()
 
+        ps.configure_voltage_output(channel, voltage_level, current_limit)
+        ps.enable_all_outputs(True)
+        ps.release()
+
+        dmm = virtualbench.acquire_digital_multimeter();
+        dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
+
+        measurement_result = dmm.read()
+        print("Measurement: %f V" % (measurement_result))
+
+        dmm.release()
+
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+    finally:
+        virtualbench.release()
+        return measurement_result
+
+
+'''
+ps = virtualbench.acquire_power_supply()
     ps.configure_voltage_output(channel, voltage_level, current_limit)
     ps.enable_all_outputs(True)
 
-    dmm = virtualbench.acquire_digital_multimeter('',True);
+    dmm = virtualbench.acquire_digital_multimeter();
     
     if configMeasure == "voltage":
         dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
     elif configMeasure == "current":
         dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1.0) # Verificar Manual Range = 10.0
     
+
     measurement_result = dmm.read()
 
-
     print("MeasurementV: %f V" % (measurement_result))
-   
+
     dmm.release()
     ps.release()
-    
-    return measurement_result
+    virtualbench.release()'''
