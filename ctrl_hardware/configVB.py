@@ -38,61 +38,109 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 # You can see the device's name in the VirtualBench Application under File->About
 virtualbench = PyVirtualBench('VB8012-30A210F')
 
-#from shift_register import SRoutput
 
-# This examples demonstrates how to make measurements using the Power
-    
+'''
+The provided script, config_VB_DMM, can be improved to ensure the 
+ps = virtualbench.acquire_power_supply() line is executed only once by utilizing the concept of 
+lazy initialization.
+'''
+
+class VirtualBenchManager:
+    """
+    This class manages the acquisition and release of virtual bench instruments.
+    It utilizes lazy initialization to ensure instruments are acquired only once.
+    """
+    def __init__(self):
+        """
+        Initializes the manager with private variables to store instrument references.
+        """
+        self._ps = None # Power supply instrument (initially None)
+        self._dmm = None # Digital multimeter instrument (initially None)
+
+    def acquire_power_supply(self):
+
+        """
+        Acquires a power supply instrument from virtualbench.
+        Uses lazy initialization to acquire the instrument only if it hasn't been acquired yet.
+
+        Returns:
+        The acquired power supply instrument.
+        """
+        if self._ps is None:
+            self._ps = virtualbench.acquire_power_supply() 
+        return self._ps
+
+    def acquire_digital_multimeter(self):
+        """
+        Acquires a digital multimeter instrument from virtualbench.
+        Uses lazy initialization to acquire the instrument only if it hasn't been acquired yet.
+
+        Returns:
+        The acquired digital multimeter instrument.
+        """
+        if self._dmm is None:
+            self._dmm = virtualbench.acquire_digital_multimeter()
+        return self._dmm
+
+    def release_instruments(self):
+        """
+        Releases the acquired instruments (power supply and multimeter) if they exist.
+
+        """
+        if self._ps:
+            self._ps.release()
+        self._ps = None
+        if self._dmm:
+            self._dmm.release()
+        self._dmm = None
+
+    def configure_voltage_output(self, channel, voltage_level, current_limit):
+        """
+        Configures the voltage output of the acquired power supply.
+
+        Args:
+        channel: The channel to configure.
+        voltage_level: The voltage level to set.
+        current_limit: The current limit to apply.
+        """
+        self._ps.configure_voltage_output(channel, voltage_level, current_limit)
+
+    def enable_all_outputs(self):
+        """
+        Enables all outputs of the acquired power supply.
+        """
+        self._ps.enable_all_outputs(True)
+
+vb_manager = VirtualBenchManager()  # Create a single instance
+
 def config_VB_DMM (Vcc:int, configMeasure:str):
-    #Vcc = int(Vcc) # É passado o parâmetro em forma de string mas é necessária a conversão para int
-    #Resistence = int(Resistence)
-
-    #############################
-    # Power Supply Configuration
-    #############################
     try:
+        #############################
+        # Power Supply Configuration
+        #############################
+
         channel = "ps/+25V"
         voltage_level = Vcc
         current_limit = 0.5
-        print(Vcc)
-    
-        ps = virtualbench.acquire_power_supply()
+        ps = vb_manager.acquire_power_supply()
+        # ... use ps for configuration ...    ps.configure_voltage_output(channel, voltage_level, current_limit)
 
         ps.configure_voltage_output(channel, voltage_level, current_limit)
         ps.enable_all_outputs(True)
-        ps.release()
-
-        dmm = virtualbench.acquire_digital_multimeter();
-        dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
-
+      
+        dmm = vb_manager.acquire_digital_multimeter()
+        # ... use dmm for configuration ...
+        if configMeasure == "voltage":
+            dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
+        elif configMeasure == "current":
+            dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1) # Verificar Manual Range = 10.0
+        
         measurement_result = dmm.read()
-        print("Measurement: %f V" % (measurement_result))
-
-        dmm.release()
 
     except PyVirtualBenchException as e:
         print("Error/Warning %d occurred\n%s" % (e.status, e))
     finally:
-        virtualbench.release()
-        return measurement_result
+        vb_manager.release_instruments()
 
-
-'''
-ps = virtualbench.acquire_power_supply()
-    ps.configure_voltage_output(channel, voltage_level, current_limit)
-    ps.enable_all_outputs(True)
-
-    dmm = virtualbench.acquire_digital_multimeter();
-    
-    if configMeasure == "voltage":
-        dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
-    elif configMeasure == "current":
-        dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1.0) # Verificar Manual Range = 10.0
-    
-
-    measurement_result = dmm.read()
-
-    print("MeasurementV: %f V" % (measurement_result))
-
-    dmm.release()
-    ps.release()
-    virtualbench.release()'''
+        #virtualbench.release()
+    return measurement_result

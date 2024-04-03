@@ -12,7 +12,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 
 #from configVB import config_VB_DMM
-from ctrl_hardware import configRelays, configVB, ps, dmm
+from ctrl_hardware import configRelays, configVB
 
 views = Blueprint('views', __name__)
 
@@ -31,17 +31,14 @@ def home():
 @login_required
 def config_VirtualBench():
     Vcc = request.args.get('Vcc', 0, int)
-    Resistance = request.args.get('R',0, int)
-    measure_parameter = request.args.get('parameter')
-
-    print(f'measure_parameter: {measure_parameter}')
-    
-    ps.powerSource(Vcc)
-
+    Resistance = request.args.get('R', 0, int)
+    measure_parameter = request.args.get('parameter', 0, str)
+  
     configRelays.config_Parameters(Resistance, measure_parameter)
-    time.sleep(5)
-    measurement_result = dmm.digitalMultimeter (measure_parameter)
+        
+    measurement_result = configVB.config_VB_DMM(Vcc, measure_parameter)
 
-    print(f'MeAsure: {measurement_result}')
+    time.sleep(5)
+    configRelays.config_Parameters(0, measure_parameter)
 
     return jsonify({'measurement_result': measurement_result})

@@ -102,6 +102,8 @@ Remember to set the width: -->
           Vcc +
           "&R=" +
           Resistance;
+        console.log("Vcc = ", Vcc);
+        console.log("Resistance = ", Resistance);
         fetch(url)
           .then((response) => response.json())
           .then((data) => {
@@ -165,29 +167,6 @@ Remember to set the width: -->
 
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
-  </script>
-
-  <!-- Funcção para accionar os relés-->
-  <script>
-    function accionarReles(parametro) {
-      // Transforma o parâmetro em uma string binária
-      const parametroBinario = "0b" + parametro;
-      var url = `/atualizar_shift_register?parametro=${parametroBinario}`;
-      fetch(url)
-        .then((response) => {
-          // Lida com a resposta, se necessário
-          console.log("Requisição enviada!");
-        })
-        .catch((error) => {
-          // Lida com possíveis erros
-          console.error("Erro:", error);
-        });
-    }
-
-    function redirecionarPaginaEAcionar(parametro, url) {
-      accionarReles(parametro); // Chama a função accionarReles com o parâmetro especificado
-      window.location.href = url; // Redireciona para a URL especificada
-    }
   </script>
 
   <!--  Script relativo ao custom menu  -->

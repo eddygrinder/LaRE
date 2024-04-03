@@ -24,32 +24,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 import time
-from pyvirtualbench import PyVirtualBench, PyVirtualBenchException
 
-# This examples demonstrates how to make measurements using the Power
-# Supply (PS) on a VirtualBench.
+# This examples demonstrates how to make measurements using the Digital
+# Multimeter (DMM) on a VirtualBench.
+def digitalMultimeter (configMeasure:str):
 
-def powerSource(Vcc:float):
-    try:
-        # Power Supply Configuration
-        channel = "ps/+25V"
-        voltage_level = Vcc
-        current_limit = 0.5
+    # You will probably need to replace "myVirtualBench" with the name of your device.
+    # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+    # You can see the device's name in the VirtualBench Application under File->About
+    virtualbench = PyVirtualBench('VB8012-30A210F')
+    dmm = virtualbench.acquire_digital_multimeter();
 
-        # You will probably need to replace "myVirtualBench" with the name of your device.
-        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
-        # You can see the device's name in the VirtualBench Application under File->About
-        virtualbench = PyVirtualBench('VB8012-30A210F')
-        ps = virtualbench.acquire_power_supply()
+    if configMeasure == "voltage":
+        dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
+    elif configMeasure == "current":
+        dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1) # Verificar Manual Range = 10.0
 
-        ps.configure_voltage_output(channel, voltage_level, current_limit)
-        ps.enable_all_outputs(True)
+    measurement_result = dmm.read()
+    print("Measurement: %f V" % (measurement_result))
 
-        time.sleep (1)
+    time.sleep (1)
 
-        ps.release()
-    except PyVirtualBenchException as e:
-        print("Error/Warning %d occurred\n%s" % (e.status, e))
-    finally:
-        virtualbench.release()
+    dmm.release()
+    virtualbench.release()
+        
+    return measurement_result

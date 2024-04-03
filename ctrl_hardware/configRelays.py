@@ -25,7 +25,7 @@
 # THE SOFTWARE.
 
 import random, socket, time
-import os, sys
+import os, sys, requests
 
 #from shift_register import SRoutput
 # This examples demonstrates how to make measurements using the Power
@@ -79,19 +79,24 @@ def config_Parameters (Resistance: int, measeure_parameter: str):
             case _:
                 print("ERROR: Resistence is not 1, 1.5 or 2.2 KOhm")
     
-    # Atraso para medição?
-    # time.sleep(1)
 
-    # Realiza a medição no DMM  
-    #measurement_result = Vcc*random.uniform(1, 5)
-
-    #print("Measurement: %f V" % (Vcc))
-    #print("Measurement: %f V" % (measurement_result))
-    #print("Measurement: %f KOhm" % (Resistence))
-    
-def config_Relays(stringValue: str):
+def relays_requests(stringValue: str):
+    # Envia a string para o Raspberry Pi
     # Endereço IP e porta do Raspberry Pi
-    HOST = '172.16.0.11'  # Substitua pelo endereço IP do Raspberry Pi
+    url = "http://192.168.1.71/endpoint"
+    string = stringValue
+    data = {"string": string}
+    # Envia a requisição usando o dicionário
+    response = requests.post(url, data)
+    if response.status_code == 200:
+        print("Requisição enviada com sucesso!")
+    else:
+        print("Erro ao enviar requisição:", response.status_code)
+
+def config_Relays(stringValue: str):
+    # Envia a string para o Raspberry Pi
+    # Endereço IP e porta do Raspberry Pi
+    HOST = '192.168.1.71'  # Substitua pelo endereço IP do Raspberry Pi
     PORT = 12345  # Porta de escuta no Raspberry Pi 
     
         # Criar um socket TCP/IP
@@ -101,5 +106,6 @@ def config_Relays(stringValue: str):
         
         # Enviar a mensagem
         s.sendall(stringValue.encode())
-        
         print("Mensagem enviada com sucesso.")
+
+# Receber a resposta

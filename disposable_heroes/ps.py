@@ -24,34 +24,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 import time
+from pyvirtualbench import PyVirtualBench, PyVirtualBenchException
 
-# This examples demonstrates how to make measurements using the Digital
-# Multimeter (DMM) on a VirtualBench.
-def digitalMultimeter (configMeasure:str):
-    try:
-        # You will probably need to replace "myVirtualBench" with the name of your device.
-        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
-        # You can see the device's name in the VirtualBench Application under File->About
-        virtualbench = PyVirtualBench('VB8012-30A210F')
-        dmm = virtualbench.acquire_digital_multimeter();
-        
-        if configMeasure == "voltage":
-            dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10.0)
-        elif configMeasure == "current":
-            dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1.0) # Verificar Manual Range = 10.0
+# This examples demonstrates how to make measurements using the Power
+# Supply (PS) on a VirtualBench.
 
-        measurement_result = dmm.read()
-        print("Measurement: %f V" % (measurement_result))
+# You will probably need to replace "myVirtualBench" with the name of your device.
+# By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+# You can see the device's name in the VirtualBench Application under File->About
+virtualbench = PyVirtualBench('VB8012-30A210F')
 
-        time.sleep (1)
+def powerSource(Vcc:int):
+    # Power Supply Configuration
+    ps = virtualbench.acquire_power_supply()
+    channel = "ps/+25V"
+    voltage_level = Vcc
+    current_limit = 0.5
+    ps.configure_voltage_output(channel, voltage_level, current_limit)
+    ps.enable_all_outputs(True)
 
-
-        dmm.release()
-    except PyVirtualBenchException as e:
-        print("Error/Warning %d occurred\n%s" % (e.status, e))
-    finally:
-        virtualbench.release()
-        
-    return measurement_result
+    time.sleep (1)
+    ps.release()
+    #virtualbench.release()
