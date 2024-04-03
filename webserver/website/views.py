@@ -35,7 +35,7 @@ def config_VirtualBench():
     measure_parameter = request.args.get('parameter', 0, str)
   
     configRelays.config_Parameters(Resistance, measure_parameter)
-        
+
     measurement_result = configVB.config_VB_DMM(Vcc, measure_parameter)
 
     time.sleep(5)

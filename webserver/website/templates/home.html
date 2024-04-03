@@ -31,20 +31,24 @@
   </div>
   <div class="column middle">
     <h2>Escolha um dos três circuitos</h2>
-    <p>Clique OK para seguir</p>
+    <p>
+      Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper
+    </p>
+    <p></p>
+    <button class="btn ok">OK</button> <button class="btn ok">STOP</button>
+    <p></p>
     <img
       src="../images/circuit_R1.png"
       width="70%"
       height="auto"
       alt="circuito R1"
       class="responsive"
-      onclick="redirecionarPaginaEAcionar('10010101', 'output')"
       style="cursor: pointer"
     />
     <!-- Surround the select box within a "custom-select" DIV element.
 Remember to set the width: -->
     <div style="display: inline-block; width: 200px">
-      <select id="selectVcc">
+      <select id="selectVcc" disabled>
         <option value="0">Seleccionar V<sub>cc</sub>:</option>
         <option value="1">1</option>
         <option value="2">2</option>
@@ -54,7 +58,7 @@ Remember to set the width: -->
       </select>
     </div>
     <div style="display: inline-block; width: 200px">
-      <select id="selectR">
+      <select id="selectR" disabled>
         <option value="0">Seleccionar R:</option>
         <option value="1">1</option>
         <option value="2">1.1</option>
@@ -77,6 +81,19 @@ Remember to set the width: -->
   <!----------------------------------------->
   <!-- Scripts zone -->
   <!----------------------------------------->
+
+  <script>
+    // Função para habilitar os seletores
+    function habilitarSeletores() {
+      document.getElementById("selectVcc").disabled = false;
+      document.getElementById("selectR").disabled = false;
+    }
+  </script>
+
+  <script>
+    // Acionar a função habilitarSeletores quando o botão "OK" for clicado
+    document.querySelector(".ok").addEventListener("click", habilitarSeletores);
+  </script>
 
   <script>
     document

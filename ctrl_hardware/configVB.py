@@ -38,82 +38,45 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 # You can see the device's name in the VirtualBench Application under File->About
 virtualbench = PyVirtualBench('VB8012-30A210F')
 
+# Variáveis globais para armazenar as instâncias dos instrumentos
+power_supply_instance = None
+digital_multimeter_instance = None
 
-'''
-The provided script, config_VB_DMM, can be improved to ensure the 
-ps = virtualbench.acquire_power_supply() line is executed only once by utilizing the concept of 
-lazy initialization.
-'''
-
-class VirtualBenchManager:
+def acquire_power_supply():
     """
-    This class manages the acquisition and release of virtual bench instruments.
-    It utilizes lazy initialization to ensure instruments are acquired only once.
+    Adquire uma instância da fonte de alimentação do VirtualBench.
+    Utiliza inicialização preguiçosa para adquirir a instância apenas quando necessário.
     """
-    def __init__(self):
-        """
-        Initializes the manager with private variables to store instrument references.
-        """
-        self._ps = None # Power supply instrument (initially None)
-        self._dmm = None # Digital multimeter instrument (initially None)
+    global power_supply_instance
+    if power_supply_instance is None:
+        power_supply_instance = virtualbench.acquire_power_supply()
+    return power_supply_instance
 
-    def acquire_power_supply(self):
+def acquire_digital_multimeter():
+    """
+    Adquire uma instância do multímetro digital do VirtualBench.
+    Utiliza inicialização preguiçosa para adquirir a instância apenas quando necessário.
+    """
+    global digital_multimeter_instance
+    if digital_multimeter_instance is None:
+        digital_multimeter_instance = virtualbench.acquire_digital_multimeter()
+    return digital_multimeter_instance
 
-        """
-        Acquires a power supply instrument from virtualbench.
-        Uses lazy initialization to acquire the instrument only if it hasn't been acquired yet.
-
-        Returns:
-        The acquired power supply instrument.
-        """
-        if self._ps is None:
-            self._ps = virtualbench.acquire_power_supply() 
-        return self._ps
-
-    def acquire_digital_multimeter(self):
-        """
-        Acquires a digital multimeter instrument from virtualbench.
-        Uses lazy initialization to acquire the instrument only if it hasn't been acquired yet.
-
-        Returns:
-        The acquired digital multimeter instrument.
-        """
-        if self._dmm is None:
-            self._dmm = virtualbench.acquire_digital_multimeter()
-        return self._dmm
-
-    def release_instruments(self):
-        """
-        Releases the acquired instruments (power supply and multimeter) if they exist.
-
-        """
-        if self._ps:
-            self._ps.release()
-        self._ps = None
-        if self._dmm:
-            self._dmm.release()
-        self._dmm = None
-
-    def configure_voltage_output(self, channel, voltage_level, current_limit):
-        """
-        Configures the voltage output of the acquired power supply.
-
-        Args:
-        channel: The channel to configure.
-        voltage_level: The voltage level to set.
-        current_limit: The current limit to apply.
-        """
-        self._ps.configure_voltage_output(channel, voltage_level, current_limit)
-
-    def enable_all_outputs(self):
-        """
-        Enables all outputs of the acquired power supply.
-        """
-        self._ps.enable_all_outputs(True)
-
-vb_manager = VirtualBenchManager()  # Create a single instance
+def release_instruments():
+    """
+    Libera as instâncias dos instrumentos se elas existirem.
+    """
+    global power_supply_instance, digital_multimeter_instance
+    if power_supply_instance:
+        power_supply_instance.release()
+        power_supply_instance = None
+    if digital_multimeter_instance:
+        digital_multimeter_instance.release()
+        digital_multimeter_instance = None
 
 def config_VB_DMM (Vcc:int, configMeasure:str):
+    global power_supply_instance
+
     try:
         #############################
         # Power Supply Configuration
@@ -122,13 +85,13 @@ def config_VB_DMM (Vcc:int, configMeasure:str):
         channel = "ps/+25V"
         voltage_level = Vcc
         current_limit = 0.5
-        ps = vb_manager.acquire_power_supply()
+        ps = acquire_power_supply()
         # ... use ps for configuration ...    ps.configure_voltage_output(channel, voltage_level, current_limit)
-
+        
         ps.configure_voltage_output(channel, voltage_level, current_limit)
         ps.enable_all_outputs(True)
-      
-        dmm = vb_manager.acquire_digital_multimeter()
+        
+        dmm = acquire_digital_multimeter()
         # ... use dmm for configuration ...
         if configMeasure == "voltage":
             dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
@@ -136,11 +99,10 @@ def config_VB_DMM (Vcc:int, configMeasure:str):
             dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1) # Verificar Manual Range = 10.0
         
         measurement_result = dmm.read()
+        print("MeasurementCONFIG: %f V" % (measurement_result))
 
     except PyVirtualBenchException as e:
         print("Error/Warning %d occurred\n%s" % (e.status, e))
     finally:
-        vb_manager.release_instruments()
-
-        #virtualbench.release()
-    return measurement_result
+        release_instruments()
+        return measurement_result
