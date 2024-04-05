@@ -25,6 +25,7 @@
 # THE SOFTWARE.
 
 import os, sys
+import store_ps_dmm
 
 # Caminho para o diretório ctrl_hardware
 ctrl_hardware_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'ctrl_hardware'))
@@ -36,73 +37,64 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 # You will probably need to replace "myVirtualBench" with the name of your device.
 # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
 # You can see the device's name in the VirtualBench Application under File->About
-virtualbench = PyVirtualBench('VB8012-30A210F')
 
-# Variáveis globais para armazenar as instâncias dos instrumentos
-power_supply_instance = None
-digital_multimeter_instance = None
+def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, configSTOP:bool):
+    virtualbench = PyVirtualBench('VB8012-30A210F')
 
-def acquire_power_supply():
-    """
-    Adquire uma instância da fonte de alimentação do VirtualBench.
-    Utiliza inicialização preguiçosa para adquirir a instância apenas quando necessário.
-    """
-    global power_supply_instance
-    if power_supply_instance is None:
-        power_supply_instance = virtualbench.acquire_power_supply()
-    return power_supply_instance
-
-def acquire_digital_multimeter():
-    """
-    Adquire uma instância do multímetro digital do VirtualBench.
-    Utiliza inicialização preguiçosa para adquirir a instância apenas quando necessário.
-    """
-    global digital_multimeter_instance
-    if digital_multimeter_instance is None:
-        digital_multimeter_instance = virtualbench.acquire_digital_multimeter()
-    return digital_multimeter_instance
-
-def release_instruments():
-    """
-    Libera as instâncias dos instrumentos se elas existirem.
-    """
-    global power_supply_instance, digital_multimeter_instance
-    if power_supply_instance:
-        power_supply_instance.release()
-        power_supply_instance = None
-    if digital_multimeter_instance:
-        digital_multimeter_instance.release()
-        digital_multimeter_instance = None
-
-def config_VB_DMM (Vcc:int, configMeasure:str):
-    global power_supply_instance
-
-    try:
-        #############################
-        # Power Supply Configuration
-        #############################
-
-        channel = "ps/+25V"
-        voltage_level = Vcc
-        current_limit = 0.5
-        ps = acquire_power_supply()
+    '''
+    São passados vários parâmetros do ficheiro views.py para este script/função.
+    De entre eles, são feitas quatro possíveis combinações que correspondem a quatro situações diferentes:
+    1 - Vcc, Resistance, measure_parameter, configOK, configSTOP = 0, 0, None, True, None - Botão OK premido
+        Sistema adquire a fonte de alimentação e o multímetro e pronto para realizar medição
+    2 - Vcc, Resistance, measure_parameter, configOK, configSTOP = 0, 0, None, None, True - Botão STOP premido
+        Sistema "desliga" a fonte de alimentação e o multímetro, e os relés são desligados (configuração inicial)
+    3/4 - Vcc, Resistance, measure_parameter, configOK, configSTOP = !=0, !=0, V or I, None, None
+        Sistema realiza medição de tensão ou corrente, conforme os parâmetros passados
+    '''
+    if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is True and configSTOP is None):
+        print("OKPSDMM")
+        #Chama a função que adquire a fonte de alimentação e o multímetro
+        ps = virtualbench.acquire_power_supply()
+        dmm = virtualbench.acquire_digital_multimeter()
+        store_ps_dmm.set_values(ps, dmm)
+        print(ps, dmm )
+    if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is None and configSTOP is True):
+        print("STOP")
+        #Chama a função que desliga fonte de alimentação e multímetro
+        ps, dmm = store_ps_dmm.get_values()       
+        ps.release()
+        dmm.release()
+        virtualbench.release()
+        store_ps_dmm.clear_values()
+    
+    if (Vcc != 0 and R != 0 and measure_parameter is not None and configOK is None and configSTOP is None):
+        print("Medição")
+        #Chama a função que realiza a medição de tensão ou corrente
+        try:
+            #############################
+            # Power Supply Configuration
+            #############################
+            channel = "ps/+25V"
+            voltage_level = Vcc
+            current_limit = 0.5 
+            ps, dmm = store_ps_dmm.get_values()       
+            ps.configure_voltage_output(channel, voltage_level, current_limit)
+            ps.enable_all_outputs(True)
+            print("Adquiriu a fonte de alimentação")
         # ... use ps for configuration ...    ps.configure_voltage_output(channel, voltage_level, current_limit)
-        
-        ps.configure_voltage_output(channel, voltage_level, current_limit)
-        ps.enable_all_outputs(True)
-        
-        dmm = acquire_digital_multimeter()
-        # ... use dmm for configuration ...
-        if configMeasure == "voltage":
-            dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
-        elif configMeasure == "current":
-            dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1) # Verificar Manual Range = 10.0
-        
-        measurement_result = dmm.read()
-        print("MeasurementCONFIG: %f V" % (measurement_result))
+            #dmm = virtualbench.acquire_digital_multimeter()
+            print("Adquiriu o multímetro")
+            # ... use dmm for configuration ...
 
-    except PyVirtualBenchException as e:
-        print("Error/Warning %d occurred\n%s" % (e.status, e))
-    finally:
-        release_instruments()
-        return measurement_result
+            if measure_parameter == "voltage":
+                dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
+            elif measure_parameter == "current":
+                dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1) # Verificar Manual Range = 10.0
+        
+            measurement_result = dmm.read()        
+            print("MeasurementCONFIG: %f V" % (measurement_result))
+
+        except PyVirtualBenchException as e:
+            print("Error/Warning %d occurred\n%s" % (e.status, e))
+        finally:
+            return measurement_result

@@ -35,7 +35,7 @@
       Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper
     </p>
     <p></p>
-    <button class="btn ok">OK</button> <button class="btn ok">STOP</button>
+    <button class="btn ok">OK</button> <button class="btn stop">STOP</button>
     <p></p>
     <img
       src="../images/circuit_R1.png"
@@ -87,12 +87,35 @@ Remember to set the width: -->
     function habilitarSeletores() {
       document.getElementById("selectVcc").disabled = false;
       document.getElementById("selectR").disabled = false;
+      // Redirecionar para a rota com o parâmetro
+      const booleanParameter = true;
+      const url =
+        "/config_VirtualBench?habilitar_parameter=" +
+        booleanParameter.toString();
+      fetch(url);
     }
   </script>
-
   <script>
     // Acionar a função habilitarSeletores quando o botão "OK" for clicado
     document.querySelector(".ok").addEventListener("click", habilitarSeletores);
+  </script>
+  <script>
+    function desabilitarSeletores() {
+      // Desabilitar os seletores
+      document.getElementById("selectVcc").disabled = true;
+      document.getElementById("selectR").disabled = true;
+      const booleanParameter = true;
+      const url =
+        "/config_VirtualBench?desabilitar_parameter=" +
+        booleanParameter.toString();
+      fetch(url);
+    }
+  </script>
+  <script>
+    // Acionar a função habilitarSeletores quando o botão "OK" for clicado
+    document
+      .querySelector(".stop")
+      .addEventListener("click", desabilitarSeletores);
   </script>
 
   <script>
@@ -112,6 +135,7 @@ Remember to set the width: -->
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
+        const booleana = "";
         const url =
           "/config_VirtualBench?parameter=" +
           parameter +
