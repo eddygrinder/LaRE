@@ -56,7 +56,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
         #Chama a função que adquire a fonte de alimentação e o multímetro
         ps = virtualbench.acquire_power_supply()
         dmm = virtualbench.acquire_digital_multimeter()
-        store_ps_dmm.set_values(ps, dmm)
+        store_ps_dmm.set_values(ps, dmm) # guarda os valores de ps e dmm
         print(ps, dmm )
     if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is None and configSTOP is True):
         print("STOP")
@@ -77,22 +77,18 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
             channel = "ps/+25V"
             voltage_level = Vcc
             current_limit = 0.5 
-            ps, dmm = store_ps_dmm.get_values()       
+            ps, dmm = store_ps_dmm.get_values()
+            ps.enable_all_outputs(True)   
             ps.configure_voltage_output(channel, voltage_level, current_limit)
-            ps.enable_all_outputs(True)
-            print("Adquiriu a fonte de alimentação")
-        # ... use ps for configuration ...    ps.configure_voltage_output(channel, voltage_level, current_limit)
-            #dmm = virtualbench.acquire_digital_multimeter()
-            print("Adquiriu o multímetro")
-            # ... use dmm for configuration ...
 
             if measure_parameter == "voltage":
                 dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
+                measurement_result = dmm.read()
+                print("MeasurementCONFIG: %f V" % (measurement_result))
             elif measure_parameter == "current":
-                dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 1) # Verificar Manual Range = 10.0
-        
-            measurement_result = dmm.read()        
-            print("MeasurementCONFIG: %f V" % (measurement_result))
+                dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 10) # Verificar Manual Range = 10.0
+                measurement_result = dmm.read()
+                print("MeasurementCONFIG: %f mA" % (measurement_result*1000))   
 
         except PyVirtualBenchException as e:
             print("Error/Warning %d occurred\n%s" % (e.status, e))

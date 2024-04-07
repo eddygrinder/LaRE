@@ -63,17 +63,17 @@ def config_Parameters (Resistance: int, measeure_parameter: str):
                 config_Relays("00000000") # Valor de resistência inválido - relés OBRIGATORIAMENTE desligados
             case 1:
                 Resistance = 1
-                config_Relays("01101001")
+                config_Relays("10010110")
                 print("Atraso para medição?")
                 # time.sleep(1)            
             case 2:
                 Resistance = 1.5
-                config_Relays("01101010")
+                config_Relays("01010110")
                 # Atraso para medição?
                 # time.sleep(1)            
             case 3:
                 Resistance = 2.2
-                config_Relays("01101100")
+                config_Relays("00110110")
                 # Atraso para medição?
                 # time.sleep(1)
             case _:
@@ -96,7 +96,7 @@ def relays_requests(stringValue: str):
 def config_Relays(stringValue: str):
     # Envia a string para o Raspberry Pi
     # Endereço IP e porta do Raspberry Pi
-    HOST = '192.168.1.71'  # Substitua pelo endereço IP do Raspberry Pi
+    HOST = '172.16.0.11'  # Substitua pelo endereço IP do Raspberry Pi
     PORT = 12345  # Porta de escuta no Raspberry Pi 
     
         # Criar um socket TCP/IP
