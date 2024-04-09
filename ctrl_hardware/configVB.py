@@ -24,6 +24,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import matplotlib.pyplot as plt
+from scipy import stats
+
 import os, sys
 import store_ps_dmm
 
@@ -66,10 +69,12 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
         dmm.release()
         virtualbench.release()
         store_ps_dmm.clear_values()
+        measurement_result = None
     
     if (Vcc != 0 and R != 0 and measure_parameter is not None and configOK is None and configSTOP is None):
         print("Medição")
         #Chama a função que realiza a medição de tensão ou corrente
+
         try:
             #############################
             # Power Supply Configuration
@@ -84,13 +89,39 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
             if measure_parameter == "voltage":
                 dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
                 measurement_result = dmm.read()
+                #store_ps_dmm.set_voltage_graphic(measurement_result)
+                voltage, v = store_ps_dmm.set_voltage_graphic(measurement_result)
+                print ("INDICE = ", v, voltage)        
                 print("MeasurementCONFIG: %f V" % (measurement_result))
             elif measure_parameter == "current":
                 dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 10) # Verificar Manual Range = 10.0
                 measurement_result = dmm.read()
+                i = store_ps_dmm.set_current_graphic(measurement_result)
+                print ("INDICE = ", i)
                 print("MeasurementCONFIG: %f mA" % (measurement_result*1000))   
-
+            
+            if (i is not None and v is not None):
+                print(i, v)
+                
         except PyVirtualBenchException as e:
             print("Error/Warning %d occurred\n%s" % (e.status, e))
         finally:
             return measurement_result
+
+def plot_graphic(current_measurements, voltage_measurements):
+   # Cria os rótulos para os eixos x
+    print ("current_measurements: ", current_measurements)
+    x_labels = range(1, len(voltage_measurements) + 1)
+
+    # Cria o gráfico
+    #plt.plot(x_labels, current_measurements, label='Corrente (A)')
+    plt.plot(current_measurements, x_labels, label='Tensão (V)', marker = 'o')
+    slope, intercept, r_value, p_value, std_err = stats.linregress(current_measurements, voltage_measurements)
+    print ("slope: %f    intercept: %f" % (slope, intercept))
+
+    plt.xlabel('Voltage')
+    plt.ylabel('Current')
+    plt.title('Gráfico de Tensão e Corrente')
+    plt.legend("declive: %f" % slope)
+    plt.grid(True)
+    plt.show() 

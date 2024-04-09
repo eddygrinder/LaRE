@@ -70,12 +70,12 @@ Remember to set the width: -->
     <a href="#" class="next round" id="measureVoltage" data-parameter="voltage"
       ><b>Medir Tensão</b> &raquo;
     </a>
-    <p id="resultado-medicao"></p>
+    <p id="voltage-measure"></p>
     <p></p>
     <a href="#" class="next round" id="measureCurrent" data-parameter="current"
       ><b>Medir Corrente</b> &raquo;
     </a>
-    <p id="resultado-medicao"></p>
+    <p id="current-measure"></p>
   </div>
 
   <!----------------------------------------->
@@ -150,7 +150,7 @@ Remember to set the width: -->
           .then((data) => {
             // Acessar a variável measurement_results
             console.log(data.measurement_result);
-            document.getElementById("resultado-medicao").innerHTML =
+            document.getElementById("voltage-measure").innerHTML =
               data.measurement_result;
           });
       });
@@ -185,7 +185,7 @@ Remember to set the width: -->
           .then((data) => {
             // Acessar a variável measurement_results
             console.log(data.measurement_result);
-            document.getElementById("resultado-medicao").innerHTML =
+            document.getElementById("current-measure").innerHTML =
               data.measurement_result;
           });
       });

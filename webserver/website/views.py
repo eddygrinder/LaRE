@@ -61,5 +61,4 @@ def config_VirtualBench():
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
     finally:
-        configRelays.config_Parameters(0, measure_parameter)
         return jsonify({'measurement_result': measurement_result})
