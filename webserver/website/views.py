@@ -40,7 +40,7 @@ def config_VirtualBench():
         print (Vcc, Resistance, measure_parameter, configOK, configSTOP)
         if Resistance:
             configRelays.config_Parameters(Resistance, measure_parameter)
-            time.sleep(5)
+            time.sleep(2)
 
         measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter, configOK, configSTOP)
         #print(Vcc, Resistance, measure_parameter, configOK, configSTOP)

@@ -90,18 +90,19 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
                 dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
                 measurement_result = dmm.read()
                 #store_ps_dmm.set_voltage_graphic(measurement_result)
-                voltage, v = store_ps_dmm.set_voltage_graphic(measurement_result)
-                print ("INDICE = ", v, voltage)        
+                voltage_ctrl_index, current_ctrl_index = store_ps_dmm.voltage_index(measurement_result)
+                print ("INDICES= ", voltage_ctrl_index, current_ctrl_index)        
                 print("MeasurementCONFIG: %f V" % (measurement_result))
             elif measure_parameter == "current":
                 dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 10) # Verificar Manual Range = 10.0
                 measurement_result = dmm.read()
-                i = store_ps_dmm.set_current_graphic(measurement_result)
-                print ("INDICE = ", i)
+                voltage_ctrl_index, current_ctrl_index = store_ps_dmm.current_index(measurement_result)
+                print ("INDICES = ", voltage_ctrl_index, current_ctrl_index)
                 print("MeasurementCONFIG: %f mA" % (measurement_result*1000))   
             
-            if (i is not None and v is not None):
-                print(i, v)
+            if (voltage_ctrl_index == 2 and current_ctrl_index == 2):
+                print(store_ps_dmm.voltage_values())
+                plot_graphic(store_ps_dmm.voltage_values(), store_ps_dmm.current_values())
                 
         except PyVirtualBenchException as e:
             print("Error/Warning %d occurred\n%s" % (e.status, e))
@@ -115,13 +116,16 @@ def plot_graphic(current_measurements, voltage_measurements):
 
     # Cria o gráfico
     #plt.plot(x_labels, current_measurements, label='Corrente (A)')
-    plt.plot(current_measurements, x_labels, label='Tensão (V)', marker = 'o')
-    slope, intercept, r_value, p_value, std_err = stats.linregress(current_measurements, voltage_measurements)
+    plt.plot(voltage_measurements, x_labels, label='Tensão (V)', marker = 'o')
+    slope, intercept, r_value, p_value, std_err = stats.linregress(voltage_measurements, current_measurements)
     print ("slope: %f    intercept: %f" % (slope, intercept))
 
-    plt.xlabel('Voltage')
-    plt.ylabel('Current')
+    plt.xlabel('Current')
+    plt.ylabel('Voltage')
     plt.title('Gráfico de Tensão e Corrente')
-    plt.legend("declive: %f" % slope)
+    plt.legend()
+    plt.text(0, 0, f'Declive: {slope:.2f}', fontsize=12, color='red')
     plt.grid(True)
-    plt.show() 
+    plt.ion()
+    plt.show(block=False) 
+    plt.pause(1)

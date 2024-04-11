@@ -7,8 +7,8 @@ from scipy import stats
 # Não esquecer de documentar a escolha do módulo para manter e aceder aos valores de ps e dmm
 ps = None
 dmm = None
-v = 0
-i = 0
+voltage_ctrl_index = 0
+current_ctrl_index = 0
 # Dicionário para armazenar os valores de corrente e tensão
 voltage_measurements = np.array([])
 current_measurements = np.array([])
@@ -26,28 +26,28 @@ def clear_values():
     ps = None
     dmm = None  
 
-def set_voltage_graphic(voltage): # Recebe os valores de tensão e armazena no dicionário
+def voltage_index(voltage): # Recebe os valores de tensão e armazena no dicionário
 # Recebe um valor de tensão e o armazena no dicionário
-    global voltage_measurements, v
+    global voltage_measurements, voltage_ctrl_index, current_ctrl_index
     # Adicione o novo valor de tensão ao array
     voltage_measurements = np.append(voltage_measurements, voltage)
     print ("voltage_values: ", voltage_measurements)
-    v+=1 # Incrementa o índice a partit do 1 devido aos return's
-    if v == 3:
-        return voltage_measurements, v
-    else:
-        return None, v
+    voltage_ctrl_index += 1 # Incrementa o índice a partit do 1 devido aos return's
+    return voltage_ctrl_index, current_ctrl_index
 
-def set_current_graphic(current): # Recebe os valores de corrente e armazena no dicionário
-    global current_measurements, i
+def current_index(current): # Recebe os valores de corrente e armazena no dicionário
+    global current_measurements, voltage_ctrl_index, current_ctrl_index
     # Adicione o novo valor de corrente ao array
     current_measurements = np.append(current_measurements, current)
     print ("current_values: ", current_measurements)
-    i+=1 # Incrementa o índice a partit do 1 devido aos return's
-    if i == 3:
-        return current_measurements
-    else:
-        return None
+    current_ctrl_index += 1 # Incrementa o índice
+    return voltage_ctrl_index, current_ctrl_index
+
+def voltage_values():
+    return voltage_measurements
+
+def current_values():
+    return current_measurements
 
 def plot_graphic():
    # Cria os rótulos para os eixos x
