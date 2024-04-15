@@ -35,6 +35,19 @@ ctrl_hardware_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..
 # Adiciona o diretório ao sys.path
 sys.path.append(ctrl_hardware_path)
 
+# Obtém o diretório atual do script
+current_dir = os.path.dirname(__file__)
+
+# Caminho para a pasta "graph_images" (dentro do mesmo diretório que o script)
+output_dir = os.path.join(current_dir, 'graph_images')
+
+# Verifica se a pasta "graph_images" existe e cria-a se não existir
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# Configura o modo de exibição do Matplotlib para 'Agg'
+plt.switch_backend('Agg')
+
 from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 
 # You will probably need to replace "myVirtualBench" with the name of your device.
@@ -126,6 +139,10 @@ def plot_graphic(current_measurements, voltage_measurements):
     plt.legend()
     plt.text(0, 0, f'Declive: {slope:.2f}', fontsize=12, color='red')
     plt.grid(True)
-    plt.ion()
-    plt.show(block=False) 
-    plt.pause(1)
+   # Salva o gráfico como uma imagem PNG
+    
+    # Salva o gráfico como uma imagem PNG na pasta "graph_images"
+    output_path = os.path.join(output_dir, 'grafico.png')
+    plt.savefig(output_path)
+
+    #192.168.1.79

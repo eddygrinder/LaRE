@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
-
 # Arquivo para armazenar os valores ps e dmm
 # Não esquecer de documentar a escolha do módulo para manter e aceder aos valores de ps e dmm
 ps = None
@@ -64,4 +63,7 @@ def plot_graphic():
     plt.title('Gráfico de Tensão e Corrente')
     plt.legend("declive: %f" % slope)
     plt.grid(True)
+    # Salva o gráfico como uma imagem PNG
+    
+    plt.savefig('../graph_images/grafico.png')
     plt.show()

@@ -76,11 +76,38 @@ Remember to set the width: -->
       ><b>Medir Corrente</b> &raquo;
     </a>
     <p id="current-measure"></p>
+    <p></p>
+    <a href="#" class="next round" id="showgraph"><b>gráfico</b> &raquo; </a>
   </div>
+
+  <!-- Div para exibir a imagem -->
+  <div id="imageContainer"></div>
 
   <!----------------------------------------->
   <!-- Scripts zone -->
   <!----------------------------------------->
+
+  <script>
+    // Obtenha a referência ao link
+    var showGraphLink = document.getElementById("showgraph");
+
+    // Adicione um manipulador de eventos de clique ao link
+    showGraphLink.addEventListener("click", function (event) {
+      event.preventDefault(); // Evite que o link seja seguido
+
+      // Caminho da imagem que você deseja exibir
+      var imagePath = "../grafico.png";
+
+      // Crie um elemento de imagem
+      var image = document.createElement("img");
+      image.src = imagePath; // Defina o atributo src para o caminho da imagem
+
+      // Adicione a imagem ao contêiner na página
+      var imageContainer = document.getElementById("imageContainer");
+      imageContainer.innerHTML = ""; // Limpe o contêiner antes de adicionar a nova imagem
+      imageContainer.appendChild(image);
+    });
+  </script>
 
   <script>
     // Função para habilitar os seletores
