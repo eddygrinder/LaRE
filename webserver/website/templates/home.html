@@ -15,17 +15,21 @@
 
 <div class="row">
   <div class="tab">
-    <button
-      class="tablinks"
-      onclick="openchoice(event, 'Ohm')"
-      id="defaultOpen"
-    >
+    <button class="tablinks" onclick="openchoice(event, 'Ohm')">
       Lei de Ohm
     </button>
-    <button class="tablinks" onclick="openchoice(event, 'MeiaOnda')">
-      Retificador meia-onda
+    <button
+      class="tablinks"
+      onclick="showImageInMiddleColumn('../images/circuit_R2.png')"
+      id="meia-onda"
+    >
+      Rectificador de meia onda
     </button>
-    <button class="tablinks" onclick="showImage('circuit_R3.png')">
+    <button
+      class="tablinks"
+      onclick="openchoice(event, 'OndaCompleta')"
+      id="onda-completa"
+    >
       Retificador Onda Completa
     </button>
   </div>
@@ -36,15 +40,7 @@
     </p>
     <p></p>
     <button class="btn ok">OK</button> <button class="btn stop">STOP</button>
-    <p></p>
-    <img
-      src="../images/circuit_R1.png"
-      width="70%"
-      height="auto"
-      alt="circuito R1"
-      class="responsive"
-      style="cursor: pointer"
-    />
+
     <!-- Surround the select box within a "custom-select" DIV element.
 Remember to set the width: -->
     <div style="display: inline-block; width: 200px">
@@ -57,6 +53,7 @@ Remember to set the width: -->
         <option value="5">5</option>
       </select>
     </div>
+
     <div style="display: inline-block; width: 200px">
       <select id="selectR" disabled>
         <option value="0">Seleccionar R:</option>
@@ -88,6 +85,15 @@ Remember to set the width: -->
   <!----------------------------------------->
 
   <script>
+    function showImageInMiddleColumn(imagePath) {
+      // Remova o conteúdo da imagem atual na coluna do meio
+      document.getElementById("middleColumnImage").src = "";
+      // Defina o caminho da nova imagem
+      document.getElementById("middleColumnImage").src = imagePath;
+    }
+  </script>
+
+  <script>
     // Obtenha a referência ao link
     var showGraphLink = document.getElementById("showgraph");
 
@@ -96,16 +102,14 @@ Remember to set the width: -->
       event.preventDefault(); // Evite que o link seja seguido
 
       // Caminho da imagem que você deseja exibir
-      var imagePath = "../grafico.png";
+      var imagePath = "../images/ohm_graph.png";
 
       // Crie um elemento de imagem
       var image = document.createElement("img");
       image.src = imagePath; // Defina o atributo src para o caminho da imagem
 
-      // Adicione a imagem ao contêiner na página
-      var imageContainer = document.getElementById("imageContainer");
-      imageContainer.innerHTML = ""; // Limpe o contêiner antes de adicionar a nova imagem
-      imageContainer.appendChild(image);
+      // Abra a imagem em uma nova janela
+      window.open(imagePath, "_blank");
     });
   </script>
 

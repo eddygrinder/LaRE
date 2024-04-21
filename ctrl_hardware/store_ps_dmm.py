@@ -22,8 +22,11 @@ def get_values():
 
 def clear_values():
     global ps, dmm
+    global voltage_ctrl_index, current_ctrl_index
     ps = None
-    dmm = None  
+    dmm = None
+    voltage_ctrl_index = 0
+    current_ctrl_index = 0
 
 def voltage_index(voltage): # Recebe os valores de tensão e armazena no dicionário
 # Recebe um valor de tensão e o armazena no dicionário

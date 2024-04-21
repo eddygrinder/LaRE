@@ -38,13 +38,6 @@ sys.path.append(ctrl_hardware_path)
 # Obtém o diretório atual do script
 current_dir = os.path.dirname(__file__)
 
-# Caminho para a pasta "graph_images" (dentro do mesmo diretório que o script)
-output_dir = os.path.join(current_dir, 'graph_images')
-
-# Verifica se a pasta "graph_images" existe e cria-a se não existir
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
-
 # Configura o modo de exibição do Matplotlib para 'Agg'
 plt.switch_backend('Agg')
 
@@ -113,7 +106,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
                 print ("INDICES = ", voltage_ctrl_index, current_ctrl_index)
                 print("MeasurementCONFIG: %f mA" % (measurement_result*1000))   
             
-            if (voltage_ctrl_index == 2 and current_ctrl_index == 2):
+            if (voltage_ctrl_index == 5 and current_ctrl_index == 5):
                 print(store_ps_dmm.voltage_values())
                 plot_graphic(store_ps_dmm.voltage_values(), store_ps_dmm.current_values())
                 
@@ -129,7 +122,7 @@ def plot_graphic(current_measurements, voltage_measurements):
 
     # Cria o gráfico
     #plt.plot(x_labels, current_measurements, label='Corrente (A)')
-    plt.plot(voltage_measurements, x_labels, label='Tensão (V)', marker = 'o')
+    plt.plot(voltage_measurements, x_labels, label='V Vs I', marker = 'o')
     slope, intercept, r_value, p_value, std_err = stats.linregress(voltage_measurements, current_measurements)
     print ("slope: %f    intercept: %f" % (slope, intercept))
 
@@ -139,10 +132,14 @@ def plot_graphic(current_measurements, voltage_measurements):
     plt.legend()
     plt.text(0, 0, f'Declive: {slope:.2f}', fontsize=12, color='red')
     plt.grid(True)
-   # Salva o gráfico como uma imagem PNG
-    
-    # Salva o gráfico como uma imagem PNG na pasta "graph_images"
-    output_path = os.path.join(output_dir, 'grafico.png')
-    plt.savefig(output_path)
+   # Verifica se o diretório "static/images" existe, se não, cria-o
+    if not os.path.exists("webserver/website/static/images"):
+        os.makedirs("webserver/website/static/images")
+
+    # Salva o gráfico como uma imagem dentro do diretório "static/images"
+    plt.savefig("webserver/website/static/images/ohm_graph.png")
+
+    # Limpa a figura
+    plt.clf()
 
     #192.168.1.79
