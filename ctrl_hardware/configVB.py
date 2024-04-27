@@ -106,9 +106,9 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
                 print ("INDICES = ", voltage_ctrl_index, current_ctrl_index)
                 print("MeasurementCONFIG: %f mA" % (measurement_result*1000))   
             
-            if (voltage_ctrl_index == 5 and current_ctrl_index == 5):
-                print(store_ps_dmm.voltage_values())
-                plot_graphic(store_ps_dmm.voltage_values(), store_ps_dmm.current_values())
+            #if (voltage_ctrl_index == 5 and current_ctrl_index == 5):
+            print(store_ps_dmm.voltage_values())
+            plot_graphic(store_ps_dmm.voltage_values(), store_ps_dmm.current_values())
                 
         except PyVirtualBenchException as e:
             print("Error/Warning %d occurred\n%s" % (e.status, e))
