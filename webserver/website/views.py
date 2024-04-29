@@ -21,6 +21,17 @@ views = Blueprint('views', __name__)
 def home():
     return render_template("home.html", user=current_user)
 
+@views.route("/ohm", methods=['GET', 'POST'])
+@login_required
+def pagina_seguinte():
+    return render_template("ohm.html", user=current_user)
+
+@views.route("/meiaonda")
+@login_required
+def meiaonda():
+    return render_template("meiaonda.html", user=current_user)
+
+
 #########################################################
 # Rota para passar parâmetros para o script controlVB.py
 # Só passa os parâmetros de escolha    
