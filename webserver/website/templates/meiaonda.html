@@ -40,36 +40,29 @@
 Remember to set the width: -->
     <div style="display: inline-block; width: 300px">
       <select id="selectC" disabled>
-        <option value="0">Seleccionar Condensador:</option>
+        <option value="0">Seleccionar Condensador [&microF]:</option>
         <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option value="2">10</option>
       </select>
     </div>
 
     <div style="display: inline-block; width: 200px">
       <select id="selectR" disabled>
-        <option value="0">Seleccionar R:</option>
+        <option value="0">Seleccionar R [K&#x3A9]:</option>
         <option value="1">1</option>
-        <option value="2">1.1</option>
-        <option value="3">1.5</option>
+        <option value="2">3.3</option>
       </select>
     </div>
+    <p></p>
+    Valor da frequência entre 50 e 2000 Hz
+    <form id="form1">
+      <input type="number" id="input1" name="input1" />
+    </form>
   </div>
+
   <div class="column right">
-    <a href="#" class="next round" id="measureVoltage" data-parameter="voltage"
-      ><b>Medir Tensão</b> &raquo;
-    </a>
-    <p id="voltage-measure"></p>
-    <p></p>
-    <a href="#" class="next round" id="measureCurrent" data-parameter="current"
-      ><b>Medir Corrente</b> &raquo;
-    </a>
-    <p id="current-measure"></p>
-    <p></p>
-    <a href="#" class="next round" id="showgraph"><b>gráfico</b> &raquo; </a>
+    <a href="#" class="next round" id="measureRipple"><b>Efectuar as medições</b> &raquo; </a>
+    <a href="#" class="next round" id="showgraph"><b>Gráfico</b> &raquo; </a>
   </div>
 
   <!-- Div para exibir a imagem -->
@@ -108,7 +101,7 @@ Remember to set the width: -->
       event.preventDefault(); // Evite que o link seja seguido
 
       // Caminho da imagem que você deseja exibir
-      var imagePath = "../images/ohm_graph.png";
+      var imagePath = "../images/meia_onda.png";
 
       // Crie um elemento de imagem
       var image = document.createElement("img");
@@ -127,7 +120,7 @@ Remember to set the width: -->
       // Redirecionar para a rota com o parâmetro
       const booleanParameter = true;
       const url =
-        "/config_VirtualBench?habilitar_parameter=" +
+        "/config_meiaonda?habilitar_parameter=" +
         booleanParameter.toString();
       fetch(url);
     }
@@ -143,7 +136,7 @@ Remember to set the width: -->
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
       const url =
-        "/config_VirtualBench?desabilitar_parameter=" +
+        "/config_meiaonda?desabilitar_parameter=" +
         booleanParameter.toString();
       fetch(url);
     }
@@ -157,11 +150,9 @@ Remember to set the width: -->
 
   <script>
     document
-      .getElementById("measureVoltage")
+      .getElementById("measureRipple")
       .addEventListener("click", function () {
-        // Obter o valor do atributo data-parameter
-        const parameter = this.dataset.parameter;
-
+        
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
@@ -174,57 +165,11 @@ Remember to set the width: -->
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
         const booleana = "";
         const url =
-          "/config_VirtualBench?parameter=" +
-          parameter +
-          "&Capacitor=" +
-          Capacitor +
-          "&R=" +
-          Resistance;
-        console.log("Capacitor = ", Capacitor);
-        console.log("Resistance = ", Resistance);
-        fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            // Acessar a variável measurement_results
-            console.log(data.measurement_result);
-            document.getElementById("voltage-measure").innerHTML =
-              data.measurement_result;
-          });
-      });
-  </script>
-
-  <script>
-    document
-      .getElementById("measureCurrent")
-      .addEventListener("click", function () {
-        // Obter o valor do atributo data-parameter
-        const parameter = this.dataset.parameter;
-
-        // Obter valores dos selects
-        const Capacitor = document.getElementById("selectC").value;
-        const Resistance = document.getElementById("selectR").value;
-
-        // Validar valores antes do fetch
-        if (Capacitor === "0" || Resistance === "0") {
-          alert("Tem de primeiro seleccionar os valores de Capacitor e R!");
-          return; // Interrompe a execução se valores forem inválidos
-        }
-        // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url =
-          "/config_VirtualBench?parameter=" +
-          parameter +
-          "&Capacitor=" +
+          "/config_meiaonda?&Capacitor=" +
           Capacitor +
           "&R=" +
           Resistance;
         fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            // Acessar a variável measurement_results
-            console.log(data.measurement_result);
-            document.getElementById("current-measure").innerHTML =
-              data.measurement_result;
-          });
       });
   </script>
 

@@ -47,7 +47,6 @@ def config_VirtualBench():
         measure_parameter = request.args.get('parameter', None, str)
         configOK = request.args.get('habilitar_parameter', None, bool)
         configSTOP = request.args.get('desabilitar_parameter', None, bool)
-        
         print (Vcc, Resistance, measure_parameter, configOK, configSTOP)
         if Resistance:
             configRelays.config_Parameters(Resistance, measure_parameter)
@@ -73,3 +72,9 @@ def config_VirtualBench():
         return jsonify({'measurement_result': 'ERROR'})
     finally:
         return jsonify({'measurement_result': measurement_result})
+
+@views.route('/config_meiaonda', methods=['GET', 'POST'])
+@login_required
+def config_meiaonda():
+    print("Meia onda")
+    return render_template("meiaonda.html", user=current_user)

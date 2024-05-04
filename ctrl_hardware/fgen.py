@@ -34,7 +34,7 @@ try:
     waveform_function = Waveform.SINE
     amplitude = 10.0      # 10V
     dc_offset = 0.0       # 0V
-    frequency = 600.0  # 500kHz
+    frequency = 200000.0  # 500kHz
     duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
 
     # You will probably need to replace "myVirtualBench" with the name of your device.
