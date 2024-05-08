@@ -157,20 +157,24 @@ Remember to set the width: -->
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
         const valorfreq = document.getElementById("input_freq").value;
+        console.log("valorfreq = ", valorfreq);
+        console.log("C = ", Capacitor);
+        console.log("R = ", Resistance);
 
 
         // Validar valores antes do fetch
-        if (Capacitor === "0" || Resistance === "0") {
-          alert("Tem de primeiro seleccionar os valores de Capacitor e R!");
+        if (Capacitor === "0" || Resistance === "0" || valorfreq === "" || valorfreq < 50 || valorfreq > 2000) {
+          alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const booleana = "";
         const url =
-          "/config_meiaonda?&Capacitor=" +
+          "/config_meiaonda?&C=" +
           Capacitor +
           "&R=" +
-          Resistance;
+          Resistance +
+          "&f=" +
+          valorfreq;
         fetch(url)
       });
   </script>

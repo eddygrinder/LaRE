@@ -29,27 +29,28 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, Waveform
 # This examples demonstrates how to configure and generate a standard
 # waveform from the Function Generator (FGEN) on a VirtualBench.
 
-try:
-    # Waveform Configuration
-    waveform_function = Waveform.SINE
-    amplitude = 10.0      # 10V
-    dc_offset = 0.0       # 0V
-    frequency = 250.0  # 500kHz
-    duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
+def config_func_generator(Frequency:float):
 
-    # You will probably need to replace "myVirtualBench" with the name of your device.
-    # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
-    # You can see the device's name in the VirtualBench Application under File->About
-    virtualbench = PyVirtualBench('VB8012-30A210F')
-    fgen = virtualbench.acquire_function_generator()
+    try:
+        # Waveform Configuration
+        waveform_function = Waveform.SINE
+        amplitude = 10.0      # 10V
+        dc_offset = 0.0       # 0V
+        frequency = Frequency  # 500kHz
+        duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
 
-    fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
+        # You will probably need to replace "myVirtualBench" with the name of your device.
+        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+        # You can see the device's name in the VirtualBench Application under File->About
+        virtualbench = PyVirtualBench('VB8012-30A210F')
+        fgen = virtualbench.acquire_function_generator()
 
-    # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
-    fgen.run()
+        fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
 
-    fgen.release()
-except PyVirtualBenchException as e:
-    print("Error/Warning %d occurred\n%s" % (e.status, e))
-finally:
-    virtualbench.release()
+        # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
+        fgen.run()
+        fgen.release()
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+    finally:
+        virtualbench.release()

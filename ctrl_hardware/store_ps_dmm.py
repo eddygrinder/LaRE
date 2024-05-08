@@ -50,23 +50,3 @@ def voltage_values():
 
 def current_values():
     return current_measurements
-
-def plot_graphic():
-   # Cria os rótulos para os eixos x
-    x_labels = range(1, len(voltage_measurements) + 1)
-
-    # Cria o gráfico
-    #plt.plot(x_labels, current_measurements, label='Corrente (A)')
-    plt.plot(current_measurements, x_labels, label='Tensão (V)', marker = 'o')
-    slope, intercept, r_value, p_value, std_err = stats.linregress(current_measurements, voltage_measurements)
-    print ("slope: %f    intercept: %f" % (slope, intercept))
-
-    plt.xlabel('Voltage')
-    plt.ylabel('Current')
-    plt.title('Gráfico de Tensão e Corrente')
-    plt.legend("declive: %f" % slope)
-    plt.grid(True)
-    # Salva o gráfico como uma imagem PNG
-    
-    plt.savefig('../graph_images/grafico.png')
-    plt.show()

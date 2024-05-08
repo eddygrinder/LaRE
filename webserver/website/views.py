@@ -12,7 +12,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 
 #from configVB import config_VB_DMM
-from ctrl_hardware import configRelays, configVB
+from ctrl_hardware import configRelays, configVB, configFGen
 
 views = Blueprint('views', __name__)
 
@@ -77,5 +77,16 @@ def config_VirtualBench():
 @views.route('/config_meiaonda', methods=['GET', 'POST'])
 @login_required
 def config_meiaonda():
-    print("Meia onda")
-    return render_template("meiaonda.html", user=current_user)
+    try:
+        Capacitor = request.args.get('C', 0, int)
+        Resistance = request.args.get('R', 0, int)
+        Frequency = request.args.get('f', 0, int)
+        print (Capacitor, Resistance, Frequency)
+
+        configFGen.config_func_generator(Frequency)
+        
+    except Exception as e:
+        print(e)
+        return jsonify({'measurement_result': 'ERROR'})
+    finally:
+        return render_template("meiaonda.html", user=current_user)
