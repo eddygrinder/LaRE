@@ -73,6 +73,7 @@ def config_VirtualBench():
     finally:
         return jsonify({'measurement_result': measurement_result})
 
+
 @views.route('/config_meiaonda', methods=['GET', 'POST'])
 @login_required
 def config_meiaonda():

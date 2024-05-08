@@ -47,7 +47,7 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
     # Cria os rótulos para os eixos x
     # Calcula os valores dos eixos x
     #time = 1/50
-    increment = 1/(200000*number_of_analog_samples_acquired)
+    increment = 1/(250*number_of_analog_samples_acquired)
     print("Incremento: ", increment)
     print("Número de amostras: ", number_of_analog_samples_acquired)
     
@@ -66,7 +66,7 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
         
         '''
         x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment)) 
-        x_values_increment = 2 * x_values_increment # ALDRABICE!!! Será?! Ajustar a escala????
+        x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será?! Ajustar a escala????
         #x_values = len(analog_data)/2 # São armazenados os valores dos dois canais, então, por cada canal é metade
 
 
