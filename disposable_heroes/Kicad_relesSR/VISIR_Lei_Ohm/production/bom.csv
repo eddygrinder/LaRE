@@ -1,10 +1,13 @@
 ﻿Designator,Footprint,Quantity,Value,LCSC Part #
-"C1, C2",C_Disc_D5.0mm_W2.5mm_P2.50mm,2,0.1uF,
+C1,C_Disc_D5.0mm_W2.5mm_P2.50mm,1,0.1uF,
 J1,PinHeader_2x20_P2.54mm_Vertical,1,Raspberry PI5,
-J2,PinHeader_1x02_P2.54mm_Vertical,1,Fonte dc,
+J10,PinHeader_1x03_P2.54mm_Vertical,1,Amperimetro+,
+J11,PinHeader_1x03_P2.54mm_Vertical,1,Amperimetro-,
+J2,PinHeader_1x02_P2.54mm_Vertical,1,Fonte dc_VB,
 J3,PinHeader_1x02_P2.54mm_Vertical,1,Fonte 12V,
-J4,PinHeader_1x02_P2.54mm_Vertical,1,Fonte 5V,
+J4,PinHeader_1x03_P2.54mm_Vertical,1,Voltimetro+,
 "J5, J6, J7, J8",PinHeader_1x20_P2.54mm_Vertical,4,Ext_OUT_PI,
+J9,PinHeader_1x03_P2.54mm_Vertical,1,Voltimetro-,
 "K1, K2, K3",RELAY8_3572-1220-053_COM,3,3572-1220-123,
 "K4, K5, K6, K7, K8",SIP_3570-1331_COM,5,3570-1331-123,
 MES1,PinHeader_1x02_P2.54mm_Vertical,1,Voltmeter_DC,
@@ -12,5 +15,5 @@ MES3,PinHeader_1x02_P2.54mm_Vertical,1,Ammeter_DC,
 R1,R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal,1,R1,
 R2,R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal,1,R2,
 R3,R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal,1,R3,
-"U1, U4",DIP-16_W10.16mm,2,74HC595N_112,"74HC595N,112"
+U1,DIP-16_W10.16mm,1,74HC595N_112,"74HC595N,112"
 "U2, U3",DIP-16_W10.16mm,2,ULN2003,

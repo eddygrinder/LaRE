@@ -56,7 +56,7 @@ Remember to set the width: -->
     <p></p>
     Valor da frequência entre 50 e 2000 Hz
     <form id="form1">
-      <input type="number" id="input1" name="input1" />
+      <input type="number" id="input_freq" name="input_freq" />
     </form>
   </div>
 
@@ -156,6 +156,8 @@ Remember to set the width: -->
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
+        const valorfreq = document.getElementById("input_freq").value;
+
 
         // Validar valores antes do fetch
         if (Capacitor === "0" || Resistance === "0") {
