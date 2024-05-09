@@ -48,7 +48,7 @@ Remember to set the width: -->
 
     <div style="display: inline-block; width: 200px">
       <select id="selectR" disabled>
-        <option value="0">Seleccionar R [K&#x3A9]:</option>
+        <option value="0">Seleccionar R[Ω]:</option>
         <option value="1">1</option>
         <option value="2">3.3</option>
       </select>
@@ -61,7 +61,9 @@ Remember to set the width: -->
   </div>
 
   <div class="column right">
-    <a href="#" class="next round" id="measureRipple"><b>Efectuar as medições</b> &raquo; </a>
+    <a href="#" class="next round" id="measureRipple"
+      ><b>Efectuar as medições</b> &raquo;
+    </a>
     <a href="#" class="next round" id="showgraph"><b>Gráfico</b> &raquo; </a>
   </div>
 
@@ -120,8 +122,7 @@ Remember to set the width: -->
       // Redirecionar para a rota com o parâmetro
       const booleanParameter = true;
       const url =
-        "/config_meiaonda?habilitar_parameter=" +
-        booleanParameter.toString();
+        "/config_meiaonda?habilitar_parameter=" + booleanParameter.toString();
       fetch(url);
     }
   </script>
@@ -136,8 +137,7 @@ Remember to set the width: -->
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
       const url =
-        "/config_meiaonda?desabilitar_parameter=" +
-        booleanParameter.toString();
+        "/config_meiaonda?desabilitar_parameter=" + booleanParameter.toString();
       fetch(url);
     }
   </script>
@@ -152,7 +152,6 @@ Remember to set the width: -->
     document
       .getElementById("measureRipple")
       .addEventListener("click", function () {
-        
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
@@ -161,9 +160,14 @@ Remember to set the width: -->
         console.log("C = ", Capacitor);
         console.log("R = ", Resistance);
 
-
         // Validar valores antes do fetch
-        if (Capacitor === "0" || Resistance === "0" || valorfreq === "" || valorfreq < 50 || valorfreq > 2000) {
+        if (
+          Capacitor === "0" ||
+          Resistance === "0" ||
+          valorfreq === "" ||
+          valorfreq < 50 ||
+          valorfreq > 2000
+        ) {
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
@@ -175,7 +179,7 @@ Remember to set the width: -->
           Resistance +
           "&f=" +
           valorfreq;
-        fetch(url)
+        fetch(url);
       });
   </script>
 

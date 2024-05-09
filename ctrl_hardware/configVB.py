@@ -49,7 +49,7 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 
 def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, configSTOP:bool):
     virtualbench = PyVirtualBench('VB8012-30A210F')
-
+    
     '''
     São passados vários parâmetros do ficheiro views.py para este script/função.
     De entre eles, são feitas quatro possíveis combinações que correspondem a quatro situações diferentes:
@@ -66,16 +66,20 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
         ps = virtualbench.acquire_power_supply()
         dmm = virtualbench.acquire_digital_multimeter()
         store_ps_dmm.set_values(ps, dmm) # guarda os valores de ps e dmm
-        print(ps, dmm )
+        print("PS,DMM", ps, dmm )
     if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is None and configSTOP is True):
-        print("STOP")
-        #Chama a função que desliga fonte de alimentação e multímetro
-        ps, dmm = store_ps_dmm.get_values()       
-        ps.release()
-        dmm.release()
-        virtualbench.release()
-        store_ps_dmm.clear_values()
-        measurement_result = None
+        try:
+            print("STOP")
+            #Chama a função que desliga fonte de alimentação e multímetro
+            ps, dmm = store_ps_dmm.get_values()       
+            ps.release()
+            dmm.release()
+            virtualbench.release()
+            store_ps_dmm.clear_values()
+            measurement_result = None
+        except PyVirtualBenchException as e:
+            print("Error/Warning %d occurred\n%s" % (e.status, e))
+        return measurement_result
     
     if (Vcc != 0 and R != 0 and measure_parameter is not None and configOK is None and configSTOP is None):
         print("Medição")
@@ -114,6 +118,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
             print("Error/Warning %d occurred\n%s" % (e.status, e))
         finally:
             return measurement_result
+
 
 def plot_graphic(current_measurements, voltage_measurements):
    # Cria os rótulos para os eixos x

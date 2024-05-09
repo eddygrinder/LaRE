@@ -6,6 +6,7 @@ from scipy import stats
 # Não esquecer de documentar a escolha do módulo para manter e aceder aos valores de ps e dmm
 ps = None
 dmm = None
+virtualbench = None
 voltage_ctrl_index = 0
 current_ctrl_index = 0
 # Dicionário para armazenar os valores de corrente e tensão
@@ -17,16 +18,28 @@ def set_values(ps_value, dmm_value):
     ps = ps_value
     dmm = dmm_value
 
+def set_virtualbench(virtualbench_value): # Define o valor do virtualbench
+    global virtualbench
+    virtualbench = virtualbench_value 
+
+def get_virtualbench(): # Retorna o valor do virtualbench
+    return virtualbench
+
 def get_values():
     return ps, dmm
 
 def clear_values():
-    global ps, dmm
-    global voltage_ctrl_index, current_ctrl_index
+    global ps, dmm, virtualbench
+    global voltage_ctrl_index, current_ctrl_index, voltage_measurements, current_measurements
     ps = None
     dmm = None
+    #virtualbench = None
+    print ("ps: ", ps, "dmm: ", dmm, "virtualbench: ", virtualbench) 
+
     voltage_ctrl_index = 0
     current_ctrl_index = 0
+    voltage_measurements = 0
+    current_measurements = 0
 
 def voltage_index(voltage): # Recebe os valores de tensão e armazena no dicionário
 # Recebe um valor de tensão e o armazena no dicionário
@@ -50,3 +63,9 @@ def voltage_values():
 
 def current_values():
     return current_measurements
+
+def fgen():
+    global ps, dmm
+    ps = None
+    dmm = None
+    virtualbench = None

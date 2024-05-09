@@ -25,6 +25,7 @@
 # THE SOFTWARE.
 
 from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, Waveform
+import store_ps_dmm
 
 # This examples demonstrates how to configure and generate a standard
 # waveform from the Function Generator (FGEN) on a VirtualBench.
@@ -42,11 +43,12 @@ def config_func_generator(Frequency:float):
         # You will probably need to replace "myVirtualBench" with the name of your device.
         # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
         # You can see the device's name in the VirtualBench Application under File->About
+        
         virtualbench = PyVirtualBench('VB8012-30A210F')
+        
+        print ("virtualbench: ", virtualbench)
         fgen = virtualbench.acquire_function_generator()
-
         fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
-
         # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
         fgen.run()
         fgen.release()
