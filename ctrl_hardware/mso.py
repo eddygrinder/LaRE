@@ -50,6 +50,7 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
     increment = 1/(250*number_of_analog_samples_acquired)
     print("Incremento: ", increment)
     print("Número de amostras: ", number_of_analog_samples_acquired)
+    print("Número de valores na estrutura: ", number_of_channels)
     
     if channels_number == 12: # Ambos os canais estão activos
         
@@ -114,12 +115,12 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
         # Cria o gráfico com duas curvas
         plt.plot(x_values_increment, analog_data[::2], label='Onde de entrada', marker=',')
         plt.plot(x_values_increment, analog_data[1::2], label='Onda de saída', marker=',')
-    elif number_of_channels == 1: # Apenas o canal 1 está activo
+    elif channels_number == 1: # Apenas o canal 1 está activo
          # Cria o gráfico
         # Cria o gráfico com duas curvas
         x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
         plt.plot(x_values_increment[::2], analog_data[::2], label='Onda de entrada', marker=',')
-    elif number_of_channels == 2: # Apenas o canal 2 está activo
+    elif channels_number == 2: # Apenas o canal 2 está activo
         # Cria o gráfico
         # Cria o gráfico com duas curvas
         x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????

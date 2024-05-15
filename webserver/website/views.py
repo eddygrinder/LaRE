@@ -78,9 +78,9 @@ def config_VirtualBench():
 @login_required
 def config_meiaonda():
     try:
-        Capacitor = request.args.get('C', 0, int)
-        Resistance = request.args.get('R', 0, int)
-        Frequency = request.args.get('f', 0, int)
+        Capacitor = request.args.get('C', 0, float)
+        Resistance = request.args.get('R', 0, float)
+        Frequency = request.args.get('f', 0, float)
         print (Capacitor, Resistance, Frequency)
         
         if Frequency != 0:
