@@ -7487,6 +7487,16 @@
 		)
 		(uuid "0614895f-37aa-47dc-b045-221b8cc4616d")
 	)
+	(text "K2"
+		(exclude_from_sim no)
+		(at 132.334 172.212 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "20eaedb7-b3b9-40f8-b9c1-8f30415ede3e")
+	)
 	(text "Reles duplos"
 		(exclude_from_sim no)
 		(at 353.314 59.944 0)
@@ -7496,6 +7506,16 @@
 			)
 		)
 		(uuid "346ae3f0-cc20-448e-906a-71e559e56f26")
+	)
+	(text "K3\n"
+		(exclude_from_sim no)
+		(at 132.588 174.498 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "3a3b9376-f959-4498-a545-686bc078a390")
 	)
 	(text "8 relés duplos\n1 relé simples"
 		(exclude_from_sim no)
@@ -7537,6 +7557,16 @@
 			)
 		)
 		(uuid "ae6fb2cc-b5d5-4fa4-b251-4b784500c18b")
+	)
+	(text "K1"
+		(exclude_from_sim no)
+		(at 132.588 169.672 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "c189afec-5ce8-415e-956d-9f51308f6413")
 	)
 	(text "Reles simples"
 		(exclude_from_sim no)

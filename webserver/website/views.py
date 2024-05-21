@@ -48,14 +48,14 @@ def config_VirtualBench():
         configOK = request.args.get('habilitar_parameter', None, bool)
         configSTOP = request.args.get('desabilitar_parameter', None, bool)
         print (Vcc, Resistance, measure_parameter, configOK, configSTOP)
-        if Resistance:
-            configRelays.config_Parameters(Resistance, measure_parameter)
-            time.sleep(2)
+        configRelays.config_relays_ohm(Resistance, measure_parameter)
+        time.sleep(2)
 
         measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter, configOK, configSTOP)
         #print(Vcc, Resistance, measure_parameter, configOK, configSTOP)
-        
-        configRelays.config_Parameters(0, measure_parameter)
+        #while(True):
+        #time.sleep(1)
+        configRelays.config_relays_ohm(0, measure_parameter)
 
         '''
         São passados vários parâmetros do ficheiro home.html para esta função.
@@ -78,13 +78,20 @@ def config_VirtualBench():
 @login_required
 def config_meiaonda():
     try:
-        Capacitor = request.args.get('C', 0, float)
-        Resistance = request.args.get('R', 0, float)
+        Capacitor = request.args.get('C', 0, int)
+        Resistance = request.args.get('R', 0, int)
         Frequency = request.args.get('f', 0, float)
         print (Capacitor, Resistance, Frequency)
         
+        # Colocar os relés a zero
+        configRelays.config_relays_meiaonda(0, 0)
+        time.sleep(2)
+
         if Frequency != 0:
             configFGen.config_func_generator(Frequency)
+            configRelays.config_relays_meiaonda(Resistance, Capacitor)
+        
+        #configRelays.config_relays_ohm(Resistance, Capacitor)
         
     except Exception as e:
         print(e)
