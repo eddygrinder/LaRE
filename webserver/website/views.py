@@ -12,7 +12,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 
 #from configVB import config_VB_DMM
-from ctrl_hardware import configRelays, configVB, configFGen, store_ps_dmm
+from ctrl_hardware import configRelays, configVB, configFGen
 
 views = Blueprint('views', __name__)
 
@@ -88,8 +88,8 @@ def config_meiaonda():
         time.sleep(2)
 
         if Frequency != 0:
-            configFGen.config_func_generator(Frequency)
             configRelays.config_relays_meiaonda(Resistance, Capacitor)
+            configFGen.config_func_generator(Frequency)
         
         #configRelays.config_relays_ohm(Resistance, Capacitor)
         
