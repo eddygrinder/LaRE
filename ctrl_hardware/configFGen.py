@@ -45,14 +45,11 @@ def config_func_generator(frequency:float):
         amplitude = 10.0      # 10V
         dc_offset = 0.0       # 0V
         duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
-        print ("Frequency: ", frequency)
-        # ficheiro mixed_signal_oscilloscope.py
 
         # You will probably need to replace "myVirtualBench" with the name of your device.
         # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
         # You can see the device's name in the VirtualBench Application under File->About
         
-        print ("virtualbench: ", virtualbench)
         fgen = virtualbench.acquire_function_generator()
         fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
         # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.

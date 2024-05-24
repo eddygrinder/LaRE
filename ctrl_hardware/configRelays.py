@@ -80,13 +80,11 @@ def config_relays_ohm (Resistance: int, measeure_parameter: str):
 
 
 def config_relays_meiaonda (Resistance: int, Capacitance: int):
-    print("Resistance = ", Resistance, "Capacitance = ", Capacitance)
     match Resistance, Capacitance:
         case 0, 0:
             # colocar os relés a zero
             config_Relays("000000000") #relés OBRIGATORIAMENTE desligados
         case 1, 1:
-            print("ERROR: Resistence or Capacitance outside values")
             # Resistência = 1KOhm e Capacitância = 1uF
             #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
             config_Relays("101101010") # Relés - K1...|K9 - R=1K e C=1uF
