@@ -31,19 +31,59 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import EngFormatter
 import numpy as np
 
+import store_ps_dmm
+
 import os, sys
-#import store_ps_dmm
+
+# Variável global para armazenar a frequência
+global_frequency = 1.0
+
+# Falar do porquê da variável global e o porqê de iniciar a 1.0
+# Tem a ver com o cálculo do incremento para o eixo x
+# O incremento é calculado com base na frequência e no número de amostras adquiridas
+# a«a primeira função a ser chamada é a config_func_generator(frequency:float), portanto, 
+# o valor da frequência é passado para a variável global_frequency
+
+def config_func_generator(frequency:float):
+    try:
+        global global_frequency
+        global_frequency = frequency
+        virtualbench = PyVirtualBench('VB8012-30A210F')
+        # Waveform Configuration
+        waveform_function = Waveform.SINE
+        amplitude = 10.0      # 10V
+        dc_offset = 0.0       # 0V
+        duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
+        print ("Frequency: ", frequency)
+        # ficheiro mixed_signal_oscilloscope.py
+
+        # You will probably need to replace "myVirtualBench" with the name of your device.
+        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+        # You can see the device's name in the VirtualBench Application under File->About
+        
+        print ("virtualbench: ", virtualbench)
+        fgen = virtualbench.acquire_function_generator()
+        fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
+        # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
+        fgen.run()
+        fgen.release()
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+    finally:
+        virtualbench.release()
 
 def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number, frequency):
+    global global_frequency
+    global_frequency = frequency
     # Seleciona os elementos pares da lista analog_data
-    analog_data_pares = analog_data[::2] # Onda de entrada
+    #analog_data_pares = analog_data[::2] # Onda de entrada
     # Seleciona os elementos ímpares da lista analog_data
-    analog_data_impares = analog_data[1::2] # Onda retificada - saída
-    
+    #analog_data_impares = analog_data[1::2] # Onda retificada - saída
+    print ("Frequency:mixes ", global_frequency)
+
     # Cria os rótulos para os eixos x
     # Calcula os valores dos eixos x
-    #frequency = 60
-    increment = 1/(frequency*number_of_analog_samples_acquired)
+    increment = 1/(global_frequency*number_of_analog_samples_acquired)
     print("Incremento: ", increment)
     print("Número de amostras: ", number_of_analog_samples_acquired)
     #print("Número de valores na estrutura: ", number_of_channels)
@@ -75,7 +115,7 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
         #length = len(analog_data) = 2004, se a frequência for 200Hz.
 
 
-        frequency_trunc = round(frequency, 2)
+        frequency_trunc = round(global_frequency, 2)
         formatter_freq = EngFormatter(unit='Hz')
         frequency_text = formatter_freq.format_data_short(frequency_trunc)  # Formate a frequência truncada usando o EngFormatter        
         plt.text(0, -4, 'f~ ' + frequency_text, fontsize=12, color='red') 
@@ -130,4 +170,46 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
 # This examples demonstrates how to configure and acquire data from the
 # Mixed Signal Oscilloscope (MSO) instrument on a VirtualBench using
 # the built in auto setup functionality.
+try:
+    # You will probably need to replace "myVirtualBench" with the name of your device.
+    # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+    # You can see the device's name in the VirtualBench Application under File->About
+    virtualbench = PyVirtualBench('VB8012-30A210F')
+    mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
+    # Configure the acquisition using auto setup
+    mso.auto_setup()
+
+    # Query the configuration that was chosen to properly interpret the data.
+    sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
+    channels = mso.query_enabled_analog_channels()
+    channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
+    print("Channels:", channels_enabled)
+    if channels_enabled == "VB8012-30A210F/mso/1:2":
+        channels_numbers = 12 # Ambos os canais estão activos
+    elif channels_enabled == "VB8012-30A210F/mso/1":
+        channels_numbers = 1 #Somente o canal 1 está activo
+    elif channels_enabled == "VB8012-30A210F/mso/2":
+        channels_numbers = 2 # Somente o canal 2 está activo
+    print(number_of_channels)
+
+    # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
+    mso.run()
+
+    # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
+    analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
+    print("Data Stride:", analog_data_stride)
+
+    analog_data_size = len(analog_data)
+    print("Analog Data Size:", analog_data_size)
+    number_of_analog_samples_acquired = analog_data_size / analog_data_stride
+    
+    
+    plot_graphic(analog_data, number_of_analog_samples_acquired, channels_numbers, global_frequency)
+    #print_digital_data(digital_data, digital_timestamps, 10)
+
+    mso.release()
+except PyVirtualBenchException as e:
+    print("Error/Warning %d occurred\n%s" % (e.status, e))
+finally:
+    virtualbench.release()

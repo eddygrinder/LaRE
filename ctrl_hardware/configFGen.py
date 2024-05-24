@@ -30,25 +30,27 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import EngFormatter
 import numpy as np
 
+import store_ps_dmm
+
 import os
 # This examples demonstrates how to configure and generate a standard
 # waveform from the Function Generator (FGEN) on a VirtualBench.
 
 
-def config_func_generator(Frequency:float):
+def config_func_generator(frequency:float):
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')
         # Waveform Configuration
         waveform_function = Waveform.SINE
         amplitude = 10.0      # 10V
         dc_offset = 0.0       # 0V
-        frequency = Frequency  # 500kHz
         duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
+        print ("Frequency: ", frequency)
+        # ficheiro mixed_signal_oscilloscope.py
 
         # You will probably need to replace "myVirtualBench" with the name of your device.
         # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
         # You can see the device's name in the VirtualBench Application under File->About
-        
         
         print ("virtualbench: ", virtualbench)
         fgen = virtualbench.acquire_function_generator()

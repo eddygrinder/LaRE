@@ -12,6 +12,7 @@ current_ctrl_index = 0
 # Dicionário para armazenar os valores de corrente e tensão
 voltage_measurements = np.array([])
 current_measurements = np.array([])
+global frequency
 
 def set_values(ps_value, dmm_value):
     global ps, dmm
@@ -64,8 +65,10 @@ def voltage_values():
 def current_values():
     return current_measurements
 
-def fgen():
-    global ps, dmm
-    ps = None
-    dmm = None
-    virtualbench = None
+#def fgen():
+#    global ps, dmm
+#    ps = None
+#    dmm = None
+#    virtualbench = None
+
+

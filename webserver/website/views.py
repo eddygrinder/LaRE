@@ -12,7 +12,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 
 #from configVB import config_VB_DMM
-from ctrl_hardware import configRelays, configVB, configFGen
+from ctrl_hardware import configRelays, configVB, configFGen, mixed_signal_oscilloscope
 
 views = Blueprint('views', __name__)
 
@@ -80,16 +80,18 @@ def config_meiaonda():
     try:
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
-        Frequency = request.args.get('f', 0, float)
-        print (Capacitor, Resistance, Frequency)
+        frequency = request.args.get('f', 0, float)
+        print (Capacitor, Resistance, frequency)
+        
         
         # Colocar os relés a zero
         configRelays.config_relays_meiaonda(0, 0)
         time.sleep(2)
 
-        if Frequency != 0:
+        if frequency != 0:
             configRelays.config_relays_meiaonda(Resistance, Capacitor)
-            #configFGen.config_func_generator(Frequency)
+            time.sleep(2)
+            mixed_signal_oscilloscope.config_func_generator(frequency)
             
             print("caralho")
             # Substitua 'meu_script.py' pelo caminho para o seu script
