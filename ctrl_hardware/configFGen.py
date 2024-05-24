@@ -29,15 +29,15 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, Waveform
 import matplotlib.pyplot as plt
 from matplotlib.ticker import EngFormatter
 import numpy as np
-import os, sys
 
-
+import os
 # This examples demonstrates how to configure and generate a standard
 # waveform from the Function Generator (FGEN) on a VirtualBench.
 
-def config_func_generator(Frequency:float):
 
+def config_func_generator(Frequency:float):
     try:
+        virtualbench = PyVirtualBench('VB8012-30A210F')
         # Waveform Configuration
         waveform_function = Waveform.SINE
         amplitude = 10.0      # 10V
@@ -49,7 +49,6 @@ def config_func_generator(Frequency:float):
         # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
         # You can see the device's name in the VirtualBench Application under File->About
         
-        virtualbench = PyVirtualBench('VB8012-30A210F')
         
         print ("virtualbench: ", virtualbench)
         fgen = virtualbench.acquire_function_generator()
@@ -63,6 +62,3 @@ def config_func_generator(Frequency:float):
     finally:
         virtualbench.release()
 
-    # This examples demonstrates how to configure and acquire data from the
-    # Mixed Signal Oscilloscope (MSO) instrument on a VirtualBench using
-    # the built in auto setup functionality.

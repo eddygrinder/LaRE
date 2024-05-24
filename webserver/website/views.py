@@ -4,7 +4,7 @@ from .models import Note
 from . import db
 import json, time
 
-import os, sys
+import os, sys, subprocess
 
 # Adiciona o diretório do projeto ao caminho de busca de módulos do Python
 current_dir = os.path.dirname(__file__)
@@ -89,12 +89,17 @@ def config_meiaonda():
 
         if Frequency != 0:
             configRelays.config_relays_meiaonda(Resistance, Capacitor)
-            configFGen.config_func_generator(Frequency)
-        
-        #configRelays.config_relays_ohm(Resistance, Capacitor)
-        
+            #configFGen.config_func_generator(Frequency)
+            
+            print("caralho")
+            # Substitua 'meu_script.py' pelo caminho para o seu script
+            
+            # Execute o comando diretamente
+            os.system('python ctrl_hardware/mixed_signal_oscilloscope.py')
+
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
     finally:
+        # Independentemente de uma exceção ocorrer ou não, renderiza o template
         return render_template("meiaonda.html", user=current_user)
