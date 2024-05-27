@@ -53,8 +53,8 @@ def config_VirtualBench():
 
         measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter, configOK, configSTOP)
         #print(Vcc, Resistance, measure_parameter, configOK, configSTOP)
-        #while(True):
-        #time.sleep(1)
+      #  while(True):
+       #     time.sleep(1)
         configRelays.config_relays_ohm(0, measure_parameter)
 
         '''

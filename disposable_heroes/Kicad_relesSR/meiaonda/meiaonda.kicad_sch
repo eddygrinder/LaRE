@@ -7558,7 +7558,17 @@
 		)
 		(uuid "ae6fb2cc-b5d5-4fa4-b251-4b784500c18b")
 	)
-	(text "K1"
+	(text "1"
+		(exclude_from_sim no)
+		(at 103.378 168.402 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "af4522a5-1662-4a4e-9812-21fb252f710e")
+	)
+	(text "K1\n0"
 		(exclude_from_sim no)
 		(at 132.588 169.672 0)
 		(effects
@@ -8624,7 +8634,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Fonte 5V - PI5"
+		(property "Value" "Fonte 5V - VB"
 			(at 201.0156 117.4496 90)
 			(effects
 				(font

@@ -46,11 +46,23 @@ import os, sys
 def config_func_generator(frequency:float):
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')
+                
         # Waveform Configuration
         waveform_function = Waveform.SINE
         amplitude = 10.0      # 10V
         dc_offset = 0.0       # 0V
         duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
+
+        #############################
+        # Power Supply Configuration
+        #############################
+        ps = virtualbench.acquire_power_supply()
+        ps.enable_all_outputs(False)
+        channel = "ps/+25V"
+        voltage_level = 12.0
+        current_limit = 0.5 
+        ps.enable_all_outputs(True)
+        ps.configure_voltage_output(channel, voltage_level, current_limit)
 
         # You will probably need to replace "myVirtualBench" with the name of your device.
         # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".

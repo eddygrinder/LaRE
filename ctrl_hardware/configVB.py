@@ -66,12 +66,20 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
         ps = virtualbench.acquire_power_supply()
         dmm = virtualbench.acquire_digital_multimeter()
         store_ps_dmm.set_values(ps, dmm) # guarda os valores de ps e dmm
+        #############################
+        # Power Supply Configuration
+        #############################
+        channel = "ps/+25V"
+        voltage_level = 12.0
+        current_limit = 0.5 
+        ps.enable_all_outputs(True)
+        ps.configure_voltage_output(channel, voltage_level, current_limit)
         print("PS,DMM", ps, dmm )
     if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is None and configSTOP is True):
         try:
             print("STOP")
             #Chama a função que desliga fonte de alimentação e multímetro
-            ps, dmm = store_ps_dmm.get_values()       
+            ps, dmm = store_ps_dmm.get_values()  
             ps.release()
             dmm.release()
             virtualbench.release()
@@ -89,7 +97,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
             #############################
             # Power Supply Configuration
             #############################
-            channel = "ps/+25V"
+            channel = "ps/+6V"
             voltage_level = Vcc
             current_limit = 0.5 
             ps, dmm = store_ps_dmm.get_values()
