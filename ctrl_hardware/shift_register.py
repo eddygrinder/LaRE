@@ -100,6 +100,12 @@ def register_clear ():
     request.set_value(SRCLK,OFF) #GPIO.output(SRCLK, 0)
     time.sleep(WaitTimeSR) # espera 100ms
     request.set_value(SRCLK,ON) #GPIO.output(SRCLK, 1)
+sadakdsa
+oksado
+oaskdo
+sdakoa
+asodkaods
+oskdosakdoasdoak
 
 # Armazenar o valor no registo
 def OutputReg ():

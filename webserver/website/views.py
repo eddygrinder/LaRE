@@ -12,7 +12,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 
 #from configVB import config_VB_DMM
-from ctrl_hardware import configRelays, configVB, configFGen, mixed_signal_oscilloscope
+from ctrl_hardware import configRelays, configVB, mixed_signal_oscilloscope
 
 views = Blueprint('views', __name__)
 
@@ -81,8 +81,12 @@ def config_meiaonda():
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
         frequency = request.args.get('f', 0, float)
+        configOK = request.args.get('habilitar_parameter', None, bool)
+        configSTOP = request.args.get('desabilitar_parameter', None, bool)
+        configOK = True
+        print("configOK", configOK)
+
         #print (Capacitor, Resistance, frequency)
-        
         
         # Colocar os relés a zero
         configRelays.config_relays_meiaonda(0, 0)
@@ -92,7 +96,7 @@ def config_meiaonda():
             configRelays.config_relays_meiaonda(Resistance, Capacitor)
             time.sleep(2)
             mixed_signal_oscilloscope.config_func_generator(frequency)
-            mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
+            #mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
                         
             # Execute o comando diretamente
             # Explicar porque se usou este comando

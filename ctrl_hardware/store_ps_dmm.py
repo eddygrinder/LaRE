@@ -1,6 +1,9 @@
-import matplotlib.pyplot as plt
+##################################
+# Dois scripts diferentes não conseguem aceder aos mesmos valores e variáveis 
+# porque cada script tem o seu próprio espaço de nomes. (memória)
+##################################
+
 import numpy as np
-from scipy import stats
 
 # Arquivo para armazenar os valores ps e dmm
 # Não esquecer de documentar a escolha do módulo para manter e aceder aos valores de ps e dmm
@@ -64,11 +67,3 @@ def voltage_values():
 
 def current_values():
     return current_measurements
-
-#def fgen():
-#    global ps, dmm
-#    ps = None
-#    dmm = None
-#    virtualbench = None
-
-

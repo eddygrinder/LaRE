@@ -74,16 +74,17 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
         current_limit = 0.5 
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)
+
         print("PS,DMM", ps, dmm )
     if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is None and configSTOP is True):
-        try:
+        try: #Acho que este try não é preciso
             print("STOP")
             #Chama a função que desliga fonte de alimentação e multímetro
             ps, dmm = store_ps_dmm.get_values()  
+            ps.enable_all_outputs(False)
             ps.release()
             dmm.release()
             virtualbench.release()
-            store_ps_dmm.clear_values()
             measurement_result = None
         except PyVirtualBenchException as e:
             print("Error/Warning %d occurred\n%s" % (e.status, e))

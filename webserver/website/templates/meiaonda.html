@@ -120,10 +120,10 @@ Remember to set the width: -->
       document.getElementById("selectC").disabled = false;
       document.getElementById("selectR").disabled = false;
       // Redirecionar para a rota com o parâmetro
-      //const booleanParameter = true;
-      //const url =
-      //  "/config_meiaonda?habilitar_parameter=" + booleanParameter.toString();
-      //fetch(url);
+      const booleanParameter = true;
+      const url =
+        "/config_meiaonda?habilitar_parameter=" + booleanParameter.toString();
+      fetch(url);
     }
   </script>
   <script>
@@ -156,9 +156,6 @@ Remember to set the width: -->
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
         const valorfreq = document.getElementById("input_freq").value;
-        console.log("valorfreq = ", valorfreq);
-        console.log("C = ", Capacitor);
-        console.log("R = ", Resistance);
 
         // Validar valores antes do fetch
         if (
