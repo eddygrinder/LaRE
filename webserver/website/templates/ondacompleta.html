@@ -28,7 +28,7 @@
   </div>
 
   <div class="column middle">
-    <h2>MEIA ONDA</h2>
+    <h2>ONDA COMPLETA</h2>
     <p>
       Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper
     </p>
@@ -53,11 +53,6 @@ Remember to set the width: -->
         <option value="2">3.3</option>
       </select>
     </div>
-    <p></p>
-    Valor da frequência entre 50 e 2000 Hz
-    <form id="form1">
-      <input type="number" id="input_freq" name="input_freq" />
-    </form>
   </div>
 
   <div class="column right">
@@ -103,7 +98,7 @@ Remember to set the width: -->
       event.preventDefault(); // Evite que o link seja seguido
 
       // Caminho da imagem que você deseja exibir
-      var imagePath = "../images/meia_onda.png";
+      var imagePath = "../images/onda_completa.png";
 
       // Crie um elemento de imagem
       var image = document.createElement("img");
@@ -155,27 +150,13 @@ Remember to set the width: -->
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
-        const valorfreq = document.getElementById("input_freq").value;
-
         // Validar valores antes do fetch
-        if (
-          Capacitor === "0" ||
-          Resistance === "0" ||
-          valorfreq === "" ||
-          valorfreq < 50 ||
-          valorfreq > 2000
-        ) {
+        if (Capacitor === "0" || Resistance === "0") {
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url =
-          "/config_meiaonda?&C=" +
-          Capacitor +
-          "&R=" +
-          Resistance +
-          "&f=" +
-          valorfreq;
+        const url = "/config_ondacompleta?&C=" + Capacitor + "&R=" + Resistance;
         fetch(url);
       });
   </script>

@@ -31,6 +31,11 @@ def pagina_seguinte():
 def meiaonda():
     return render_template("meiaonda.html", user=current_user)
 
+@views.route("/ondacompleta")
+@login_required
+def ondacompleta():
+    return render_template("ondacompleta.html", user=current_user)
+
 
 #########################################################
 # Rota para passar parâmetros para o script controlVB.py
@@ -81,18 +86,12 @@ def config_meiaonda():
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
         frequency = request.args.get('f', 0, float)
-        configOK = request.args.get('habilitar_parameter', None, bool)
-        configSTOP = request.args.get('desabilitar_parameter', None, bool)
-        configOK = True
-        print("configOK", configOK)
-
-        #print (Capacitor, Resistance, frequency)
         
         # Colocar os relés a zero
         configRelays.config_relays_meiaonda(0, 0)
         time.sleep(2) # Verificar estes atrasos
 
-        if frequency != 0:
+        if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
             configRelays.config_relays_meiaonda(Resistance, Capacitor)
             time.sleep(2)
             mixed_signal_oscilloscope.config_func_generator(frequency)
@@ -108,3 +107,39 @@ def config_meiaonda():
     finally:
         # Independentemente de uma exceção ocorrer ou não, renderiza o template
         return render_template("meiaonda.html", user=current_user)
+    
+@views.route('/config_ondacompleta', methods=['GET', 'POST'])
+@login_required
+def config_ondacompleta():
+    try:
+        Capacitor = request.args.get('C', 0, int)
+        Resistance = request.args.get('R', 0, int)
+        # Colocar os relés a zero
+        configRelays.config_relays_meiaonda(0, 0)
+        time.sleep(2) # Verificar estes atrasos
+
+        configRelays.config_relays_meiaonda(Resistance, Capacitor)
+        time.sleep(2)
+        
+        # devido ao problema de massas da rectificação de onda completa, a onda de entrada tem de ser medida primeiro
+        # e só depois a onda de saída - PROBLEMA DE MASSAS. Os gráficos têm de ser desenhados independentemente.
+        # Os relés activos consoante o caso.
+
+        ############################################################
+        # Activar os respectivos relés para a medição da onda de entrada
+        # Relés - K1...|K9 - 000000000
+        ############################################################
+        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True)
+
+        #mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
+                    
+            # Execute o comando diretamente
+            # Explicar porque se usou este comando
+            #os.system('python ctrl_hardware/mixed_signal_oscilloscope.py')
+
+    except Exception as e:
+        print(e)
+        return jsonify({'measurement_result': 'ERROR'})
+    finally:
+        # Independentemente de uma exceção ocorrer ou não, renderiza o template
+        return render_template("ondacompleta.html", user=current_user)

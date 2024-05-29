@@ -78,13 +78,15 @@ def config_func_generator(frequency:float):
         sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
         channels = mso.query_enabled_analog_channels()
         channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
+        
+        # POVAVELMENTE ISTO PODE SALTAR FORA - PARTE-SE DUM PRINCÍPIO QUE AMBAS AS PONTAS
+        # ESTÃO SEMPRE LIGADAS AO VIRTUAL BENCH
         if channels_enabled == "VB8012-30A210F/mso/1:2":
             channels_numbers = 12 # Ambos os canais estão activos
         elif channels_enabled == "VB8012-30A210F/mso/1":
             channels_numbers = 1 #Somente o canal 1 está activo
         elif channels_enabled == "VB8012-30A210F/mso/2":
             channels_numbers = 2 # Somente o canal 2 está activo
-
         # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
         mso.run()
 
@@ -93,7 +95,7 @@ def config_func_generator(frequency:float):
 
         analog_data_size = len(analog_data)
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
-        plot_graphic(analog_data, number_of_analog_samples_acquired, channels_numbers, frequency)
+        plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, channels_numbers, frequency)
         #print_digital_data(digital_data, digital_timestamps, 10)
         ps.release()
         mso.release()
@@ -103,7 +105,7 @@ def config_func_generator(frequency:float):
     finally:
         virtualbench.release()
 
-def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number, frequency):
+def plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, channels_number, frequency):
     # Seleciona os elementos pares da lista analog_data
     #analog_data_pares = analog_data[::2] # Onda de entrada
     # Seleciona os elementos ímpares da lista analog_data
@@ -161,7 +163,7 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
     
     plt.xlabel('Time (Seg)')
     plt.ylabel('Voltage (V)')
-    plt.title('Rectificador meia-onda')
+    plt.title('Rectificador onda completa')
 
      # Define os valores específicos para o eixo x (frequência) e rotaciona os rótulos
     plt.xticks(rotation=45)
@@ -187,6 +189,141 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, channels_number
 
     # Salva o gráfico como uma imagem dentro do diretório "static/images"
     plt.savefig("webserver/website/static/images/meia_onda.png")
+
+    # Limpa a figura
+    plt.clf()
+
+def config_mso_ondacompleta(onda_entrada:bool):
+    try:
+        virtualbench = PyVirtualBench('VB8012-30A210F')        
+        #############################
+        # Power Supply Configuration
+        #############################
+        ps = virtualbench.acquire_power_supply()
+        channel = "ps/+25V"
+        voltage_level = 12.0
+        current_limit = 0.5 
+        ps.enable_all_outputs(True)
+        ps.configure_voltage_output(channel, voltage_level, current_limit)        
+        
+        mso = virtualbench.acquire_mixed_signal_oscilloscope()
+
+        # Configure the acquisition using auto setup
+        mso.auto_setup()
+
+        # Query the configuration that was chosen to properly interpret the data.
+        # POVAVELMENTE ISTO PODE SALTAR FORA - PARTE-SE DUM PRINCÍPIO QUE AMBAS AS PONTAS
+        # ESTÃO SEMPRE LIGADAS AO VIRTUAL BENCH
+        sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
+        channels = mso.query_enabled_analog_channels()
+        channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
+        
+        if onda_entrada == True: # A função foi chamada para medir a onda de entrada
+                                 # É atribuído o valor 1 ao canal 1 e 0 ao canal 2
+            channels_numbers = 1 # Somente para fazer a leitura do canal 1
+        
+        # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
+        mso.run()
+
+        # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
+        analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
+
+        analog_data_size = len(analog_data)
+        number_of_analog_samples_acquired = analog_data_size / analog_data_stride
+        plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, channels_numbers)
+        #print_digital_data(digital_data, digital_timestamps, 10)
+        ps.release()
+        mso.release()
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+    finally:
+        virtualbench.release()
+
+def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, channels_number):
+    # Seleciona os elementos pares da lista analog_data
+    #analog_data_pares = analog_data[::2] # Onda de entrada
+    # Seleciona os elementos ímpares da lista analog_data
+    #analog_data_impares = analog_data[1::2] # Onda retificada - saída
+
+    # Cria os rótulos para os eixos x
+    # Calcula os valores dos eixos x
+    frequency = 60 # Frequência da rede elétrica
+    increment = 1/(frequency*number_of_analog_samples_acquired)
+
+    if channels_number == 12: # Ambos os canais estão activos
+        
+        '''
+        ATENÇÃO!!!!
+        O CÁLCULO DO INCREMENTO DEVE ESTAR FORA DOS IF'S
+        '''
+
+        '''
+        DOIS CANAIS: ARMAZENA NA ESTRUTURA OS VALORES DO CANAL UM E DOIS, LOGO, O INCREMENTO TEM DE 
+        
+        Número de amostras [number_of_analog_samples_acquired] = 1002
+        Número de valores na estrutura [len(analog_data)] = 2004
+        
+        '''
+        x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment)) 
+        x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será?! Ajustar a escala????
+        #x_values = len(analog_data)/2 # São armazenados os valores dos dois canais, então, por cada canal é metade
+
+
+        # Armazena o par frequência, tensão no array, logo, o resultado de len(analog_data) é o dobro de number_of_analog_samples_acquired
+        # print("Número de amostras: ", len(analog_data)) = 2004
+        # print("Número de amostras adquiridas: ", number_of_analog_samples_acquired) = 1002
+        # frequency_values = frequency_values/2 # Armazena os valores de ambos os canais no array - divide por 2 para obter a frequência correta
+        # Armazena o par frequência, tensão no array, logo, o resultado de len(analog_data) é o dobro de number_of_analog_samples_acquired
+        #length = len(analog_data) = 2004, se a frequência for 200Hz.
+
+        frequency_trunc = round(frequency, 2)
+        formatter_freq = EngFormatter(unit='Hz')
+        frequency_text = formatter_freq.format_data_short(frequency_trunc)  # Formate a frequência truncada usando o EngFormatter        
+        plt.text(0, -4, 'f= ' + frequency_text, fontsize=12, color='red') 
+        
+        # Cria o gráfico
+        # Cria o gráfico com duas curvas
+        plt.plot(x_values_increment, analog_data[::2], label='Onde de entrada', marker=',')
+        plt.plot(x_values_increment, analog_data[1::2], label='Onda de saída', marker=',')
+    elif channels_number == 1: # Apenas o canal 1 está activo
+         # Cria o gráfico
+        # Cria o gráfico com duas curvas
+        x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
+        plt.plot(x_values_increment[::2], analog_data[::2], label='Onda de entrada', marker=',')
+    elif channels_number == 2: # Apenas o canal 2 está activo
+        # Cria o gráfico
+        # Cria o gráfico com duas curvas
+        x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
+        plt.plot(x_values_increment[1::2], analog_data[1::2], label='Onda de saída', marker=',')
+    
+    plt.xlabel('Time (Seg)')
+    plt.ylabel('Voltage (V)')
+    plt.title('Rectificador onda completa')
+
+     # Define os valores específicos para o eixo x (frequência) e rotaciona os rótulos
+    plt.xticks(rotation=45)
+
+    # Define o EngFormatter para o eixo x
+    formatter0 = EngFormatter(unit='s')
+    plt.gca().xaxis.set_major_formatter(formatter0)
+
+    # Define os limites do eixo y para -5 a 5
+    plt.ylim(-5, 5)
+
+    # Adiciona a legenda ao gráfico
+    plt.legend(loc='best')
+
+    plt.tight_layout()  # Ajusta automaticamente o layout do gráfico para evitar sobreposições
+
+    # Adiciona a grade ao gráfico
+    plt.grid(True)
+
+    # Verifica se o diretório "static/images" existe, se não, cria-o
+    if not os.path.exists("webserver/website/static/images"):
+        os.makedirs("webserver/website/static/images")
+
+    # Salva o gráfico como uma imagem dentro do diretório "static/images"
+    plt.savefig("webserver/website/static/images/onda_completa.png")
 
     # Limpa a figura
     plt.clf()
