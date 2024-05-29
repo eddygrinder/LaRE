@@ -115,10 +115,10 @@ def config_ondacompleta():
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
         # Colocar os relés a zero
-        configRelays.config_relays_meiaonda(0, 0)
+        configRelays.config_relays_ondacompleta(0, 0)
         time.sleep(2) # Verificar estes atrasos
 
-        configRelays.config_relays_meiaonda(Resistance, Capacitor)
+        #configRelays.config_relays_ondacompleta(Resistance, Capacitor)
         time.sleep(2)
         
         # devido ao problema de massas da rectificação de onda completa, a onda de entrada tem de ser medida primeiro

@@ -31,7 +31,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import EngFormatter
 import numpy as np
 
-import os, sys
+import os, sys, pickle
 
 
 # Falar do porquê da variável global e o porqê de iniciar a 1.0
@@ -323,7 +323,19 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         os.makedirs("webserver/website/static/images")
 
     # Salva o gráfico como uma imagem dentro do diretório "static/images"
-    plt.savefig("webserver/website/static/images/onda_completa.png")
+    #plt.savefig("webserver/website/static/images/onda_completa.png")
+
+    if channels_number == 1:
+    # Salva o gráfico atual em um arquivo
+        with open('fig1.pickle', 'wb') as f:
+            pickle.dump(plt.gcf(), f)
+    elif channels_number == 2:
+        # Carregue o gráfico do arquivo pickle
+        with open('figura.pickle', 'rb') as f:
+            fig = pickle.load(f)
+            fig.show()           
+            # Salve o gráfico como uma imagem PNG
+            fig.savefig('figura.png')
 
     # Limpa a figura
-    plt.clf()
+    #plt.clf()
