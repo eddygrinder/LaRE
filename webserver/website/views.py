@@ -115,12 +115,9 @@ def config_ondacompleta():
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
         # Colocar os relés a zero
-        configRelays.config_relays_ondacompleta(0, 0)
-        time.sleep(2) # Verificar estes atrasos
+       
 
-        #configRelays.config_relays_ondacompleta(Resistance, Capacitor)
-        time.sleep(2)
-        
+        frequency = 60
         # devido ao problema de massas da rectificação de onda completa, a onda de entrada tem de ser medida primeiro
         # e só depois a onda de saída - PROBLEMA DE MASSAS. Os gráficos têm de ser desenhados independentemente.
         # Os relés activos consoante o caso.
@@ -129,7 +126,24 @@ def config_ondacompleta():
         # Activar os respectivos relés para a medição da onda de entrada
         # Relés - K1...|K9 - 000000000
         ############################################################
-        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True)
+        #mixed_signal_oscilloscope.config_func_generator(frequency)
+
+        # O VB detecta os dois canais CH1 e CH2, não há possibilidade, por software, de desligar um dos canais
+        # O que se pode fazer é desligar o canal fisicamente
+        # A leitura é armazenada no array analog_data[1::2] - canal 2 e analog_data[0::2] - canal 1
+        # Como é feita a leitura se os dois canais forem chamados, um a um?
+        # Os valores mantêm-se ou terá de ser feita uma nova leitura?
+        
+
+        configRelays.config_relays_ondacompleta(Capacitor, Resistance)
+        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
+        
+        configRelays.config_relays_ondacompleta(0, 0)
+        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=False, onda_saida=True)
+
+        time.sleep(2) # Verificar estes atrasos
+
+
 
         #mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
                     

@@ -193,7 +193,7 @@ def plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, channe
     # Limpa a figura
     plt.clf()
 
-def config_mso_ondacompleta(onda_entrada:bool):
+def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')        
         #############################
@@ -218,10 +218,11 @@ def config_mso_ondacompleta(onda_entrada:bool):
         channels = mso.query_enabled_analog_channels()
         channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
         
-        if onda_entrada == True: # A função foi chamada para medir a onda de entrada
-                                 # É atribuído o valor 1 ao canal 1 e 0 ao canal 2
-            channels_numbers = 1 # Somente para fazer a leitura do canal 1
-        
+        if onda_entrada == True: # A função foi chamada para medir a onda de entrada. É atribuído o valor 1 ao canal 1 e 0 ao canal 2
+            channel_number = 1 # Somente para fazer a leitura do canal 1
+        if onda_saida == True: # A função foi chamada para medir a onda de saída
+            channel_number = 2 # Somente para fazer a leitura do canal 2
+        print("Canais activos: ", channel_number)
         # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
         mso.run()
 
@@ -230,7 +231,7 @@ def config_mso_ondacompleta(onda_entrada:bool):
 
         analog_data_size = len(analog_data)
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
-        plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, channels_numbers)
+        plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, channel_number)
         #print_digital_data(digital_data, digital_timestamps, 10)
         ps.release()
         mso.release()
@@ -239,18 +240,36 @@ def config_mso_ondacompleta(onda_entrada:bool):
     finally:
         virtualbench.release()
 
-def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, channels_number):
+def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, channel_number):
     # Seleciona os elementos pares da lista analog_data
     #analog_data_pares = analog_data[::2] # Onda de entrada
     # Seleciona os elementos ímpares da lista analog_data
     #analog_data_impares = analog_data[1::2] # Onda retificada - saída
 
+    # ATENÇÃO!!!!
+    # Como os dois canais estão activos, analog_data contém os valores dos dois canais.
+    # Como se pretende desenhar os gráficos de cada canal separadamente, é necessário dividir o array analog_data
+    # Neste caso o número de elementos do gráfico é metade do número de elementos de analog_data
+    # No cálculo dos x_values_increment este valor tem de satisfazer esta condição.
+    # Portanto, o número de elementos de x_values_increment = analog_data[0::2]
+
     # Cria os rótulos para os eixos x
     # Calcula os valores dos eixos x
+
+     # Verifica se o diretório "static/images" existe, se não, cria-o
+    images_dir = "webserver/website/static/images"
+    if not os.path.exists(images_dir):
+        os.makedirs(images_dir)
+    
+      # Caminho completo do arquivo
+    pickle_file_path = os.path.join(images_dir, "ondacompleta.pickle")
+    png_file_path = os.path.join(images_dir, "ondacompleta.png")
+
     frequency = 60 # Frequência da rede elétrica
     increment = 1/(frequency*number_of_analog_samples_acquired)
-
-    if channels_number == 12: # Ambos os canais estão activos
+    x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment))
+    print("Canais activos: ", channel_number)
+    if channel_number == 12: # Ambos os canais estão activos
         
         '''
         ATENÇÃO!!!!
@@ -264,7 +283,6 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         Número de valores na estrutura [len(analog_data)] = 2004
         
         '''
-        x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment)) 
         x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será?! Ajustar a escala????
         #x_values = len(analog_data)/2 # São armazenados os valores dos dois canais, então, por cada canal é metade
 
@@ -285,57 +303,53 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         # Cria o gráfico com duas curvas
         plt.plot(x_values_increment, analog_data[::2], label='Onde de entrada', marker=',')
         plt.plot(x_values_increment, analog_data[1::2], label='Onda de saída', marker=',')
-    elif channels_number == 1: # Apenas o canal 1 está activo
+    elif channel_number == 1: # Apenas o canal 1 está activo
          # Cria o gráfico
         # Cria o gráfico com duas curvas
-        x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
-        plt.plot(x_values_increment[::2], analog_data[::2], label='Onda de entrada', marker=',')
-    elif channels_number == 2: # Apenas o canal 2 está activo
+        #x_values_increment = 2 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
+        plt.plot(x_values_increment, analog_data[1::2], label='Onda de entrada', marker=',')
+        # Salva o gráfico atual em um arquivo
+        with open(pickle_file_path, 'wb') as f:
+            pickle.dump(plt.gcf(), f)
+        plt.close() # Fecha o gráfico para libertar recursos
+       
+    elif channel_number == 2: # Apenas o canal 2 está activo
         # Cria o gráfico
         # Cria o gráfico com duas curvas
-        x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
-        plt.plot(x_values_increment[1::2], analog_data[1::2], label='Onda de saída', marker=',')
-    
-    plt.xlabel('Time (Seg)')
-    plt.ylabel('Voltage (V)')
-    plt.title('Rectificador onda completa')
-
-     # Define os valores específicos para o eixo x (frequência) e rotaciona os rótulos
-    plt.xticks(rotation=45)
-
-    # Define o EngFormatter para o eixo x
-    formatter0 = EngFormatter(unit='s')
-    plt.gca().xaxis.set_major_formatter(formatter0)
-
-    # Define os limites do eixo y para -5 a 5
-    plt.ylim(-5, 5)
-
-    # Adiciona a legenda ao gráfico
-    plt.legend(loc='best')
-
-    plt.tight_layout()  # Ajusta automaticamente o layout do gráfico para evitar sobreposições
-
-    # Adiciona a grade ao gráfico
-    plt.grid(True)
-
-    # Verifica se o diretório "static/images" existe, se não, cria-o
-    if not os.path.exists("webserver/website/static/images"):
-        os.makedirs("webserver/website/static/images")
-
-    # Salva o gráfico como uma imagem dentro do diretório "static/images"
-    #plt.savefig("webserver/website/static/images/onda_completa.png")
-
-    if channels_number == 1:
-    # Salva o gráfico atual em um arquivo
-        with open('fig1.pickle', 'wb') as f:
-            pickle.dump(plt.gcf(), f)
-    elif channels_number == 2:
+        #x_values_increment = 8 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
+        
         # Carregue o gráfico do arquivo pickle
-        with open('figura.pickle', 'rb') as f:
+        with open(pickle_file_path, 'rb') as f:
             fig = pickle.load(f)
-            fig.show()           
-            # Salve o gráfico como uma imagem PNG
-            fig.savefig('figura.png')
+            # Adicione o novo plot ao gráfico carregado
+            plt.figure(fig.number)  # Certifique-se de que o novo plot seja adicionado à figura carregada
+            print("Número de amostras: ", analog_data[1::2])
+            plt.plot(x_values_increment, analog_data[1::2], label='Onda de saída', marker=',')
+            plt.legend()  # Adicione a legenda para ambos os plots
+                
+            plt.xlabel('Time (Seg)')
+            plt.ylabel('Voltage (V)')
+            plt.title('Rectificador onda completa')
 
-    # Limpa a figura
-    #plt.clf()
+            # Define os valores específicos para o eixo x (frequência) e rotaciona os rótulos
+            plt.xticks(rotation=45)
+
+            # Define o EngFormatter para o eixo x
+            formatter0 = EngFormatter(unit='s')
+            plt.gca().xaxis.set_major_formatter(formatter0)
+
+            # Define os limites do eixo y para -5 a 5
+            plt.ylim(-15, 15)
+
+            # Adiciona a legenda ao gráfico
+            plt.legend(loc='best')
+
+            plt.tight_layout()  # Ajusta automaticamente o layout do gráfico para evitar sobreposições
+
+            # Adiciona a grade ao gráfico
+            plt.grid(True)
+            # Salve o gráfico atualizado como uma imagem PNG
+            fig.savefig(png_file_path)
+            # Renomeia o arquivo pickle após o uso
+            #os.rename(pickle_file_path, os.path.join(images_dir, "fig1_processed.pickle"))
+        
