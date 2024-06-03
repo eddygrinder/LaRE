@@ -133,15 +133,15 @@ def config_ondacompleta():
         # A leitura é armazenada no array analog_data[1::2] - canal 2 e analog_data[0::2] - canal 1
         # Como é feita a leitura se os dois canais forem chamados, um a um?
         # Os valores mantêm-se ou terá de ser feita uma nova leitura?
-        
-
-        configRelays.config_relays_ondacompleta(Capacitor, Resistance)
-        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
-        
-        configRelays.config_relays_ondacompleta(0, 0)
-        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=False, onda_saida=True)
-
+                
+        # DESTA FORMA FUNCIONA A ONDA DE ENTRADA - PONTO
+        #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
+        configRelays.config_relays_vin()
         time.sleep(2) # Verificar estes atrasos
+
+        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
+        configRelays.config_relays_ondacompleta(Resistance, Capacitor)
+        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=False, onda_saida=True)
 
 
 

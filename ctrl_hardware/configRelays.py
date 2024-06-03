@@ -105,7 +105,7 @@ def config_relays_ondacompleta (Resistance: int, Capacitance: int):
     match Resistance, Capacitance:
         case 0, 0:
             # colocar os relés a zero
-            config_Relays("000000000001") #relés OBRIGATORIAMENTE desligados
+            config_Relays("000000000000") #relés OBRIGATORIAMENTE desligados
         case 1, 1:
             # Resistência = 1KOhm e Capacitância = 1uF
             #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
@@ -123,6 +123,8 @@ def config_relays_ondacompleta (Resistance: int, Capacitance: int):
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 
+def config_relays_vin ():
+    config_Relays("000000000001") # K12 Activo para ler vin
 
 def config_Relays(stringValue: str):
     # Envia a string para o Raspberry Pi

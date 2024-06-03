@@ -38,8 +38,8 @@ if not os.path.exists("webserver/website/static/images"):
     os.makedirs("webserver/website/static/images")
 
     # Caminho completo do arquivo
-pickle_file_path = os.path.join("webserver/website/static/images", "onda_completa.pickle")
-png_file_path = os.path.join("webserver/website/static/images", "onda_completa.png")
+pickle_file_path = os.path.join("webserver/website/static/images", "onda-completa.pickle")
+png_file_path = os.path.join("webserver/website/static/images", "onda-completa.png")
 
 with open(pickle_file_path, 'rb') as f:
             fig = pickle.load(f)
