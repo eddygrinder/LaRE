@@ -19,28 +19,27 @@
       Menu Principal
     </button>
     <button class="tablinks" onclick="ohm()" id="ohm">Lei de Ohm</button>
-    <button class="tablinks" onclick="openchoice(event, 'meiaonda')">
+    <button class="tablinks" onclick="meiaonda()" id="meiaonda">
       Rectificador de meia onda
     </button>
     <button class="tablinks" onclick="ondacompleta()" id="ondacompleta">
       Rectificador de onda completa
     </button>
-    <button class="tablinks" onclick="passaalto()" id="passaalto">
-      Filtro Passa-Alto
+    <button class="tablinks" onclick="openchoice(event, 'passaalto')">
+      Filtro Passa-alto
     </button>
-    <button class="tablinks" onclick="passabaixo()" id="passabaixo">
+    <button class="tablinks" onclick="openchoice(event, 'passabaixo')">
       Filtro Passa-Baixo
     </button>
   </div>
 
   <div class="column middle">
-    <h2>MEIA ONDA</h2>
+    <h2>Filtro Passa-Alto</h2>
     <p>
       Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper
     </p>
     <p></p>
-    <button class="btn ok">OK</button>
-    <button class="btn stop">STOP/RESET</button>
+    <button class="btn ok">OK</button> <button class="btn stop">STOP</button>
     <p></p>
 
     <!-- Surround the select box within a "custom-select" DIV element.
@@ -60,11 +59,6 @@ Remember to set the width: -->
         <option value="2">3.3</option>
       </select>
     </div>
-    <p></p>
-    Valor da frequência entre 50 e 2000 Hz
-    <form id="form1">
-      <input type="number" id="input_freq" name="input_freq" />
-    </form>
   </div>
 
   <div class="column right">
@@ -94,15 +88,23 @@ Remember to set the width: -->
   </script>
 
   <script>
+    function meiaonda() {
+      window.location.href = "/meiaonda";
+    }
+  </script>
+
+  <script>
     function ondacompleta() {
       window.location.href = "/ondacompleta";
     }
   </script>
+
   <script>
     function passaalto() {
       window.location.href = "/passaalto";
     }
   </script>
+
   <script>
     function passabaixo() {
       window.location.href = "/passabaixo";
@@ -127,7 +129,7 @@ Remember to set the width: -->
       event.preventDefault(); // Evite que o link seja seguido
 
       // Caminho da imagem que você deseja exibir
-      var imagePath = "../images/meia_onda.png";
+      var imagePath = "../images/onda_completa.png";
 
       // Crie um elemento de imagem
       var image = document.createElement("img");
@@ -160,8 +162,9 @@ Remember to set the width: -->
       document.getElementById("selectC").disabled = true;
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
-      const url = "/config_meiaonda?reset=" + booleanParameter.toString();
-      fetch(url);
+      //const url =
+      //  "/config_meiaonda?desabilitar_parameter=" + booleanParameter.toString();
+      //fetch(url);
     }
   </script>
   <script>
@@ -178,27 +181,13 @@ Remember to set the width: -->
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
-        const valorfreq = document.getElementById("input_freq").value;
-
         // Validar valores antes do fetch
-        if (
-          Capacitor === "0" ||
-          Resistance === "0" ||
-          valorfreq === "" ||
-          valorfreq < 50 ||
-          valorfreq > 2000
-        ) {
+        if (Capacitor === "0" || Resistance === "0") {
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url =
-          "/config_meiaonda?&C=" +
-          Capacitor +
-          "&R=" +
-          Resistance +
-          "&f=" +
-          valorfreq;
+        const url = "/config_ondacompleta?&C=" + Capacitor + "&R=" + Resistance;
         fetch(url);
       });
   </script>

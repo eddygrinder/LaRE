@@ -19,11 +19,17 @@
       Menu Principal
     </button>
     <button class="tablinks" onclick="ohm()" id="ohm">Lei de Ohm</button>
-    <button class="tablinks" onclick="openchoice(event, 'meiaonda')">
+    <button class="tablinks" onclick="meiaonda()" id="meiaonda">
       Rectificador de meia onda
     </button>
     <button class="tablinks" onclick="openchoice(event, 'ondacompleta')">
       Rectificador de onda completa
+    </button>
+    <button class="tablinks" onclick="passaalto()" id="passaalto">
+      Filtro Passa-Alto
+    </button>
+    <button class="tablinks" onclick="passabaixo()" id="passabaixo">
+      Filtro Passa-Baixo
     </button>
   </div>
 
@@ -80,6 +86,25 @@ Remember to set the width: -->
       window.location.href = "/ohm";
     }
   </script>
+
+  <script>
+    function meiaonda() {
+      window.location.href = "/meiaonda";
+    }
+  </script>
+
+  <script>
+    function passaalto() {
+      window.location.href = "/passaalto";
+    }
+  </script>
+
+  <script>
+    function passabaixo() {
+      window.location.href = "/passabaixo";
+    }
+  </script>
+
   <script>
     function showImageInMiddleColumn(imagePath) {
       // Remova o conteúdo da imagem atual na coluna do meio

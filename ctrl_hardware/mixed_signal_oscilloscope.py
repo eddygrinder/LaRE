@@ -193,9 +193,28 @@ def plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, channe
     # Limpa a figura
     plt.clf()
 
-def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
+
+############################################
+# Configuração do gerador de sinal para a rectificação de onda completa
+############################################
+def config_func_generatorMSO(frequency:float):
     try:
-        virtualbench = PyVirtualBench('VB8012-30A210F')        
+        virtualbench = PyVirtualBench('VB8012-30A210F')
+        # Waveform Configuration
+        waveform_function = Waveform.SINE
+        amplitude = 10.0      # 10V
+        dc_offset = 0.0       # 0V
+        duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
+
+        # You will probably need to replace "myVirtualBench" with the name of your device.
+        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+        # You can see the device's name in the VirtualBench Application under File->About
+        
+        fgen = virtualbench.acquire_function_generator()
+        fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
+        # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
+        fgen.run()
+        
         #############################
         # Power Supply Configuration
         #############################
@@ -204,8 +223,21 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         voltage_level = 12.0
         current_limit = 0.5 
         ps.enable_all_outputs(True)
-        ps.configure_voltage_output(channel, voltage_level, current_limit)        
-        
+        ps.configure_voltage_output(channel, voltage_level, current_limit)      
+        fgen.release()
+
+        # o gerador pode ser feito o release - está nos comentários da biblioteca
+        # a PS não  
+
+    except PyVirtualBenchException as e:
+            print("Error/Warning %d occurred\n%s" % (e.status, e))
+    finally:
+        virtualbench.release()
+
+def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
+    try:
+        virtualbench = PyVirtualBench('VB8012-30A210F')        
+
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
         # Configure the acquisition using auto setup
@@ -223,7 +255,6 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
 
         # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
         analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
-
         analog_data_size = len(analog_data)
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
         if onda_entrada == True: # A função foi chamada para medir a onda de entrada. É atribuído o valor 1 ao canal 1 e 0 ao canal 2
@@ -232,10 +263,9 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         if onda_saida == True: # A função foi chamada para medir a onda de saída
             #channel_number = 2 # Somente para fazer a leitura do canal 2
             plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, 2)
-
         
         #print_digital_data(digital_data, digital_timestamps, 10)
-        ps.release()
+        #ps.release()
         mso.release()
     except PyVirtualBenchException as e:
         print("Error/Warning %d occurred\n%s" % (e.status, e))
@@ -270,28 +300,29 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
     frequency = 60 # Frequência da rede elétrica
     increment = 1/(frequency*number_of_analog_samples_acquired)
     x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment))
-    print("Canais activos: ", channel_number)
     if channel_number == 1: # Apenas o canal 1 está activo
          # Cria o gráfico
         # Cria o gráfico com duas curvas
         #x_values_increment = 2 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
-        plt.plot(x_values_increment, analog_data[0::2], label='Onda de entrada', marker=',')
+        #plt.plot(x_values_increment, analog_data[0::2], label='Onda de entrada', marker=',')
         # Salva o gráfico atual em um arquivo
         with open(pickle_file_path, 'wb') as f:
-            pickle.dump(plt.gcf(), f)
+            #pickle.dump(analog_data[0::2], f)
+            pickle.dump(analog_data[0::2], f)
         plt.close() # Fecha o gráfico para libertar recursos
        
     elif channel_number == 2: # Apenas o canal 2 está activo
         # Cria o gráfico
         # Cria o gráfico com duas curvas
         #x_values_increment = 8 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
-        
         # Carregue o gráfico do arquivo pickle
         with open(pickle_file_path, 'rb') as f:
-            fig = pickle.load(f)
+            data = pickle.load(f)
             # Adicione o novo plot ao gráfico carregado
-        plt.figure(fig.number)  # Certifique-se de que o novo plot seja adicionado à figura carregada
+        #plt.figure(fig.number)  # Certifique-se de que o novo plot seja adicionado à figura carregada
+        plt.plot(x_values_increment, data, label='Onda de saída', marker=',')
         plt.plot(x_values_increment, analog_data[1::2], label='Onda de saída', marker=',')
+
         plt.legend()  # Adicione a legenda para ambos os plots
             
         plt.xlabel('Time (Seg)')
@@ -306,7 +337,7 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         plt.gca().xaxis.set_major_formatter(formatter0)
 
         # Define os limites do eixo y para -5 a 5
-        plt.ylim(-15, 15)
+        plt.ylim(-6, 6)
 
         # Adiciona a legenda ao gráfico
         plt.legend(loc='best')
@@ -316,10 +347,9 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         # Adiciona a grade ao gráfico
         plt.grid(True)
         # Salve o gráfico atualizado como uma imagem PNG
-        fig.savefig(png_file_path)
+        plt.savefig(png_file_path)
         plt.close()
         # Apaga o arquivo pickle após o uso para evitar reutilização
         os.remove(pickle_file_path)
         # Renomeia o arquivo pickle após o uso
         #os.rename(pickle_file_path, os.path.join(images_dir, "fig1_processed.pickle"))
-        

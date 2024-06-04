@@ -36,6 +36,10 @@ def meiaonda():
 def ondacompleta():
     return render_template("ondacompleta.html", user=current_user)
 
+@views.route("/passaalto")
+@login_required
+def passaalto():
+    return render_template("passaalto.html", user=current_user)
 
 #########################################################
 # Rota para passar parâmetros para o script controlVB.py
@@ -86,6 +90,10 @@ def config_meiaonda():
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
         frequency = request.args.get('f', 0, float)
+        reset = request.args.get('reset', 0, bool)
+
+        #if reset:
+            
         
         # Colocar os relés a zero
         configRelays.config_relays_meiaonda(0, 0)
@@ -136,11 +144,16 @@ def config_ondacompleta():
                 
         # DESTA FORMA FUNCIONA A ONDA DE ENTRADA - PONTO
         #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
+        mixed_signal_oscilloscope.config_func_generatorMSO(frequency)
         configRelays.config_relays_vin()
         time.sleep(2) # Verificar estes atrasos
 
         mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
+        time.sleep(2) # Verificar estes atrasos
+
         configRelays.config_relays_ondacompleta(Resistance, Capacitor)
+        time.sleep(2) # Verificar estes atrasos
+
         mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=False, onda_saida=True)
 
 
