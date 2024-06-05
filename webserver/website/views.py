@@ -145,16 +145,75 @@ def config_ondacompleta():
         # DESTA FORMA FUNCIONA A ONDA DE ENTRADA - PONTO
         #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
         mixed_signal_oscilloscope.config_func_generatorMSO(frequency)
-        configRelays.config_relays_vin()
         time.sleep(2) # Verificar estes atrasos
-
+        configRelays.config_Relays("010011000001")
+        time.sleep(2) # Verificar estes atrasos
         mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
         time.sleep(2) # Verificar estes atrasos
-
+        
+        configRelays.config_Relays("000000000000")
+        time.sleep(2) # Verificar estes atrasos
         configRelays.config_relays_ondacompleta(Resistance, Capacitor)
         time.sleep(2) # Verificar estes atrasos
 
         mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=False, onda_saida=True)
+        time.sleep(2) # Verificar estes atrasos
+
+
+        #mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
+                    
+            # Execute o comando diretamente
+            # Explicar porque se usou este comando
+            #os.system('python ctrl_hardware/mixed_signal_oscilloscope.py')
+
+    except Exception as e:
+        print(e)
+        return jsonify({'measurement_result': 'ERROR'})
+    finally:
+        # Independentemente de uma exceção ocorrer ou não, renderiza o template
+        return render_template("ondacompleta.html", user=current_user)
+    
+@views.route('/config_passaalto', methods=['GET', 'POST'])
+@login_required
+def config_passaalto():
+    try:
+        Capacitor = request.args.get('C', 0, int) 
+        Resistance = request.args.get('R', 0, int)
+         #- APESAR DE NÃO SER PRECISO O VALOR DA RESISTÊNCIA, O MESMO FOI PASSADO COMO PARÂMETRO
+        # DE FUTURO PODE SER NECESSÁRIO ACRESCENTAR MAIS RESISTÊNCIAS
+        frequency = request.args.get('f', 0, float)
+        #reset = request.args.get('reset', 0, bool)       
+        
+        # Colocar os relés a zero
+        # devido ao problema de massas da rectificação de onda completa, a onda de entrada tem de ser medida primeiro
+        # e só depois a onda de saída - PROBLEMA DE MASSAS. Os gráficos têm de ser desenhados independentemente.
+        # Os relés activos consoante o caso.
+
+        ############################################################
+        # Activar os respectivos relés para a medição da onda de entrada
+        # Relés - K1...|K9 - 000000000
+        ############################################################
+        #mixed_signal_oscilloscope.config_func_generator(frequency)
+
+        # O VB detecta os dois canais CH1 e CH2, não há possibilidade, por software, de desligar um dos canais
+        # O que se pode fazer é desligar o canal fisicamente
+        # A leitura é armazenada no array analog_data[1::2] - canal 2 e analog_data[0::2] - canal 1
+        # Como é feita a leitura se os dois canais forem chamados, um a um?
+        # Os valores mantêm-se ou terá de ser feita uma nova leitura?
+                
+        # DESTA FORMA FUNCIONA A ONDA DE ENTRADA - PONTO
+        #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
+        mixed_signal_oscilloscope.config_func_generatorMSO(frequency)
+        configRelays.config_relays_vin()
+        time.sleep(2) # Verificar estes atrasos
+
+        mixed_signal_oscilloscope.config_mso_ondacompleta(ondacompleta = False, passaalto=True, onda_entrada=True, onda_saida=False, frequency=frequency)
+        time.sleep(2) # Verificar estes atrasos
+
+        configRelays.config_relays_passaalto(Resistance, Capacitor)
+        time.sleep(2) # Verificar estes atrasos
+
+        mixed_signal_oscilloscope.config_mso_ondacompleta(ondacompleta = False, passaalto=True, onda_entrada=False, onda_saida=True, frequency=frequency)
 
 
 

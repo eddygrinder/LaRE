@@ -75,7 +75,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)
 
-        print("PS,DMM", ps, dmm )
+        return None, ps, dmm, virtualbench
     if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is None and configSTOP is True):
         try: #Acho que este try não é preciso
             print("STOP")
@@ -127,7 +127,6 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
             print("Error/Warning %d occurred\n%s" % (e.status, e))
         finally:
             return measurement_result
-
 
 def plot_graphic(current_measurements, voltage_measurements):
    # Cria os rótulos para os eixos x

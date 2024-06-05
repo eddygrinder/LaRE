@@ -48,7 +48,7 @@ Remember to set the width: -->
       <select id="selectC" disabled>
         <option value="0">Seleccionar Condensador [&microF]:</option>
         <option value="1">1</option>
-        <option value="2">10</option>
+        <option value="1">10</option>
       </select>
     </div>
 
@@ -56,9 +56,13 @@ Remember to set the width: -->
       <select id="selectR" disabled>
         <option value="0">Seleccionar R[Ω]:</option>
         <option value="1">1</option>
-        <option value="2">3.3</option>
       </select>
     </div>
+    <p></p>
+    Valor da frequência entre 50 e 2000 Hz
+    <form id="form1">
+      <input type="number" id="input_freq" name="input_freq" />
+    </form>
   </div>
 
   <div class="column right">
@@ -181,13 +185,27 @@ Remember to set the width: -->
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
+        const valorfreq = document.getElementById("input_freq").value;
+
         // Validar valores antes do fetch
-        if (Capacitor === "0" || Resistance === "0") {
+        if (
+          Capacitor === "0" ||
+          Resistance === "0" ||
+          valorfreq === "" ||
+          valorfreq < 50 ||
+          valorfreq > 2000
+        ) {
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url = "/config_ondacompleta?&C=" + Capacitor + "&R=" + Resistance;
+        const url =
+          "/config_passaalto?&C=" +
+          Capacitor +
+          "&R=" +
+          Resistance +
+          "&f=" +
+          valorfreq;
         fetch(url);
       });
   </script>
