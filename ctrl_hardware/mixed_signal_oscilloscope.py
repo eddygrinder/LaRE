@@ -288,6 +288,12 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
     # Cria os rótulos para os eixos x
     # Calcula os valores dos eixos x
 
+    #####################################
+    # 06/06 - FUNCIONA SÓ COM O CANAL 1 LIGADO
+    # APARENTEMENTE NÃO FUNCIONA SÓ COM O CANAL 2 LIGADO
+    #####################################
+
+
      # Verifica se o diretório "static/images" existe, se não, cria-o
     images_dir = "webserver/website/static/images"
     if not os.path.exists(images_dir):
@@ -321,7 +327,7 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
             # Adicione o novo plot ao gráfico carregado
         #plt.figure(fig.number)  # Certifique-se de que o novo plot seja adicionado à figura carregada
         plt.plot(x_values_increment, data, label='Onda de saída', marker=',')
-        plt.plot(x_values_increment, analog_data[1::2], label='Onda de saída', marker=',')
+        plt.plot(x_values_increment, analog_data[0::2], label='Onda de saída', marker=',')
 
         plt.legend()  # Adicione a legenda para ambos os plots
             
@@ -337,7 +343,7 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         plt.gca().xaxis.set_major_formatter(formatter0)
 
         # Define os limites do eixo y para -5 a 5
-        plt.ylim(-6, 6)
+        plt.ylim(-15, 15)
 
         # Adiciona a legenda ao gráfico
         plt.legend(loc='best')

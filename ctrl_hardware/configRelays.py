@@ -87,7 +87,7 @@ def config_relays_meiaonda (Resistance: int, Capacitance: int):
         case 1, 1:
             # Resistência = 1KOhm e Capacitância = 1uF
             #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
-            config_Relays("101101010") # Relés - K1...|K9 - R=1K e C=1uF
+            config_Relays("101101010000") # Relés - K1...|K9 - R=1K e C=1uF
 
         case 1, 2:
             # Resistência = 1KOhm e Capacitância = 3.3uF
@@ -140,7 +140,7 @@ def config_relays_passaalto (Resistance: int, Capacitance: int):
             print("ERROR: Resistence or Capacitance outside values")
 
 def config_relays_vin ():
-    config_Relays("010011000001") # K12 Activo para ler vin
+    config_Relays("010011000000") # K12 Activo para ler vin
 
 def config_Relays(stringValue: str):
     # Envia a string para o Raspberry Pi
