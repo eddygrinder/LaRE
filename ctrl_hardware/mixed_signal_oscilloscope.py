@@ -242,6 +242,17 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
 
         # Configure the acquisition using auto setup
         mso.auto_setup()
+        # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
+        mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 10, 1, 1, 0)
+
+
+        ##################################
+        # AO QUE PARECE PARA QUE DESTA FORMA A LEITURA SEJA FEITA CORRETAMENTE
+        # É NECESSÁRIO QUE O CANAL 1 ESTEJA LIGADO DIRETAMENTE AO CANAL DOIS
+        # E DESACTIVADO COM A LINHA ACIMA
+        ##################################
+
+
 
         # Query the configuration that was chosen to properly interpret the data.
         # POVAVELMENTE ISTO PODE SALTAR FORA - PARTE-SE DUM PRINCÍPIO QUE AMBAS AS PONTAS
@@ -257,12 +268,19 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
         analog_data_size = len(analog_data)
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
+        print("Número de amostras: ", number_of_analog_samples_acquired)
+
+        frequency = 60 # Frequência da rede elétrica
+        increment = 1/(frequency*number_of_analog_samples_acquired)
+        x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired/2), increment))
+        print("comprimento_x_values: ", len(x_values_increment))
+
         if onda_entrada == True: # A função foi chamada para medir a onda de entrada. É atribuído o valor 1 ao canal 1 e 0 ao canal 2
             #channel_number = 1 # Somente para fazer a leitura do canal 1
-            plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, 1)
+            plot_graphic_ondacompleta(analog_data, x_values_increment, 1)
         if onda_saida == True: # A função foi chamada para medir a onda de saída
             #channel_number = 2 # Somente para fazer a leitura do canal 2
-            plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, 2)
+            plot_graphic_ondacompleta(analog_data, x_values_increment, 2)
         
         #print_digital_data(digital_data, digital_timestamps, 10)
         #ps.release()
@@ -272,7 +290,7 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
     finally:
         virtualbench.release()
 
-def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, channel_number):
+def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
     # Seleciona os elementos pares da lista analog_data
     #analog_data_pares = analog_data[::2] # Onda de entrada
     # Seleciona os elementos ímpares da lista analog_data
@@ -291,6 +309,7 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
     #####################################
     # 06/06 - FUNCIONA SÓ COM O CANAL 1 LIGADO
     # APARENTEMENTE NÃO FUNCIONA SÓ COM O CANAL 2 LIGADO
+    #  O NÚMERO DE AMSOSTRAS SÓ É IGUAL QUANDO ESTÁ O CANAL UM LIGADO
     #####################################
 
 
@@ -303,18 +322,17 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
     pickle_file_path = os.path.join(images_dir, "onda-completa.pickle")
     png_file_path = os.path.join(images_dir, "onda-completa.png")
 
-    frequency = 60 # Frequência da rede elétrica
-    increment = 1/(frequency*number_of_analog_samples_acquired)
-    x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment))
     if channel_number == 1: # Apenas o canal 1 está activo
          # Cria o gráfico
         # Cria o gráfico com duas curvas
         #x_values_increment = 2 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
         #plt.plot(x_values_increment, analog_data[0::2], label='Onda de entrada', marker=',')
         # Salva o gráfico atual em um arquivo
+        print("Número de amostras: ", len(analog_data[0::2]))
         with open(pickle_file_path, 'wb') as f:
             #pickle.dump(analog_data[0::2], f)
             pickle.dump(analog_data[0::2], f)
+            pickle.dump(x_values_increment, f)
         plt.close() # Fecha o gráfico para libertar recursos
        
     elif channel_number == 2: # Apenas o canal 2 está activo
@@ -324,10 +342,12 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         # Carregue o gráfico do arquivo pickle
         with open(pickle_file_path, 'rb') as f:
             data = pickle.load(f)
+            data_increment = pickle.load(f)
             # Adicione o novo plot ao gráfico carregado
         #plt.figure(fig.number)  # Certifique-se de que o novo plot seja adicionado à figura carregada
-        plt.plot(x_values_increment, data, label='Onda de saída', marker=',')
-        plt.plot(x_values_increment, analog_data[0::2], label='Onda de saída', marker=',')
+            plt.plot(data_increment, data, label='Vin', marker=',')
+    
+        plt.plot(x_values_increment, analog_data[1::2], label='Vout', marker=',')
 
         plt.legend()  # Adicione a legenda para ambos os plots
             
@@ -358,4 +378,7 @@ def plot_graphic_ondacompleta(analog_data, number_of_analog_samples_acquired, ch
         # Apaga o arquivo pickle após o uso para evitar reutilização
         os.remove(pickle_file_path)
         # Renomeia o arquivo pickle após o uso
-        #os.rename(pickle_file_path, os.path.join(images_dir, "fig1_processed.pickle"))
+        #os.remove(pickle_file_path, os.path.join(images_dir, "onda-completa.pickle"))
+
+
+        #FUNCIONA CM OS DOIS CANAIS LIGADOS
