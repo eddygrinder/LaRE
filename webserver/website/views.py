@@ -126,7 +126,7 @@ def config_ondacompleta():
 
         # DESTA FORMA FUNCIONA A ONDA DE ENTRADA - PONTO
         #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
-        mixed_signal_oscilloscope.config_func_generatorMSO(frequency)
+        mixed_signal_oscilloscope.config_func_generatorMSO()
         configRelays.config_relays_vin()
         time.sleep(2) # Verificar estes atrasos
 

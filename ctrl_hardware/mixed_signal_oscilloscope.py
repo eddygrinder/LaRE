@@ -197,24 +197,9 @@ def plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, channe
 ############################################
 # Configuração do gerador de sinal para a rectificação de onda completa
 ############################################
-def config_func_generatorMSO(frequency:float):
+def config_func_generatorMSO():
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')
-        # Waveform Configuration
-        waveform_function = Waveform.SINE
-        amplitude = 10.0      # 10V
-        dc_offset = 0.0       # 0V
-        duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
-
-        # You will probably need to replace "myVirtualBench" with the name of your device.
-        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
-        # You can see the device's name in the VirtualBench Application under File->About
-        
-        fgen = virtualbench.acquire_function_generator()
-        fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
-        # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
-        fgen.run()
-        
         #############################
         # Power Supply Configuration
         #############################
@@ -224,7 +209,6 @@ def config_func_generatorMSO(frequency:float):
         current_limit = 0.5 
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)      
-        fgen.release()
 
         # o gerador pode ser feito o release - está nos comentários da biblioteca
         # a PS não  
@@ -270,7 +254,7 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
         print("Número de amostras: ", number_of_analog_samples_acquired)
 
-        frequency = 60 # Frequência da rede elétrica
+        frequency = 50 # Frequência da rede elétrica
         increment = 1/(frequency*number_of_analog_samples_acquired)
         x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired/2), increment))
         print("comprimento_x_values: ", len(x_values_increment))
@@ -345,12 +329,19 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
             data_increment = pickle.load(f)
             # Adicione o novo plot ao gráfico carregado
         #plt.figure(fig.number)  # Certifique-se de que o novo plot seja adicionado à figura carregada
-            plt.plot(data_increment, data, label='Vin', marker=',')
+            plt.plot(4*data_increment, data, label='Vin', marker=',')
     
-        plt.plot(x_values_increment, analog_data[1::2], label='Vout', marker=',')
+        plt.plot(4*x_values_increment, analog_data[1::2], label='Vout', marker=',')
+        # A multiplicação do 4 é para ajustar o valor da escala e tem a ver com o cálculo do incremento e
+        # o facto de o VB ou a libraria gravar no mesmo array os valores dos dois canais
 
         plt.legend()  # Adicione a legenda para ambos os plots
-            
+
+        frequency = 50 # Frequência da rede elétrica
+        formatter_freq = EngFormatter(unit='Hz')
+        frequency_text = formatter_freq.format_data_short(frequency)  # Formate a frequência truncada usando o EngFormatter        
+        plt.text(0, -4, 'f= ' + frequency_text, fontsize=12, color='red') 
+
         plt.xlabel('Time (Seg)')
         plt.ylabel('Voltage (V)')
         plt.title('Rectificador onda completa')
@@ -363,7 +354,7 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
         plt.gca().xaxis.set_major_formatter(formatter0)
 
         # Define os limites do eixo y para -5 a 5
-        plt.ylim(-15, 15)
+        plt.ylim(0, 15)
 
         # Adiciona a legenda ao gráfico
         plt.legend(loc='best')
