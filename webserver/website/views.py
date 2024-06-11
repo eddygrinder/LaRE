@@ -19,10 +19,12 @@ def home():
 @login_required
 def pagina_seguinte():
     return render_template("ohm.html", user=current_user)
+
 @views.route("/meiaonda")
 @login_required
 def meiaonda():
     return render_template("meiaonda.html", user=current_user)
+
 @views.route("/ondacompleta")
 @login_required
 def ondacompleta():
@@ -83,8 +85,7 @@ def config_meiaonda():
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
         frequency = request.args.get('f', 0, float)
-        reset = request.args.get('reset', 0, bool)
-
+        
         if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
             mixed_signal_oscilloscope.config_instruments(frequency, Resistance, Capacitor, "HW")
     except Exception as e:
@@ -144,16 +145,20 @@ def config_ondacompleta():
         # Independentemente de uma exceção ocorrer ou não, renderiza o template
         return render_template("ondacompleta.html", user=current_user)
     
-@views.route('/config_passaalto', methods=['GET', 'POST'])
+@views.route('/config_filters', methods=['GET', 'POST'])
 @login_required
-def config_passaalto():
+def config_filters():
     try:
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
         frequency = request.args.get('f', 0, float)
-        reset = request.args.get('reset', 0, bool)
+        which_filter = request.args.get('filter_type', 0, str)
+        
+        print(Capacitor, Resistance, frequency, which_filter)
          
-        if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
+        if frequency != 0 and which_filter == "HPF": #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
+            print("HPF")
+
             mixed_signal_oscilloscope.config_instruments(frequency, Resistance, Capacitor, "H-PF") # high-pass filter
     except Exception as e:
         print(e)

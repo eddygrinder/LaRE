@@ -7,8 +7,9 @@
 />
 <link rel="icon" type="image/x-icon" href="../images/logo.ico" />
 <h1>
-  <img src="../images/logo.png" width="10%" />
-  <img src="../images/logo_20230106.png" />
+  <img src="../images/logo.jpg" width="30%" />
+
+  <img src="../images/logo_20230106.png" width="25%" align="right" />
 </h1>
 
 <p></p>
@@ -189,6 +190,7 @@ Remember to set the width: -->
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
         const valorfreq = document.getElementById("input_freq").value;
+        const filter_type = "HPF"; // Filtro passa-alto
 
         // Validar valores antes do fetch
         if (
@@ -201,14 +203,15 @@ Remember to set the width: -->
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
-        // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url =
-          "/config_passaalto?&C=" +
-          Capacitor +
-          "&R=" +
-          Resistance +
-          "&f=" +
-          valorfreq;
+        // Enviar requisição AJAX para a rota / colocar a rota certa
+        // uSO dp template literals para incluir os valores das variáveis diretamente na URL de forma mais legível e correta.
+        // https://www.freecodecamp.org/news/template-literals-in-javascript/
+        // https://www.w3schools.com/js/js_string_templates.asp
+
+        // ************************************************
+        // VERIFICAR NAS OUTRAS PÁGINAS!!!
+        // ************************************************
+        const url = `/config_filters?filter_type=${filter_type}&C=${Capacitor}&R=${Resistance}&f=${valorfreq}`;
         fetch(url);
       });
   </script>

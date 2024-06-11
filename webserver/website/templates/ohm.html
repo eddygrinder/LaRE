@@ -201,15 +201,16 @@ Remember to set the width: -->
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
         const booleana = "";
-        const url =
-          "/config_VirtualBench?parameter=" +
-          parameter +
-          "&Vcc=" +
-          Vcc +
-          "&R=" +
-          Resistance;
-        console.log("Vcc = ", Vcc);
-        console.log("Resistance = ", Resistance);
+
+        // uSO dp template literals para incluir os valores das variáveis diretamente na URL de forma mais legível e correta.
+        // https://www.freecodecamp.org/news/template-literals-in-javascript/
+        // https://www.w3schools.com/js/js_string_templates.asp
+
+        // ************************************************
+        // VERIFICAR NAS OUTRAS PÁGINAS!!!
+        // ************************************************
+
+        const url = `/config_VirtualBench?parameter=${parameter}&Vcc=${Vcc}&R=${Resistance}`;
         fetch(url)
           .then((response) => response.json())
           .then((data) => {
