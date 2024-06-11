@@ -33,6 +33,11 @@ def ondacompleta():
 def passaalto():
     return render_template("passaalto.html", user=current_user)
 
+@views.route("/bodediagram")
+@login_required
+def bodediagram():
+    return render_template("passaalto.html", user=current_user)
+
 #########################################################
 # Rota para passar parâmetros para o script controlVB.py
 # Só passa os parâmetros de escolha    
@@ -70,6 +75,7 @@ def config_VirtualBench():
         return jsonify({'measurement_result': 'ERROR'})
     finally:
         return jsonify({'measurement_result': measurement_result})
+    
 @views.route('/config_meiaonda', methods=['GET', 'POST'])
 @login_required
 def config_meiaonda():
@@ -79,21 +85,8 @@ def config_meiaonda():
         frequency = request.args.get('f', 0, float)
         reset = request.args.get('reset', 0, bool)
 
-        #if reset:
-
-
-        # Colocar os relés a zero
-        configRelays.config_relays_meiaonda(0, 0)
-        time.sleep(2) # Verificar estes atrasos
         if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
-            configRelays.config_relays_meiaonda(Resistance, Capacitor)
-            time.sleep(2)
-            mixed_signal_oscilloscope.config_func_generator(frequency)
-            #mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
-                        
-            # Execute o comando diretamente
-            # Explicar porque se usou este comando
-            #os.system('python ctrl_hardware/mixed_signal_oscilloscope.py')
+            mixed_signal_oscilloscope.config_instruments(frequency, Resistance, Capacitor, "HW")
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
@@ -150,3 +143,35 @@ def config_ondacompleta():
     finally:
         # Independentemente de uma exceção ocorrer ou não, renderiza o template
         return render_template("ondacompleta.html", user=current_user)
+    
+@views.route('/config_passaalto', methods=['GET', 'POST'])
+@login_required
+def config_passaalto():
+    try:
+        Capacitor = request.args.get('C', 0, int)
+        Resistance = request.args.get('R', 0, int)
+        frequency = request.args.get('f', 0, float)
+        reset = request.args.get('reset', 0, bool)
+         
+        if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
+            mixed_signal_oscilloscope.config_instruments(frequency, Resistance, Capacitor, "H-PF") # high-pass filter
+    except Exception as e:
+        print(e)
+        return jsonify({'measurement_result': 'ERROR'})
+    finally:
+        # Independentemente de uma exceção ocorrer ou não, renderiza o template
+        return render_template("passaalto.html", user=current_user)
+
+@views.route('/get_bodediagram', methods=['GET', 'POST'])
+@login_required
+def get_bodediagram():
+    try:
+        Capacitor = request.args.get('C', 0, int)
+        Resistance = request.args.get('R', 0, int)
+        mixed_signal_oscilloscope.bode_graphic_H_PassFilter(Resistance, Capacitor)
+    except Exception as e:
+        print(e)
+        return jsonify({'measurement_result': 'ERROR'})
+    finally:
+        # Independentemente de uma exceção ocorrer ou não, renderiza o template
+        return render_template("passaalto.html", user=current_user)

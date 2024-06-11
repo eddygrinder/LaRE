@@ -25,7 +25,7 @@
     <button class="tablinks" onclick="ondacompleta()" id="ondacompleta">
       Rectificador de onda completa
     </button>
-    <button class="tablinks" onclick="openchoice(event, 'passaalto')">
+    <button class="tablinks" onclick="passalto()" id="passaalto">
       Filtro Passa-alto
     </button>
     <button class="tablinks" onclick="openchoice(event, 'passabaixo')">
@@ -34,7 +34,7 @@
   </div>
 
   <div class="column middle">
-    <h2>Filtro Passa-Alto</h2>
+    <h2>Filtro Passa-Baixo</h2>
     <p>
       Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper
     </p>
@@ -48,6 +48,7 @@ Remember to set the width: -->
       <select id="selectC" disabled>
         <option value="0">Seleccionar Condensador [&microF]:</option>
         <option value="1">1</option>
+        <option value="2">10</option>
       </select>
     </div>
 
@@ -55,7 +56,6 @@ Remember to set the width: -->
       <select id="selectR" disabled>
         <option value="0">Seleccionar R[KΩ]:</option>
         <option value="1">1</option>
-        <option value="2">10</option>
       </select>
     </div>
     <p></p>

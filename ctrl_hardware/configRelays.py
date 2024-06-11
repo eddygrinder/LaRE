@@ -1,28 +1,5 @@
 #! /usr/bin/env python3
-
-# The MIT License (MIT)
-#
-# Copyright (c) 2016 Charles Armstrap <charles@armstrap.org>
-# If you like this library, consider donating to: https://bit.ly/armstrap-opensource-dev
-# Anything helps.
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# -*- coding: utf-8 -*-
 
 import random, socket, time
 import os, sys, requests
@@ -78,16 +55,15 @@ def config_relays_ohm (Resistance: int, measeure_parameter: str):
             case _:
                 print("ERROR: Resistence is not 1, 1.5 or 2.2 KOhm")
 
-
 def config_relays_meiaonda (Resistance: int, Capacitance: int):
     match Resistance, Capacitance:
         case 0, 0:
             # colocar os relés a zero
-            config_Relays("000000000000") #relés OBRIGATORIAMENTE desligados
+            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
         case 1, 1:
             # Resistência = 1KOhm e Capacitância = 1uF
             #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
-            config_Relays("101101010000") # Relés - K1...|K9 - R=1K e C=1uF
+            config_Relays("1011010100000") # Relés - K1...|K9 - R=1K e C=1uF
 
         case 1, 2:
             # Resistência = 1KOhm e Capacitância = 3.3uF
@@ -127,7 +103,7 @@ def config_relays_passaalto (Resistance: int, Capacitance: int):
     match Resistance, Capacitance:
         case 0, 0:
             # colocar os relés a zero
-            config_Relays("000000000000") #relés OBRIGATORIAMENTE desligados
+            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
         case 1, 1:
             # Resistência = 1KOhm e Capacitância = 1uF
             #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
@@ -135,7 +111,7 @@ def config_relays_passaalto (Resistance: int, Capacitance: int):
 
         case 2, 1:
             # Resistência = 1KOhm e Capacitância = 3.3uF
-            config_Relays("100100100010") # Relés - K1...|K9 - R=1K e C=3.3uF
+            config_Relays("1001001000010") # Relés - K1...|K9 - R=1K e C=3.3uF
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 
@@ -145,7 +121,7 @@ def config_relays_vin ():
 def config_Relays(stringValue: str):
     # Envia a string para o Raspberry Pi
     # Endereço IP e porta do Raspberry Pi
-    HOST = '192.168.1.71'  # Substitua pelo endereço IP do Raspberry Pi
+    HOST = '192.168.1.75'  # Substitua pelo endereço IP do Raspberry Pi
     PORT = 12345  # Porta de escuta no Raspberry Pi 
     
         # Criar um socket TCP/IP
@@ -157,6 +133,15 @@ def config_Relays(stringValue: str):
         s.sendall(stringValue.encode())
         print("Mensagem enviada com sucesso.")
 
+       # Espera pela resposta do servidor
+        while True:
+            data = s.recv(1024)
+            if not data:
+                break
+            response = data.decode()
+            if response == 'True':  # Espera por uma confirmação específica do servidor
+                print("Confirmação recebida do servidor:", response)
+                break
 # Receber a resposta
 '''
 def relays_requests(stringValue: str):
