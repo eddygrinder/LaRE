@@ -1,0 +1,18 @@
+﻿designator,quantity,value,pack,mpn,mount_type
+C1,1,10uF,CP_Radial_D6.3mm_P2.50mm,,tht
+C2,1,100uF,CP_Radial_D6.3mm_P2.50mm,,tht
+"C3, C4",2,0.1uF,C_Disc_D5.0mm_W2.5mm_P2.50mm,,tht
+C6,1,10uF,CP_Radial_D5.0mm_P2.00mm,,tht
+D1,1,1N4007,D_DO-41_SOD81_P10.16mm_Horizontal,,tht
+D2,1,B250C2300-1500A,Diode_Bridge_19.0x3.5x10.0mm_P5.0mm,,tht
+F1,1,Fuse,Fuseholder_Cylinder-5x20mm_Stelvio-Kontek_PTF78_Horizontal_Open,,tht
+"H1, H2, H3, H4",4,MountingHole,MountingHole_3.2mm_M3,,tht
+J2,1,PI_config,PinSocket_1x06_P2.54mm_Vertical,,tht
+J3,1,Power Sources,PinSocket_1x06_P2.54mm_Vertical,,tht
+J4,1,Signals,PinSocket_1x06_P2.54mm_Vertical,,tht
+"K1, K2, K3, K5, K6, K7, K8, K9",8,3572-1220-123,RELAY8_3572-1220-053_COM,,tht
+"K10, K11, K12, K13, K4",5,3570-1331-123,SIP_3570-1331_COM,,tht
+"R1, R3",2,1K,R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal,,tht
+R2,1,4.7K,R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal,,tht
+"U1, U3",2,74HC595N_112,DIP-16_W10.16mm,"74HC595N,112",tht
+"U2, U4",2,ULN2003,DIP-16_W10.16mm,,tht

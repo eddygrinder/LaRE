@@ -73,6 +73,7 @@
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -432,7 +433,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "VISIR_Lei_Ohm.kicad_pro",
+    "filename": "VISIR_Lei_Ohm.kicad_pcb_V8.kicad_pro",
     "version": 1
   },
   "net_settings": {
