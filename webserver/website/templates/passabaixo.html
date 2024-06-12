@@ -222,13 +222,14 @@ Remember to set the width: -->
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
+        const filter_type = "LPF"; // Filtro passa-baixo
         // Validar valores antes do fetch
         if (Capacitor === "0" || Resistance === "0") {
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url = "/get_bodediagram?&C=" + Capacitor + "&R=" + Resistance;
+        const url = `/get_bodediagram?filter_type=${filter_type}&C=${Capacitor}&R=${Resistance}`;
         fetch(url);
       });
   </script>

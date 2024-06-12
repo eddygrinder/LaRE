@@ -41,12 +41,6 @@ import os, sys, pickle, socket, time
 # a«a primeira função a ser chamada é a config_func_generator(frequency:float), portanto, 
 # o valor da frequência é passado para a variável global_frequency
 
-def config_instruments(frequency:float, Resistance:int, Capacitor:int, circuit:str):
-    if circuit == "HW":
-        config_instruments_HalfWave(frequency, Resistance, Capacitor)
-    elif circuit == "H-PF":
-        config_instruments_H_PassFilter(frequency, Resistance, Capacitor)
-
 def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')
@@ -370,7 +364,7 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
 
         #FUNCIONA CM OS DOIS CANAIS LIGADOS
 
-def config_instruments_H_PassFilter(frequency, Resistance, Capacitor):
+def config_instruments_PassFilters(frequency:float, Resistance:int, Capacitor:int, which_filter:str):
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')
         
@@ -400,9 +394,12 @@ def config_instruments_H_PassFilter(frequency, Resistance, Capacitor):
         current_limit = 0.5 
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)      
-        
-        config_relays_H_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
-        config_relays_H_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
+        if which_filter == "H-PF":
+            config_relays_H_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
+            config_relays_H_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
+        elif which_filter == "L-PF":
+            config_relays_L_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
+            config_relays_L_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
         
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
@@ -434,6 +431,143 @@ def config_instruments_H_PassFilter(frequency, Resistance, Capacitor):
         print("Error/Warning %d occurred\n%s" % (e.status, e))
     finally:
         virtualbench.release()
+
+def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
+    try:
+        
+        '''
+        Explicação das Modificações
+        Gerar Frequências com np.logspace:
+
+        np.logspace(np.log10(start_freq), np.log10(stop_freq), num=num_points) gera num_points frequências logaritmicamente espaçadas entre start_freq e stop_freq.
+        Iterar sobre as Frequências:
+
+        Em vez de calcular cada frequência dentro do loop, você itera diretamente sobre as frequências geradas por np.logspace.
+        Coleção de Máximos:
+
+        Você coleta os valores máximos correspondentes às frequências geradas no loop.
+        Vantagens
+        Simplicidade: O código é mais direto e legível.
+        Performance: Usar np.logspace pode ser mais eficiente do que calcular manualmente cada frequência dentro de um loop.
+        Manutenção: É mais fácil ajustar a faixa de frequências alterando os parâmetros de np.logspace.
+        Usar np.logspace é geralmente uma abordagem melhor para gerar uma série de frequências logarítmicas, especialmente quando a simplicidade e a eficiência são desejáveis.
+        '''
+                
+        # Defina o número de pontos por década e a faixa de frequências
+        points_per_decade = 5 #Padrão ISO 12 pontos por década
+        start_freq = 50  # Frequência inicial
+        stop_freq = 1e6  # Frequência final
+        num_points = int(np.log10(stop_freq / start_freq) * points_per_decade)
+
+        # Gerar frequências espaçadas logaritmicamente
+        frequencies = np.logspace(np.log10(start_freq), np.log10(stop_freq), num=num_points)
+        max_vout_values = []
+                
+        virtualbench = PyVirtualBench('VB8012-30A210F')
+
+        #############################
+        # Power Supply Configuration
+        #############################
+        ps = virtualbench.acquire_power_supply()
+        channel = "ps/+25V"
+        voltage_level = 12.0
+        current_limit = 0.5 
+        ps.enable_all_outputs(True)
+        ps.configure_voltage_output(channel, voltage_level, current_limit)      
+        
+        if which_filter == "HPF":
+            config_relays_H_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
+            config_relays_H_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
+            file_name = "webserver/website/static/images/bode_hpf.png"
+        elif which_filter == "LPF":
+            config_relays_L_PassFilter(0, 0)
+            config_relays_L_PassFilter(Resistance, Capacitor)
+            file_name = "webserver/website/static/images/bode_lpf.png"
+        
+        #############################
+        # Waveform Configuration - Configuração do gerador de sinal
+        #############################
+        waveform_function = Waveform.SINE
+        amplitude = 10.0      # 10V - Valor PICO-a-PICO, não PICO
+        vin = 5.0
+        dc_offset = 0.0       # 0V
+        duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
+
+        # You will probably need to replace "myVirtualBench" with the name of your device.
+        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+        # You can see the device's name in the VirtualBench Application under File->About
+        
+        fgen = virtualbench.acquire_function_generator()
+        fgen.run()
+
+        for frequency in frequencies:
+            fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
+            # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
+                
+            
+            mso = virtualbench.acquire_mixed_signal_oscilloscope()
+
+            # Configure the acquisition using auto setup
+            mso.auto_setup()
+         
+            ########################################################
+            # POSE-SE RETIRAR PARA ACELARAR O PROCESSO DE CONSTRUÇÃO DO GRÁFICO
+            ########################################################
+            
+            # Query the configuration that was chosen to properly interpret the data.
+            #sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
+            #channels = mso.query_enabled_analog_channels()
+            #channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
+            
+            # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
+            mso.run() 
+            
+            # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
+            analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
+               
+            #print_digital_data(digital_data, digital_timestamps, 10)
+            vout_max = (max(analog_data[1::2]))
+            # Armazene a frequência e o máximo correspondente
+            max_vout_values.append(vout_max)
+            mso.release()
+            time.sleep(1.0) # Aguarde 100ms antes de passar para a próxima frequência
+        Av = np.array(max_vout_values)/vin
+        # Plotar o gráfico logarítmico
+        plt.figure(figsize=(10, 6))
+        plt.plot(frequencies, Av, '.-', label='Ganho de tensão')
+
+        plt.xscale('log')
+        plt.xlabel('Frequência (Hz)')
+        plt.ylabel('Av')
+        plt.title('Diagrama de Bode')
+        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+        plt.legend()
+        plt.ylim(0, 1)
+         # Adiciona a legenda ao gráfico
+        plt.legend(loc='best')
+
+        
+         # Verifica se o diretório "static/images" existe, se não, cria-o
+        if not os.path.exists("webserver/website/static/images"):
+            os.makedirs("webserver/website/static/images")
+
+        # Salva o gráfico como uma imagem dentro do diretório "static/images"
+        plt.savefig(file_name)
+
+        # Limpa a figura
+        plt.clf()
+        #ps.enable_all_outputs(False) # Desliga a fonte de alimentação
+        
+        ps.release()
+        fgen.release()
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+    finally:
+        virtualbench.release()
+    
+###############################################
+# Relays Configuration Zone
+###############################################
 
 def config_Relays(stringValue: str):
     # Envia a string para o Raspberry Pi
@@ -482,133 +616,6 @@ def config_relays_meiaonda (Resistance: int, Capacitance: int):
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 
-def bode_graphic_H_PassFilter(Resistance, Capacitor):
-    try:
-        
-        '''
-        Explicação das Modificações
-        Gerar Frequências com np.logspace:
-
-        np.logspace(np.log10(start_freq), np.log10(stop_freq), num=num_points) gera num_points frequências logaritmicamente espaçadas entre start_freq e stop_freq.
-        Iterar sobre as Frequências:
-
-        Em vez de calcular cada frequência dentro do loop, você itera diretamente sobre as frequências geradas por np.logspace.
-        Coleção de Máximos:
-
-        Você coleta os valores máximos correspondentes às frequências geradas no loop.
-        Vantagens
-        Simplicidade: O código é mais direto e legível.
-        Performance: Usar np.logspace pode ser mais eficiente do que calcular manualmente cada frequência dentro de um loop.
-        Manutenção: É mais fácil ajustar a faixa de frequências alterando os parâmetros de np.logspace.
-        Usar np.logspace é geralmente uma abordagem melhor para gerar uma série de frequências logarítmicas, especialmente quando a simplicidade e a eficiência são desejáveis.
-        '''
-                
-        # Defina o número de pontos por década e a faixa de frequências
-        points_per_decade = 5 #Padrão ISO 12 pontos por década
-        start_freq = 1  # Frequência inicial
-        stop_freq = 1e6  # Frequência final
-        num_points = int(np.log10(stop_freq / start_freq) * points_per_decade)
-
-        # Gerar frequências espaçadas logaritmicamente
-        frequencies = np.logspace(np.log10(start_freq), np.log10(stop_freq), num=num_points)
-        max_vout_values = []
-                
-        virtualbench = PyVirtualBench('VB8012-30A210F')
-
-        #############################
-        # Power Supply Configuration
-        #############################
-        ps = virtualbench.acquire_power_supply()
-        channel = "ps/+25V"
-        voltage_level = 12.0
-        current_limit = 0.5 
-        ps.enable_all_outputs(True)
-        ps.configure_voltage_output(channel, voltage_level, current_limit)      
-        
-        config_relays_H_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
-        config_relays_H_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
-        
-        #############################
-        # Waveform Configuration - Configuração do gerador de sinal
-        #############################
-        waveform_function = Waveform.SINE
-        amplitude = 10.0      # 10V - Valor PICO-a-PICO, não PICO
-        vin = 5.0
-        dc_offset = 0.0       # 0V
-        duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
-
-        # You will probably need to replace "myVirtualBench" with the name of your device.
-        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
-        # You can see the device's name in the VirtualBench Application under File->About
-        
-        fgen = virtualbench.acquire_function_generator()
-        fgen.run()
-
-        for frequency in frequencies:
-            fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
-            # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
-                
-            
-            mso = virtualbench.acquire_mixed_signal_oscilloscope()
-
-            # Configure the acquisition using auto setup
-            mso.auto_setup()
-         
-            ########################################################
-            # POSE-SE RETIRAR PARA ACELARAR O PROCESSO DE CONSTRUÇÃO DO GRÁFICO
-            ########################################################
-            
-            # Query the configuration that was chosen to properly interpret the data.
-            #sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
-            #channels = mso.query_enabled_analog_channels()
-            #channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
-            
-            # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
-            mso.run() 
-            
-            # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
-            analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
-               
-            #print_digital_data(digital_data, digital_timestamps, 10)
-            vout_max = (max(analog_data[1::2]))
-            # Armazene a frequência e o máximo correspondente
-            max_vout_values.append(vout_max)
-            mso.release()
-            time.sleep(0.5) # Aguarde 100ms antes de passar para a próxima frequência
-        Av = np.array(max_vout_values)/vin
-        # Plotar o gráfico logarítmico
-        plt.figure(figsize=(10, 6))
-        plt.plot(frequencies, Av, '.-', label='Ganho de tensão')
-
-        plt.xscale('log')
-        plt.xlabel('Frequência (Hz)')
-        plt.ylabel('Av')
-        plt.title('Diagrama de Bode')
-        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-        plt.legend()
-        plt.ylim(0, 1)
-         # Adiciona a legenda ao gráfico
-        plt.legend(loc='best')
-
-        
-         # Verifica se o diretório "static/images" existe, se não, cria-o
-        if not os.path.exists("webserver/website/static/images"):
-            os.makedirs("webserver/website/static/images")
-
-        # Salva o gráfico como uma imagem dentro do diretório "static/images"
-        plt.savefig("webserver/website/static/images/bode_passaalto.png")
-
-        # Limpa a figura
-        plt.clf()
-        #ps.enable_all_outputs(False) # Desliga a fonte de alimentação
-        
-        ps.release()
-        fgen.release()
-    except PyVirtualBenchException as e:
-        print("Error/Warning %d occurred\n%s" % (e.status, e))
-    finally:
-        virtualbench.release()
-                  
 def config_relays_H_PassFilter (Resistance: int, Capacitance: int):
     match Resistance, Capacitance:
         case 0, 0:
@@ -616,7 +623,6 @@ def config_relays_H_PassFilter (Resistance: int, Capacitance: int):
             config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
         case 1, 1:
             # Resistência = 1KOhm e Capacitância = 1uF
-            #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
             config_Relays("1001010000100") # Relés - K1...|K9 - R=1K e C=1uF
 
         case 2, 1:
@@ -625,6 +631,20 @@ def config_relays_H_PassFilter (Resistance: int, Capacitance: int):
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 
+def config_relays_L_PassFilter (Resistance: int, Capacitance: int):
+    match Resistance, Capacitance:
+        case 0, 0:
+            # colocar os relés a zero
+            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+        case 1, 1:
+            # Resistência = 1KOhm e Capacitância = 1uF
+            config_Relays("1001000101000") # Relés - K1...|K9 - R=1K e C=1uF
+
+        case 1, 2:
+            # Resistência = 1KOhm e Capacitância = 3.3uF
+            config_Relays("1001000011000") # Relés - K1...|K9 - R=1K e C=3.3uF
+        case _:
+            print("ERROR: Resistence or Capacitance outside values")
 '''
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')

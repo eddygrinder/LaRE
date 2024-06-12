@@ -35,6 +35,11 @@ def ondacompleta():
 def passaalto():
     return render_template("passaalto.html", user=current_user)
 
+@views.route("/passabaixo")
+@login_required
+def passabaixo():
+    return render_template("passabaixo.html", user=current_user)
+
 @views.route("/bodediagram")
 @login_required
 def bodediagram():
@@ -87,7 +92,7 @@ def config_meiaonda():
         frequency = request.args.get('f', 0, float)
         
         if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
-            mixed_signal_oscilloscope.config_instruments(frequency, Resistance, Capacitor, "HW")
+            mixed_signal_oscilloscope.config_instruments_HalfWave(frequency, Resistance, Capacitor)
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
@@ -158,8 +163,10 @@ def config_filters():
          
         if frequency != 0 and which_filter == "HPF": #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
             print("HPF")
-
-            mixed_signal_oscilloscope.config_instruments(frequency, Resistance, Capacitor, "H-PF") # high-pass filter
+            mixed_signal_oscilloscope.config_instruments_PassFilters(frequency, Resistance, Capacitor, "H-PF") # high-pass filter
+        elif frequency != 0 and which_filter == "LPF":
+            print("LPF")
+            mixed_signal_oscilloscope.config_instruments_PassFilters(frequency, Resistance, Capacitor, "L-PF") # low-pass filter
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
@@ -173,7 +180,13 @@ def get_bodediagram():
     try:
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
-        mixed_signal_oscilloscope.bode_graphic_H_PassFilter(Resistance, Capacitor)
+        which_filter = request.args.get('filter_type', 0, str)
+        print(Capacitor, Resistance, which_filter)
+        if which_filter == "HPF":
+            mixed_signal_oscilloscope.bode_graphic_Filters(Resistance, Capacitor, which_filter)
+        elif which_filter == "LPF":
+            print("LPF")
+            mixed_signal_oscilloscope.bode_graphic_Filters(Resistance, Capacitor, which_filter)
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
