@@ -163,10 +163,10 @@ def config_filters():
          
         if frequency != 0 and which_filter == "HPF": #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
             print("HPF")
-            mixed_signal_oscilloscope.config_instruments_PassFilters(frequency, Resistance, Capacitor, "H-PF") # high-pass filter
+            mixed_signal_oscilloscope.config_instruments_PassFilters(frequency, Resistance, Capacitor, "HPF") # high-pass filter
         elif frequency != 0 and which_filter == "LPF":
             print("LPF")
-            mixed_signal_oscilloscope.config_instruments_PassFilters(frequency, Resistance, Capacitor, "L-PF") # low-pass filter
+            mixed_signal_oscilloscope.config_instruments_PassFilters(frequency, Resistance, Capacitor, "LPF") # low-pass filter
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})

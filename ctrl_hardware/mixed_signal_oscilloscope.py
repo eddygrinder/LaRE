@@ -394,12 +394,9 @@ def config_instruments_PassFilters(frequency:float, Resistance:int, Capacitor:in
         current_limit = 0.5 
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)      
-        if which_filter == "H-PF":
-            config_relays_H_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
-            config_relays_H_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
-        elif which_filter == "L-PF":
-            config_relays_L_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
-            config_relays_L_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
+        
+        config_relays_PassFilter(0, 0, which_filter) # Independentemente do seu estado, coloca os relés a zero
+        config_relays_PassFilter(Resistance, Capacitor, which_filter) # Configura os relés para a medição
         
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
@@ -475,13 +472,11 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)      
         
+        config_relays_PassFilter(0, 0, which_filter) # Independentemente do seu estado, coloca os relés a zero
+        config_relays_PassFilter(Resistance, Capacitor, which_filter) # Configura os relés para a medição
         if which_filter == "HPF":
-            config_relays_H_PassFilter(0, 0) # Independentemente do seu estado, coloca os relés a zero
-            config_relays_H_PassFilter(Resistance, Capacitor) # Configura os relés para a medição
             file_name = "webserver/website/static/images/bode_hpf.png"
         elif which_filter == "LPF":
-            config_relays_L_PassFilter(0, 0)
-            config_relays_L_PassFilter(Resistance, Capacitor)
             file_name = "webserver/website/static/images/bode_lpf.png"
         
         #############################
@@ -616,35 +611,36 @@ def config_relays_meiaonda (Resistance: int, Capacitance: int):
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 
-def config_relays_H_PassFilter (Resistance: int, Capacitance: int):
-    match Resistance, Capacitance:
-        case 0, 0:
-            # colocar os relés a zero
-            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
-        case 1, 1:
-            # Resistência = 1KOhm e Capacitância = 1uF
-            config_Relays("1001010000100") # Relés - K1...|K9 - R=1K e C=1uF
+def config_relays_PassFilter (Resistance: int, Capacitance: int, which_filter:str):
+    if which_filter == "HPF":
+        print ("FODA-SE")
+        match Resistance, Capacitance:
+            case 0, 0:
+                # colocar os relés a zero
+                config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+            case 1, 1:
+                # Resistência = 1KOhm e Capacitância = 1uF
+                config_Relays("1001010000100") # Relés - K1...|K9 - R=1K e C=1uF
 
-        case 2, 1:
-            # Resistência = 1KOhm e Capacitância = 3.3uF
-            config_Relays("1001001000100") # Relés - K1...|K9 - R=1K e C=3.3uF
-        case _:
-            print("ERROR: Resistence or Capacitance outside values")
+            case 2, 1:
+                # Resistência = 1KOhm e Capacitância = 3.3uF
+                config_Relays("1001001000100") # Relés - K1...|K9 - R=1K e C=3.3uF
+            case _:
+                print("ERROR: Resistence or Capacitance outside values")
+    elif which_filter == "LPF":
+        match Resistance, Capacitance:
+            case 0, 0:
+                # colocar os relés a zero
+                config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+            case 1, 1:
+                # Resistência = 1KOhm e Capacitância = 1uF
+                config_Relays("1001000101000") # Relés - K1...|K9 - R=1K e C=1uF
 
-def config_relays_L_PassFilter (Resistance: int, Capacitance: int):
-    match Resistance, Capacitance:
-        case 0, 0:
-            # colocar os relés a zero
-            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
-        case 1, 1:
-            # Resistência = 1KOhm e Capacitância = 1uF
-            config_Relays("1001000101000") # Relés - K1...|K9 - R=1K e C=1uF
-
-        case 1, 2:
-            # Resistência = 1KOhm e Capacitância = 3.3uF
-            config_Relays("1001000011000") # Relés - K1...|K9 - R=1K e C=3.3uF
-        case _:
-            print("ERROR: Resistence or Capacitance outside values")
+            case 1, 2:
+                # Resistência = 1KOhm e Capacitância = 3.3uF
+                config_Relays("1001000011000") # Relés - K1...|K9 - R=1K e C=3.3uF
+            case _:
+                print("ERROR: Resistence or Capacitance outside values")
 '''
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')
