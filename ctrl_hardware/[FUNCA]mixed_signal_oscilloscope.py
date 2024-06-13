@@ -452,8 +452,8 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
         '''
                 
         # Defina o número de pontos por década e a faixa de frequências
-        points_per_decade = 12 #Padrão ISO 12 pontos por década
-        start_freq = 50  # Frequência inicial - frequência menor fica muito instável
+        points_per_decade = 5 #Padrão ISO 12 pontos por década
+        start_freq = 50  # Frequência inicial
         stop_freq = 1e6  # Frequência final
         num_points = int(np.log10(stop_freq / start_freq) * points_per_decade)
 
@@ -494,48 +494,15 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
         # You can see the device's name in the VirtualBench Application under File->About
         
         fgen = virtualbench.acquire_function_generator()
-        mso = virtualbench.acquire_mixed_signal_oscilloscope()     
-        print (mso)
-        store_ps_dmm.set_values_mso(mso) # guarda os valores de ps e dmm
         fgen.run()
 
         for frequency in frequencies:
-            '''
-                fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
-                mso = virtualbench.acquire_mixed_signal_oscilloscope()     
-                mso.auto_setup()
-                mso.run() 
-                analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
-                mso.stop() 
-                
-                Esta sequência de comandos não funciona, dando como erro:
-                    Error/Warning -375903 occurred
-                    NI-VirtualBench: The requested resource is reserved.
-                    Resource: Mixed Signal Oscilloscope
-                Isto porque o mso não é libertado, logo, não é possível adquirir o sinal para a próxima frequência.
-                mso.stop() não liberta o mso, apenas o pára e aquando da aquisição do mso para a próxima frequência, o erro é derivado ao mso 
-                não ter sido libertado [VER ESTE PORTUGUÊS]
-                
-                A forma de contornar este problema é libertar o mso após a aquisição do sinal para a frequência atual e adquirir o sinal para a próxima frequência.
-                    mso.release()
-                o problema é que entre libertar e adquirir o processo fica demasiado lento
-                #time.sleep(0.05) # Aguarde 100ms antes de passar para a próxima frequência
-                
-                Outra forma de contornar o problema é adquirir o mso FORA ciclo for e armazenar 
-                endereço/objecto num ficheiro externo - store_ps_dmm.set_values_mso(mso)
-                
-                Dessa forma o mso pode ser parado - mso.stop() - SEM ser libertado - mso.release() - e adquirir o sinal para a próxima frequência.
-                O endereço do objecto é adquirido através de store_ps_dmm.get_values_mso(), dentro do ciclo for.
-                O instrumento é libertado no final do script - mso.release()
-                
-                A aquisição dos sinais fica mais rápido e estável conforme o código em baixo:
-            
-            '''        
-            
             fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
             # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
-            mso = store_ps_dmm.get_values_mso() # Obter o valor de mso
+                
             
+            mso = virtualbench.acquire_mixed_signal_oscilloscope()
+
             # Configure the acquisition using auto setup
             mso.auto_setup()
          
@@ -558,9 +525,8 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
             vout_max = (max(analog_data[1::2]))
             # Armazene a frequência e o máximo correspondente
             max_vout_values.append(vout_max)
-            mso.stop() # O osciloscópio deve ser parado antes de passar para a próxima frequência e fazer a aquisição do sinal
-            #time.sleep(0.05) # Aguarde 100ms antes de passar para a próxima frequência
-        print(mso)
+            mso.release()
+            time.sleep(1.0) # Aguarde 100ms antes de passar para a próxima frequência
         Av = np.array(max_vout_values)/vin
         # Plotar o gráfico logarítmico
         plt.figure(figsize=(10, 6))
@@ -586,8 +552,8 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
 
         # Limpa a figura
         plt.clf()
-        ps.enable_all_outputs(False) # Desliga a fonte de alimentação
-        mso.release()
+        #ps.enable_all_outputs(False) # Desliga a fonte de alimentação
+        
         ps.release()
         fgen.release()
     except PyVirtualBenchException as e:
@@ -648,6 +614,7 @@ def config_relays_meiaonda (Resistance: int, Capacitance: int):
 
 def config_relays_PassFilter (Resistance: int, Capacitance: int, which_filter:str):
     if which_filter == "HPF":
+        print ("FODA-SE")
         match Resistance, Capacitance:
             case 0, 0:
                 # colocar os relés a zero

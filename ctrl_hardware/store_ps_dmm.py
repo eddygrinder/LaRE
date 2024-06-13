@@ -67,3 +67,15 @@ def voltage_values():
 
 def current_values():
     return current_measurements
+
+
+def set_values_mso(mso_value):
+    global mso
+    mso = mso_value
+
+def get_values_mso():
+    return mso
+
+def clear_values_mso():
+    global mso
+    mso = None
