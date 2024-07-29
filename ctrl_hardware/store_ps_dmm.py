@@ -17,6 +17,13 @@ voltage_measurements = np.array([])
 current_measurements = np.array([])
 global frequency
 
+def clear_index():
+    global voltage_ctrl_index, current_ctrl_index, voltage_measurements, current_measurements
+    voltage_ctrl_index = 0
+    current_ctrl_index = 0
+    voltage_measurements = 0
+    current_measurements = 0
+    
 def set_values(ps_value, dmm_value):
     global ps, dmm
     ps = ps_value

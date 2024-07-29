@@ -4,6 +4,12 @@
 	(generator_version "8.0")
 	(uuid "98799e4d-d48b-41fa-b9e1-2ca005c8d473")
 	(paper "A3")
+	(title_block
+		(title "LaRE - Rectificação/Filtragem")
+		(date "2024-07-21")
+		(rev "Julho 2024")
+		(company "ISEP")
+	)
 	(lib_symbols
 		(symbol "3570-1331-123:3570-1331-123"
 			(pin_names
@@ -3890,7 +3896,7 @@
 		(uuid "990f6e1b-205f-4ae2-ba4c-8ccd24405328")
 	)
 	(junction
-		(at 328.93 53.34)
+		(at 273.05 106.68)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9f5f8ff7-de0e-4cf3-a5fe-edc2a873f2d4")
@@ -4251,7 +4257,7 @@
 	)
 	(wire
 		(pts
-			(xy 349.25 50.8) (xy 345.44 50.8)
+			(xy 293.37 104.14) (xy 289.56 104.14)
 		)
 		(stroke
 			(width 0)
@@ -4364,7 +4370,7 @@
 	)
 	(wire
 		(pts
-			(xy 364.49 68.58) (xy 374.65 68.58)
+			(xy 308.61 121.92) (xy 318.77 121.92)
 		)
 		(stroke
 			(width 0)
@@ -4525,7 +4531,7 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 53.34) (xy 328.93 49.53)
+			(xy 273.05 106.68) (xy 273.05 102.87)
 		)
 		(stroke
 			(width 0)
@@ -4687,7 +4693,7 @@
 	)
 	(wire
 		(pts
-			(xy 345.44 50.8) (xy 345.44 68.58)
+			(xy 289.56 104.14) (xy 289.56 121.92)
 		)
 		(stroke
 			(width 0)
@@ -4697,7 +4703,7 @@
 	)
 	(wire
 		(pts
-			(xy 374.65 58.42) (xy 374.65 60.96)
+			(xy 318.77 111.76) (xy 318.77 114.3)
 		)
 		(stroke
 			(width 0)
@@ -4739,7 +4745,7 @@
 	)
 	(wire
 		(pts
-			(xy 365.76 50.8) (xy 374.65 50.8)
+			(xy 309.88 104.14) (xy 318.77 104.14)
 		)
 		(stroke
 			(width 0)
@@ -5085,7 +5091,7 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 71.12) (xy 347.98 71.12)
+			(xy 273.05 124.46) (xy 292.1 124.46)
 		)
 		(stroke
 			(width 0)
@@ -5148,7 +5154,7 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 53.34) (xy 328.93 71.12)
+			(xy 273.05 106.68) (xy 273.05 124.46)
 		)
 		(stroke
 			(width 0)
@@ -5473,7 +5479,7 @@
 	)
 	(wire
 		(pts
-			(xy 345.44 68.58) (xy 347.98 68.58)
+			(xy 289.56 121.92) (xy 292.1 121.92)
 		)
 		(stroke
 			(width 0)
@@ -5738,7 +5744,7 @@
 	)
 	(wire
 		(pts
-			(xy 349.25 53.34) (xy 328.93 53.34)
+			(xy 293.37 106.68) (xy 273.05 106.68)
 		)
 		(stroke
 			(width 0)
@@ -5941,8 +5947,8 @@
 		(uuid "fe7cba85-0a85-4b45-864d-2698057602ae")
 	)
 	(rectangle
-		(start 325.628 45.72)
-		(end 392.43 77.216)
+		(start 269.748 99.06)
+		(end 336.55 130.556)
 		(stroke
 			(width 0.25)
 			(type dash)
@@ -6503,7 +6509,7 @@
 	)
 	(text_box "K12 - Na rectificação de onda completa, \na onda de entrada tem de ser medida primeiro, devido ao problema de massas.\nSendo assim, na primeira medição, K12 estará activo e todos os outros \n11 relés estarão desactivados, é feita a medição.\nPara medir a onda de saída, o relés K12 ficará aberto, cortando, assim, a massa do Canal 1.\nÉ medida a onda de saída e construído o gráfico"
 		(exclude_from_sim no)
-		(at 353.06 81.28 0)
+		(at 525.78 80.01 0)
 		(size 54.102 27.686)
 		(stroke
 			(width 0)
@@ -6532,9 +6538,19 @@
 		)
 		(uuid "00e5e5d8-2af3-478d-b6f3-8e97319bc8f4")
 	)
+	(text "Gerador de sinal"
+		(exclude_from_sim no)
+		(at 30.734 72.39 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "124c9805-a35c-4182-96d8-5021a0a5eb49")
+	)
 	(text "8 relés duplos\n5 relé simples"
 		(exclude_from_sim no)
-		(at 391.668 243.586 0)
+		(at 621.03 97.79 0)
 		(effects
 			(font
 				(size 2.27 2.27)
@@ -6544,7 +6560,7 @@
 	)
 	(text "Relé K12 necessário por causa \ndas massas no rectificador de onda completa"
 		(exclude_from_sim no)
-		(at 44.196 130.302 0)
+		(at -24.13 131.826 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6562,9 +6578,9 @@
 		)
 		(uuid "ae6fb2cc-b5d5-4fa4-b251-4b784500c18b")
 	)
-	(text "Reles simples"
+	(text "Filtragem"
 		(exclude_from_sim no)
-		(at 357.378 41.91 0)
+		(at 301.498 95.25 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6574,7 +6590,7 @@
 	)
 	(text "Pontas osciloscópio"
 		(exclude_from_sim no)
-		(at 24.384 98.806 0)
+		(at 32.512 90.17 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6584,7 +6600,7 @@
 	)
 	(text "Total: "
 		(exclude_from_sim no)
-		(at 388.112 234.696 0)
+		(at 617.474 88.9 0)
 		(effects
 			(font
 				(size 4 4)
@@ -6596,7 +6612,7 @@
 	)
 	(text "Bypass ao díodo para \nrealizar o estudo dos \nfiltros passa-alto e \npassa-baixo\ne resposta do condensador \naos vários tipos de onda"
 		(exclude_from_sim no)
-		(at 326.39 87.122 0)
+		(at 499.11 85.852 0)
 		(effects
 			(font
 				(size 1 1)
@@ -6628,7 +6644,7 @@
 		(uuid "028fd119-6af2-41eb-bd5c-5a1f5d873ee0")
 	)
 	(label "12V"
-		(at 328.93 49.53 0)
+		(at 273.05 102.87 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6958,7 +6974,7 @@
 		(uuid "7a0b7122-7096-4607-86a2-8d16de9fa8dd")
 	)
 	(label "v_{out}+"
-		(at 374.65 59.69 0)
+		(at 318.77 113.03 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7255,7 +7271,7 @@
 		(uuid "c0f7d7c2-e6d7-40b4-acc3-014a9a9823e0")
 	)
 	(label "O_{24}"
-		(at 364.49 71.12 270)
+		(at 308.61 124.46 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7431,7 +7447,7 @@
 		(uuid "dfa9bf31-3d53-4f86-9003-f6ee0f45e0ae")
 	)
 	(label "O_{23}"
-		(at 365.76 53.34 270)
+		(at 309.88 106.68 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7541,7 +7557,7 @@
 		(uuid "fe91db44-d970-4cff-9584-618a381f2e89")
 	)
 	(label "v_{in}"
-		(at 345.44 66.04 90)
+		(at 289.56 119.38 90)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -8556,7 +8572,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 374.65 54.61 180)
+		(at 318.77 107.95 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8564,7 +8580,7 @@
 		(dnp no)
 		(uuid "503a7cfa-f07d-4558-8911-ac6dc32dc175")
 		(property "Reference" "R3"
-			(at 378.714 55.118 0)
+			(at 322.834 108.458 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8573,7 +8589,7 @@
 			)
 		)
 		(property "Value" "1K"
-			(at 378.714 53.086 0)
+			(at 322.834 106.426 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8582,7 +8598,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal"
-			(at 376.428 54.61 90)
+			(at 320.548 107.95 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8591,7 +8607,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 374.65 54.61 0)
+			(at 318.77 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8600,7 +8616,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 374.65 54.61 0)
+			(at 318.77 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8859,7 +8875,7 @@
 	)
 	(symbol
 		(lib_id "3570-1331-123:3570-1331-123")
-		(at 335.915 64.77 0)
+		(at 280.035 118.11 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8867,7 +8883,7 @@
 		(dnp no)
 		(uuid "71e6036a-eee1-4b10-a98b-fb1352b04eed")
 		(property "Reference" "K11"
-			(at 363.22 65.278 0)
+			(at 307.34 118.618 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -8875,7 +8891,7 @@
 			)
 		)
 		(property "Value" "3570-1331-123"
-			(at 356.235 64.77 0)
+			(at 300.355 118.11 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -8884,7 +8900,7 @@
 			)
 		)
 		(property "Footprint" "3570-1331-123:SIP_3570-1331_COM"
-			(at 333.375 57.023 0)
+			(at 277.495 110.363 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8894,7 +8910,7 @@
 			)
 		)
 		(property "Datasheet" "3570-1331-051"
-			(at 331.343 59.944 0)
+			(at 275.463 113.284 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8904,7 +8920,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 335.915 64.77 0)
+			(at 280.035 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9751,7 +9767,7 @@
 	)
 	(symbol
 		(lib_id "3570-1331-123:3570-1331-123")
-		(at 337.185 46.99 0)
+		(at 281.305 100.33 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9759,7 +9775,7 @@
 		(dnp no)
 		(uuid "b68d4f7b-6f3b-4ff6-89b4-5f1e9454bb4b")
 		(property "Reference" "K10"
-			(at 364.49 47.498 0)
+			(at 308.61 100.838 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9767,7 +9783,7 @@
 			)
 		)
 		(property "Value" "3570-1331-123"
-			(at 357.505 46.99 0)
+			(at 301.625 100.33 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9776,7 +9792,7 @@
 			)
 		)
 		(property "Footprint" "3570-1331-123:SIP_3570-1331_COM"
-			(at 334.645 39.243 0)
+			(at 278.765 92.583 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9786,7 +9802,7 @@
 			)
 		)
 		(property "Datasheet" "3570-1331-051"
-			(at 332.613 42.164 0)
+			(at 276.733 95.504 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9796,7 +9812,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 337.185 46.99 0)
+			(at 281.305 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10401,7 +10417,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized")
-		(at 374.65 64.77 180)
+		(at 318.77 118.11 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10409,7 +10425,7 @@
 		(dnp no)
 		(uuid "f1b132d4-3927-46ff-8870-ce5888a7e8c5")
 		(property "Reference" "C6"
-			(at 373.888 66.802 0)
+			(at 318.008 120.142 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10418,7 +10434,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 374.396 62.23 0)
+			(at 318.516 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10427,7 +10443,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm"
-			(at 373.6848 60.96 0)
+			(at 317.8048 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10436,7 +10452,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 374.65 64.77 0)
+			(at 318.77 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10445,7 +10461,7 @@
 			)
 		)
 		(property "Description" "Polarized capacitor"
-			(at 374.65 64.77 0)
+			(at 318.77 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)

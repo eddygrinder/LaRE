@@ -80,7 +80,8 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
         try: #Acho que este try não é preciso
             print("STOP")
             #Chama a função que desliga fonte de alimentação e multímetro
-            ps, dmm = store_ps_dmm.get_values()  
+            ps, dmm = store_ps_dmm.get_values()
+            store_ps_dmm.clear_index()
             ps.enable_all_outputs(False)
             ps.release()
             dmm.release()
@@ -107,7 +108,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
 
             if measure_parameter == "voltage":
                 dmm.configure_measurement(DmmFunction.DC_VOLTS, True, 10)
-                measurement_result = dmm.read()
+                measurement_result = round(dmm.read(),2)
                 #store_ps_dmm.set_voltage_graphic(measurement_result)
                 voltage_ctrl_index, current_ctrl_index = store_ps_dmm.voltage_index(measurement_result)
                 print ("INDICES= ", voltage_ctrl_index, current_ctrl_index)        
@@ -115,9 +116,11 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
             elif measure_parameter == "current":
                 dmm.configure_measurement(DmmFunction.DC_CURRENT, True, 10) # Verificar Manual Range = 10.0
                 measurement_result = dmm.read()
+                if measurement_result < 1:
+                    measurement_result = round(measurement_result * 1000, 2)
                 voltage_ctrl_index, current_ctrl_index = store_ps_dmm.current_index(measurement_result)
                 print ("INDICES = ", voltage_ctrl_index, current_ctrl_index)
-                print("MeasurementCONFIG: %f mA" % (measurement_result*1000))   
+                print("MeasurementCONFIG: %f mA" % (measurement_result))   
             
             #if (voltage_ctrl_index == 5 and current_ctrl_index == 5):
             print(store_ps_dmm.voltage_values())

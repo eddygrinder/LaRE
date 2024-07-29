@@ -10,11 +10,14 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(parent_dir)
 #from configVB import config_VB_DMM
 from ctrl_hardware import configRelays, configVB, mixed_signal_oscilloscope
+
 views = Blueprint('views', __name__)
+
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     return render_template("home.html", user=current_user)
+
 @views.route("/ohm", methods=['GET', 'POST'])
 @login_required
 def pagina_seguinte():
@@ -63,6 +66,7 @@ def config_VirtualBench():
         configRelays.config_relays_ohm(Resistance, measure_parameter)
         time.sleep(2)
         measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter, configOK, configSTOP)
+        print("FODA-sE", measurement_result)
         #print(Vcc, Resistance, measure_parameter, configOK, configSTOP)
       #  while(True):
        #     time.sleep(1)
