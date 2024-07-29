@@ -7,7 +7,6 @@ import hashlib
 
 auth = Blueprint('auth', __name__)
 
-
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -62,7 +61,3 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
-
-@auth.route('/output', methods=['GET', 'POST'])
-def output():
-    return render_template('output.html', user=current_user)
