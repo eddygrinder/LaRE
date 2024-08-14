@@ -177,15 +177,15 @@
         <mxCell id="M2YFyVoE7GtHk2X1bXnB-70" value="Parâmetro passado:&amp;nbsp;&lt;b&gt;Vcc, R e U&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="77e6c97f196da883-4" vertex="1">
           <mxGeometry x="25" y="550" width="175" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="nrBS12ZGRaC_mSFteA_r-96" value="&lt;div&gt;Configura&amp;nbsp;&lt;/div&gt;&lt;div&gt;VirtualBench&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=8;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="77e6c97f196da883-4">
+        <mxCell id="nrBS12ZGRaC_mSFteA_r-96" value="&lt;div&gt;Configura&amp;nbsp;&lt;/div&gt;&lt;div&gt;VirtualBench conforme o parâmetro recebido&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=8;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="77e6c97f196da883-4">
           <mxGeometry x="25" y="360" width="100" height="60" as="geometry" />
         </mxCell>
         <mxCell id="8H8KK3qULcMsiAke63Tr-96" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;fillColor=#008a00;strokeColor=#005700;" parent="77e6c97f196da883-1" source="8H8KK3qULcMsiAke63Tr-107" target="77e6c97f196da883-11" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="860" y="120" as="sourcePoint" />
             <Array as="points">
-              <mxPoint x="655" y="130" />
-              <mxPoint x="275" y="130" />
+              <mxPoint x="855" y="110" />
+              <mxPoint x="445" y="110" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -280,9 +280,9 @@
         <mxCell id="nrBS12ZGRaC_mSFteA_r-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="77e6c97f196da883-1" source="8H8KK3qULcMsiAke63Tr-106" target="nrBS12ZGRaC_mSFteA_r-96">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="nrBS12ZGRaC_mSFteA_r-98" value="Configura VirtualBench&lt;div&gt;consoante for escolhido OK ou Reset&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nrBS12ZGRaC_mSFteA_r-97">
+        <mxCell id="nrBS12ZGRaC_mSFteA_r-98" value="&lt;div&gt;Envia parâmetros OK ou Reset&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="nrBS12ZGRaC_mSFteA_r-97">
           <mxGeometry x="0.4471" y="2" relative="1" as="geometry">
-            <mxPoint x="33" y="18" as="offset" />
+            <mxPoint x="23" y="-12" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Stz53FhgeXE6KHRWkM9m-22" value="Python" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
