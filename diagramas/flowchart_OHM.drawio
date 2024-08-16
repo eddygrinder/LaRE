@@ -70,7 +70,7 @@
         <mxCell id="GOfvM1B0ZKZ93wvjMKwl-21" value="&lt;font color=&quot;#ffffff&quot;&gt;configRelays.py&lt;/font&gt;" style="swimlane;html=1;startSize=20;horizontal=0;fillColor=#60A917;" parent="GOfvM1B0ZKZ93wvjMKwl-1" vertex="1">
           <mxGeometry x="20" y="400" width="570" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="GOfvM1B0ZKZ93wvjMKwl-87" value="Testa e envia trama de bits" style="rounded=0;whiteSpace=wrap;html=1;" parent="GOfvM1B0ZKZ93wvjMKwl-21" vertex="1">
+        <mxCell id="GOfvM1B0ZKZ93wvjMKwl-87" value="Envia trama de bits" style="rounded=0;whiteSpace=wrap;html=1;" parent="GOfvM1B0ZKZ93wvjMKwl-21" vertex="1">
           <mxGeometry x="110" y="80" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="qkWF6An03FUQs90SeYeG-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="GOfvM1B0ZKZ93wvjMKwl-21" source="GOfvM1B0ZKZ93wvjMKwl-113" target="GOfvM1B0ZKZ93wvjMKwl-87">
