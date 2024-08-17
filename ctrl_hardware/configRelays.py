@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import random, socket, time
-import os, sys, requests
+#import os, sys, requests
 
 #from shift_register import SRoutput
 # This examples demonstrates how to make measurements using the Power

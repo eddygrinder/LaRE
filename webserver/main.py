@@ -5,7 +5,7 @@ sys.path.append(ctrl_hardware_path)
 
 #from controlVB import read_Vcc_R
 from website import create_app
-from flask import send_from_directory, request
+from flask import send_from_directory
 
 app = create_app()
 app.config['SECRET_KEY'] = 'thisisasecretkey'
@@ -17,4 +17,4 @@ def serve_image(filename):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True) #efenido para executar em todos os ip's disponíveis pela rede
+    app.run(host='0.0.0.0', port=5000, debug=True) #defenido para executar em todos os ip's disponíveis pela rede
