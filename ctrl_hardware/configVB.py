@@ -25,6 +25,8 @@
 # THE SOFTWARE.
 
 import matplotlib.pyplot as plt
+
+import matplotlib.pyplot as plt
 from scipy import stats
 
 import os, sys
