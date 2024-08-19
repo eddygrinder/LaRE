@@ -59,9 +59,9 @@ def config_VirtualBench():
     try:
         Vcc = request.args.get('Vcc', 0, int)
         Resistance = request.args.get('R', 0, int)
-        measure_parameter = request.args.get('parameter', None, str)
-        configOK = request.args.get('habilitar_parameter', None, bool)
-        configSTOP = request.args.get('desabilitar_parameter', None, bool)
+        measure_parameter = request.args.get('parameter', 0, str)
+        configOK = request.args.get('habilitar_parameter', 0, bool)
+        configSTOP = request.args.get('desabilitar_parameter', 0, bool)
         print (Vcc, Resistance, measure_parameter, configOK, configSTOP)
         configRelays.config_relays_ohm(Resistance, measure_parameter)
         time.sleep(2)
