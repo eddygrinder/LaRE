@@ -49,7 +49,51 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
 # You can see the device's name in the VirtualBench Application under File->About
 
-def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, configSTOP:bool):
+def OK():
+    try:
+        virtualbench = PyVirtualBench('VB8012-30A210F')
+
+        # Caso o utilizador carregue primeiro no RESET e depois no OK
+        # Se o utilizado carregar primeiro no RESET, o valor de virtualbench é None
+        store_ps_dmm.set_virtualbench(virtualbench)
+
+        print("PQP")
+        print("OKPSDMM")
+
+        #Chama a função que adquire a fonte de alimentação e o multímetro
+        ps = virtualbench.acquire_power_supply()
+        dmm = virtualbench.acquire_digital_multimeter()
+        store_ps_dmm.set_values(ps, dmm) # guarda os valores de ps e dmm
+
+        #############################
+        # Power Supply Configuration
+        #############################
+        channel = "ps/+25V"
+        voltage_level = 12.0
+        current_limit = 0.5 
+        ps.enable_all_outputs(True)
+        ps.configure_voltage_output(channel, voltage_level, current_limit)
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+        
+def STOP():
+    try: #Acho que este try não é preciso
+        print("STOPfoda-se")
+        #Chama a função que desliga fonte de alimentação e multímetro
+        virtualbench = store_ps_dmm.get_virtualbench()
+        ps, dmm = store_ps_dmm.get_values()
+        store_ps_dmm.clear_index()
+        if ps is not None and dmm is not None and virtualbench is not None: # Caso o utilizador clique no botão STOP várias vezes seguidas        
+            ps.enable_all_outputs(False)
+            ps.release()
+            dmm.release()
+            virtualbench.release()
+        store_ps_dmm.clear_values()
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+
+def test_parameters(Vcc:int, R:int, measure_parameter:str):
+    
     virtualbench = PyVirtualBench('VB8012-30A210F')
     
     '''
@@ -62,38 +106,8 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str, configOK:bool, config
     3/4 - Vcc, Resistance, measure_parameter, configOK, configSTOP = !=0, !=0, V or I, None, None
         Sistema realiza medição de tensão ou corrente, conforme os parâmetros passados
     '''
-    if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is True and configSTOP is None):
-        print("OKPSDMM")
-        #Chama a função que adquire a fonte de alimentação e o multímetro
-        ps = virtualbench.acquire_power_supply()
-        dmm = virtualbench.acquire_digital_multimeter()
-        store_ps_dmm.set_values(ps, dmm) # guarda os valores de ps e dmm
-        #############################
-        # Power Supply Configuration
-        #############################
-        channel = "ps/+25V"
-        voltage_level = 12.0
-        current_limit = 0.5 
-        ps.enable_all_outputs(True)
-        ps.configure_voltage_output(channel, voltage_level, current_limit)
-
-        return None, ps, dmm, virtualbench
-    if (Vcc == 0 and R == 0 and measure_parameter is None and configOK is None and configSTOP is True):
-        try: #Acho que este try não é preciso
-            print("STOP")
-            #Chama a função que desliga fonte de alimentação e multímetro
-            ps, dmm = store_ps_dmm.get_values()
-            store_ps_dmm.clear_index()
-            ps.enable_all_outputs(False)
-            ps.release()
-            dmm.release()
-            virtualbench.release()
-            measurement_result = None
-        except PyVirtualBenchException as e:
-            print("Error/Warning %d occurred\n%s" % (e.status, e))
-        return measurement_result
-    
-    if (Vcc != 0 and R != 0 and measure_parameter is not None and configOK is None and configSTOP is None):
+       
+    if (Vcc != 0 and R != 0 and measure_parameter is not None):
         print("Medição")
         #Chama a função que realiza a medição de tensão ou corrente
 

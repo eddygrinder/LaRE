@@ -44,7 +44,7 @@ def clear_values():
     global voltage_ctrl_index, current_ctrl_index, voltage_measurements, current_measurements
     ps = None
     dmm = None
-    #virtualbench = None
+    virtualbench = None
     print ("ps: ", ps, "dmm: ", dmm, "virtualbench: ", virtualbench) 
 
     voltage_ctrl_index = 0
