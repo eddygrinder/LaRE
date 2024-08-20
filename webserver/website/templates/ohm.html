@@ -165,6 +165,7 @@ Remember to set the width: -->
     // Acionar a função habilitarSeletores quando o botão "OK" for clicado
     document.querySelector(".ok").addEventListener("click", habilitarSeletores);
   </script>
+  
   <script>
     function desabilitarSeletores() {
       // Desabilitar os seletores
@@ -175,10 +176,13 @@ Remember to set the width: -->
         "/config_VirtualBench?desabilitar_parameter=" +
         booleanParameter.toString();
       fetch(url);
+      // Adicionando o recarregamento da página
+      location.reload();
     }
   </script>
+  
   <script>
-    // Acionar a função habilitarSeletores quando o botão "OK" for clicado
+    // Acionar a função deshabilitarSeletores quando o botão "STOP" for clicado
     document
       .querySelector(".stop")
       .addEventListener("click", desabilitarSeletores);

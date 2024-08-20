@@ -59,28 +59,26 @@ def config_VirtualBench():
     try:
         Vcc = request.args.get('Vcc', 0, int)
         Resistance = request.args.get('R', 0, int)
-        measure_parameter = request.args.get('parameter', None, str)
-        configOK = request.args.get('habilitar_parameter', None, bool)
-        configSTOP = request.args.get('desabilitar_parameter', None, bool)
+        measure_parameter = request.args.get('parameter', 0, str)
+        configOK = request.args.get('habilitar_parameter', 0, bool)
+        configSTOP = request.args.get('desabilitar_parameter', 0, bool)
         print (Vcc, Resistance, measure_parameter, configOK, configSTOP)
-        configRelays.config_relays_ohm(Resistance, measure_parameter)
-        time.sleep(2)
-        measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter, configOK, configSTOP)
-        print("FODA-sE", measurement_result)
-        #print(Vcc, Resistance, measure_parameter, configOK, configSTOP)
-      #  while(True):
-       #     time.sleep(1)
-        configRelays.config_relays_ohm(0, measure_parameter)
-        '''
-        São passados vários parâmetros do ficheiro home.html para esta função.
-        De entre eles, são feitas quatro possíveis combinações que correspondem a quatro situações diferentes:
-        1 - Vcc, Resistance, measure_parameter, configOK, configSTOP = 0, 0, None, True, None - Botão OK premido
-            Sistema adquire a fonte de alimentação e o multímetro e pronto para realizar medição
-        2 - Vcc, Resistance, measure_parameter, configOK, configSTOP = 0, 0, None, None, True - Botão STOP premido
-            Sistema "desliga" a fonte de alimentação e o multímetro, e os relés são desligados (configuração inicial)
-        3/4 - Vcc, Resistance, measure_parameter, configOK, configSTOP = !=0, !=0, V or I, None, None
-            Sistema realiza medição de tensão ou corrente, conforme os parâmetros passados
-        '''
+        
+        if configOK == True:
+            print("OK")
+            configVB.OK()
+            measurement_result = 0       
+        elif configSTOP == True:
+            print("STOP")
+            configVB.STOP()
+            measurement_result = 0
+        else:    
+            configRelays.config_relays_ohm(Resistance, measure_parameter)# isto pode ser modificado, só é chamado uma vez
+            time.sleep(2)
+            measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter) #isto pode ser modificado - verificar
+            # tem de ser, uma vez que os relés são desligados
+            print("FODA-sE", measurement_result)
+            configRelays.config_relays_ohm(0, measure_parameter)
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
