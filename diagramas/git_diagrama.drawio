@@ -111,49 +111,49 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-23" value="&lt;b&gt;configVB.py&lt;/b&gt;&lt;div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;def test_parameters(parâmetros)&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=0;align=center;" vertex="1" parent="1">
-          <mxGeometry x="650" y="325" width="140" height="60" as="geometry" />
+          <mxGeometry x="430" y="340" width="140" height="60" as="geometry" />
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-29" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="679" y="289.53000000000003" as="sourcePoint" />
-            <mxPoint x="629" y="289.53000000000003" as="targetPoint" />
+            <mxPoint x="1000" y="230.00000000000003" as="sourcePoint" />
+            <mxPoint x="950" y="230.00000000000003" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-30" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Vcc, R, parâmetros de medida (U ou I)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="630" y="272.36" width="160" height="10" as="geometry" />
+          <mxGeometry x="900" y="272.36" width="160" height="10" as="geometry" />
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-31" value="ConfigRelays.py" style="whiteSpace=wrap;html=1;rounded=0;align=center;" vertex="1" parent="1">
-          <mxGeometry x="504" y="485" width="100" height="30" as="geometry" />
+          <mxGeometry x="590" y="485" width="100" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="JOfDeOOW8SHyUDtn-MuH-33" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.774;exitY=0.846;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.677;entryY=0.846;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+        <mxCell id="JOfDeOOW8SHyUDtn-MuH-33" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="660.0000000000001" y="419.78000000000003" as="sourcePoint" />
-            <mxPoint x="595.0099999999999" y="419.78000000000003" as="targetPoint" />
+            <mxPoint x="590" y="650" as="sourcePoint" />
+            <mxPoint x="590.01" y="600" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-34" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Envia os parâmetros escolhidos pelo utilizador - R e Vcc&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="660" y="400" width="138" height="30" as="geometry" />
+          <mxGeometry x="900" y="375" width="138" height="30" as="geometry" />
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-35" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.774;exitY=0.846;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.677;entryY=0.846;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="674.9900000000001" y="497.72" as="sourcePoint" />
-            <mxPoint x="609.9999999999999" y="497.72" as="targetPoint" />
+            <mxPoint x="764.9900000000001" y="492" as="sourcePoint" />
+            <mxPoint x="699.9999999999999" y="492" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="JOfDeOOW8SHyUDtn-MuH-36" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Envia a respectiva string consoante os parâmetros recebidos&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="622" y="462" width="154" height="30" as="geometry" />
+        <mxCell id="JOfDeOOW8SHyUDtn-MuH-36" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Recebe os parâmetros e&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;verifica a string a enviar&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="700" y="500" width="110" height="30" as="geometry" />
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-37" value="RaspberryPI" style="whiteSpace=wrap;html=1;rounded=0;align=center;" vertex="1" parent="1">
           <mxGeometry x="340" y="570" width="80" height="30" as="geometry" />
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-39" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.774;exitY=0.846;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.677;entryY=0.846;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="626.0000000000001" y="570" as="sourcePoint" />
-            <mxPoint x="561.0099999999999" y="570" as="targetPoint" />
+            <mxPoint x="918.9900000000001" y="600" as="sourcePoint" />
+            <mxPoint x="853.9999999999999" y="600" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="JOfDeOOW8SHyUDtn-MuH-40" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Envia a string via SOCKET e aguarda por confirmação&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="570" y="550" width="220" height="20" as="geometry" />
+        <mxCell id="JOfDeOOW8SHyUDtn-MuH-40" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;string enviada via SOCKET e&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;aguarda por confirmação&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="600" y="615" width="130" height="20" as="geometry" />
         </mxCell>
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-42" value="Matriz LaRE" style="whiteSpace=wrap;html=1;rounded=0;align=center;" vertex="1" parent="1">
           <mxGeometry x="340" y="680" width="80" height="30" as="geometry" />
@@ -182,12 +182,12 @@
         <mxCell id="JOfDeOOW8SHyUDtn-MuH-48" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Após confirmação de envio, retorna ao script&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="322" y="462" width="98" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="JOfDeOOW8SHyUDtn-MuH-53" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="JOfDeOOW8SHyUDtn-MuH-31" target="JOfDeOOW8SHyUDtn-MuH-37">
+        <mxCell id="JOfDeOOW8SHyUDtn-MuH-53" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="JOfDeOOW8SHyUDtn-MuH-31" target="JOfDeOOW8SHyUDtn-MuH-37">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="540" y="620" as="sourcePoint" />
             <mxPoint x="590" y="570" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="529" y="585" />
+              <mxPoint x="665" y="585" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -196,7 +196,7 @@
             <mxPoint x="620" y="250" as="sourcePoint" />
             <mxPoint x="670" y="200" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="580" y="245" />
+              <mxPoint x="665" y="245" />
             </Array>
           </mxGeometry>
         </mxCell>
