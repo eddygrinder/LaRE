@@ -173,7 +173,8 @@ Remember to set the width: -->
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
       const url =
-        "/config_VirtualBench?desabilitar_parameter=" +
+      // Mudar isto  
+      "/config_VirtualBench?desabilitar_parameter=" +
         booleanParameter.toString();
       fetch(url);
       // Adicionando o recarregamento da página
@@ -244,13 +245,7 @@ Remember to set the width: -->
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url =
-          "/config_VirtualBench?parameter=" +
-          parameter +
-          "&Vcc=" +
-          Vcc +
-          "&R=" +
-          Resistance;
+        const url = `/config_VirtualBench?parameter=${parameter}&Vcc=${Vcc}&R=${Resistance}`;
         fetch(url)
           .then((response) => response.json())
           .then((data) => {
