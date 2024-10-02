@@ -57,9 +57,6 @@ def OK():
         # Se o utilizado carregar primeiro no RESET, o valor de virtualbench é None
         store_ps_dmm.set_virtualbench(virtualbench)
 
-        print("PQP")
-        print("OKPSDMM")
-
         #Chama a função que adquire a fonte de alimentação e o multímetro
         ps = virtualbench.acquire_power_supply()
         dmm = virtualbench.acquire_digital_multimeter()
@@ -107,7 +104,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str):
         Sistema realiza medição de tensão ou corrente, conforme os parâmetros passados
     '''
        
-    if (Vcc != 0 and R != 0 and measure_parameter is not None):
+    if (Vcc != 0 and R != 0 and measure_parameter is not None): #poderia, eventualmente ser um OR
         print("Medição")
         #Chama a função que realiza a medição de tensão ou corrente
 
