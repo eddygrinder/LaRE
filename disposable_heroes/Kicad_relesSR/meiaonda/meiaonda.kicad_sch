@@ -3800,6 +3800,12 @@
 		(uuid "107aaf55-ed2e-424b-b28f-49336b5a9844")
 	)
 	(junction
+		(at 193.548 87.2744)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "17f36d24-2fa4-47e0-a7bd-1fbfb8e2f6c1")
+	)
+	(junction
 		(at 46.99 87.63)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3973,7 +3979,7 @@
 	)
 	(wire
 		(pts
-			(xy 174.498 87.2744) (xy 217.678 87.2744)
+			(xy 174.498 87.2744) (xy 193.548 87.2744)
 		)
 		(stroke
 			(width 0)
@@ -4866,6 +4872,16 @@
 	)
 	(wire
 		(pts
+			(xy 193.548 87.2744) (xy 217.678 87.2744)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "78440f31-1e6e-41aa-8351-d706a6a5d380")
+	)
+	(wire
+		(pts
 			(xy 148.59 181.61) (xy 165.1 181.61)
 		)
 		(stroke
@@ -5373,7 +5389,7 @@
 		(stroke
 			(width 0)
 			(type default)
-			(color 0 0 0 1)
+			(color 0 132 0 1)
 		)
 		(uuid "b3fb099a-c444-4680-85e1-231dbe28c469")
 	)
@@ -5960,8 +5976,8 @@
 		(uuid 2cd06f5c-9755-47c5-8a1e-7d42ddd3a5af)
 	)
 	(rectangle
-		(start 73.152 17.9324)
-		(end 178.562 96.1644)
+		(start 73.5932 18.2374)
+		(end 179.0032 96.4694)
 		(stroke
 			(width 0.25)
 			(type dash)
@@ -5974,7 +5990,7 @@
 	)
 	(rectangle
 		(start 73.152 99.4664)
-		(end 179.07 140.8684)
+		(end 179.07 135.89)
 		(stroke
 			(width 0.25)
 			(type dash)
@@ -10267,10 +10283,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "c76df9d0-eba9-453a-8b93-bf51db0ffbf0")
 		(property "Reference" "F1"
-			(at 80.01 99.06 90)
+			(at 80.01 108.204 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10278,7 +10293,7 @@
 			)
 		)
 		(property "Value" "Fuse"
-			(at 80.01 101.6 90)
+			(at 80.01 110.49 90)
 			(effects
 				(font
 					(size 1.27 1.27)
