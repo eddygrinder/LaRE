@@ -78,7 +78,8 @@ def config_VirtualBench():
             measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter) #isto pode ser modificado - verificar
             # tem de ser, uma vez que os relés são desligados
             print("FODA-sE", measurement_result)
-            configRelays.config_relays_ohm(0, measure_parameter)
+            configRelays.config_relays_ohm(0, measure_parameter) # atenção a este "0" - verificar
+            # fica "0" é para desligar os relés
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})

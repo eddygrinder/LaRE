@@ -6,8 +6,8 @@ import random, socket, time
 
 #from shift_register import SRoutput
 # This examples demonstrates how to make measurements using the Power
-def config_relays_ohm (Resistance: int, measeure_parameter: str):
-    if measeure_parameter == "voltage":
+def config_relays_ohm (Resistance: int, measure_parameter: str):
+    if measure_parameter == "voltage":
         match Resistance:
             case 0:
                 print("ERROR: Resistence is 0")
@@ -32,7 +32,7 @@ def config_relays_ohm (Resistance: int, measeure_parameter: str):
             case _:
                 print("ERROR: Resistence is not 1, 1.5 or 2.2 KOhm")
 
-    elif measeure_parameter == "current":
+    elif measure_parameter == "current":
         match Resistance:
             case 0:
                 print("ERROR: Resistence is 0")
@@ -54,6 +54,8 @@ def config_relays_ohm (Resistance: int, measeure_parameter: str):
                 # time.sleep(1)
             case _:
                 print("ERROR: Resistence is not 1, 1.5 or 2.2 KOhm")
+
+# acho que estas funções seguintes estão a mais
 
 def config_relays_meiaonda (Resistance: int, Capacitance: int):
     match Resistance, Capacitance:
