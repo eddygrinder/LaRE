@@ -215,3 +215,25 @@ div.scroll-container {
 div.scroll-container img {
   padding: 10px;
 }
+
+/*********************************************/
+/* Linha separador */
+.linha-separador {
+  width: 15%; /* Define a largura da linha como 10% da largura do contêiner */
+  margin: 20px 0; /* Adiciona uma margem acima e abaixo da linha */
+  border: 0; /* Remove a borda padrão */
+   height: 2px; /* Define a altura da linha */
+   background-color: #000; /* Define a cor da linha */
+}
+
+.spacing {
+  margin-bottom: 100px;
+}
+
+.spacing_meiaonda {
+  margin-bottom: 245px;
+}
+
+.spacing_ondacompleta {
+  margin-bottom: 190px;
+}

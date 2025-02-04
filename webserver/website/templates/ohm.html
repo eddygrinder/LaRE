@@ -37,9 +37,9 @@
   </div>
 
   <div class="column middle">
-    <h2>Escolha uma das três resistências</h2>
+    <h2>Lei de Ohm</h2>
     <p>
-      Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper
+      Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper a experiência.
     </p>
     <p></p>
     <button class="btn ok">OK</button>
@@ -67,6 +67,17 @@ Remember to set the width: -->
         <option value="3">1.5</option>
       </select>
     </div>
+<p></p>
+<div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
+<hr class="linha-separador">
+<p></p>
+    <b>Instruções:</b>
+    <p></p>
+    <ul>
+      <li>Seleccione uma Resistência - R;
+        <li> Para cada valor de Vcc efectue <b>uma</b> medição de <b>tensão</b> e <b>corrente</b>;</li>
+      <li>Visualize o gráfico.</li>
+    </ul>   
   </div>
   <div class="column right">
     <a href="#" class="next round" id="measureVoltage" data-parameter="voltage"
@@ -80,10 +91,11 @@ Remember to set the width: -->
     <p id="current-measure"></p>
     <p></p>
     <a href="#" class="next round" id="showgraph"; style="display: block; margin-bottom: 1cm;"><b>Gráfico</b> &raquo; </a>
-
-    <p id="current-measure"></p>
     <p></p>
-    <a href="#" class="next round" id="instrucoes"><b>Instruções</b> &raquo; </a>  
+    <div class="spacing"></div>
+    <img src="../images/circuit_R1_volt-amp.png" width="85%" />
+
+
   </div>
 
   <!-- Div para exibir a imagem -->
