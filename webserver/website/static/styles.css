@@ -67,7 +67,7 @@ body {
 
 .left,
 .right {
-  width: 25%;
+  width: 30%;
   border-left: none;
 }
 
@@ -236,4 +236,12 @@ div.scroll-container img {
 
 .spacing_ondacompleta {
   margin-bottom: 190px;
+}
+
+.spacing_FPA {
+  margin-bottom: 200px;
+}
+
+.spacing_FPB {
+  margin-bottom: 200px;
 }

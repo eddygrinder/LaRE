@@ -40,7 +40,7 @@
       Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper
     </p>
     <p></p>
-    <button class="btn ok">OK</button> <button class="btn stop">STOP</button>
+    <button class="btn ok">OK</button> <button class="btn stop">STOP/RESET</button>
     <p></p>
 
     <!-- Surround the select box within a "custom-select" DIV element.
@@ -64,16 +64,30 @@ Remember to set the width: -->
     <form id="form1">
       <input type="number" id="input_freq" name="input_freq" />
     </form>
-  </div>
+
+  <div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
+  <hr class="linha-separador">
+  <p></p>
+      <b>Instruções</b>
+      <p></p>
+      <ul>
+        <li>Seleccione o Condensador - C e a Resistência - R;</li>
+        <li>Introduza o valor da frequência;</li>
+        <li>Efectue as medições e visualize os gráficos.</li>
+      </ul>   
+    </div>
+  
 
   <div class="column right">
     <a href="#" class="next round" id="measureRipple"
       ><b>Efectuar as medições</b> &raquo;
-    </a>
-    <a href="#" class="next round" id="showgraph"><b>Gráfico</b> &raquo; </a>
+    </a><br>
+    <a href="#" class="next round" id="showgraph"><b>Gráfico</b> &raquo; </a><br>
     <a href="#" class="next round" id="bodediagram"
       ><b>Diagrama de Bode</b> &raquo;
     </a>
+    <div class="spacing_FPA"></div>
+    <img src="../images/circuito_PA_OSC.png" width="100%" />
   </div>
 
   <!-- Div para exibir a imagem -->
