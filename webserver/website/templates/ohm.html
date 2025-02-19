@@ -171,9 +171,7 @@ Remember to set the width: -->
       document.getElementById("selectR").disabled = false;
       // Redirecionar para a rota com o parâmetro
       const booleanParameter = true;
-      const url =
-        "/config_VirtualBench?habilitar_parameter=" +
-        booleanParameter.toString();
+      const url = `/config_VirtualBench?habilitar_parameter=${booleanParameter.toString()}`;
       fetch(url);
     }
   </script>
