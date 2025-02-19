@@ -81,6 +81,7 @@ def STOP():
         ps, dmm = store_ps_dmm.get_values()
         store_ps_dmm.clear_index()
         if ps is not None and dmm is not None and virtualbench is not None: # Caso o utilizador clique no botão STOP várias vezes seguidas        
+            #if all([ps, dmm, virtualbench]): VERIFICAR. Isso funciona porque None é avaliado como False em um contexto booleano.
             ps.enable_all_outputs(False)
             ps.release()
             dmm.release()
