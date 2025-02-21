@@ -230,6 +230,8 @@ Remember to set the width: -->
         // VERIFICAR NAS OUTRAS PÁGINAS!!!
         // ************************************************
 
+        // VER SE AQUI NÃO LEVA UM ELSA PARA OS PARÂMETROS NÃO SEREM ENVIADOS
+
         const url = `/config_VirtualBench?parameter=${parameter}&Vcc=${Vcc}&R=${Resistance}`;
         fetch(url)
           .then((response) => response.json())
