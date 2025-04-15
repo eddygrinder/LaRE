@@ -1,29 +1,46 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.12">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.12">
   <diagram name="Página-1" id="AoPaH_ot53IrC0nwiRIE">
-    <mxGraphModel dx="1113" dy="489" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1150" dy="540" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="ztB5clT2Jjmn9FA6MDX--9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ztB5clT2Jjmn9FA6MDX--1" target="ztB5clT2Jjmn9FA6MDX--2">
+        <mxCell id="ztB5clT2Jjmn9FA6MDX--9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="ztB5clT2Jjmn9FA6MDX--1" target="ztB5clT2Jjmn9FA6MDX--2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ztB5clT2Jjmn9FA6MDX--1" value="ohm.html" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="160" width="120" height="80" as="geometry" />
+        <mxCell id="mbTAtv-9PhQAtets-G_5-1" value="Medição n" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="ztB5clT2Jjmn9FA6MDX--9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="13" as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="ztB5clT2Jjmn9FA6MDX--10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ztB5clT2Jjmn9FA6MDX--2" target="ztB5clT2Jjmn9FA6MDX--3">
+        <mxCell id="ztB5clT2Jjmn9FA6MDX--1" value="ohm.html" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="160" width="105" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ztB5clT2Jjmn9FA6MDX--10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="ztB5clT2Jjmn9FA6MDX--2" target="ztB5clT2Jjmn9FA6MDX--3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ztB5clT2Jjmn9FA6MDX--2" value="views.py" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="240" y="40" width="80" height="80" as="geometry" />
+        <mxCell id="ztB5clT2Jjmn9FA6MDX--2" value="views.py" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="200" y="80" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="ztB5clT2Jjmn9FA6MDX--11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ztB5clT2Jjmn9FA6MDX--3" target="ztB5clT2Jjmn9FA6MDX--4">
+        <mxCell id="ztB5clT2Jjmn9FA6MDX--11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="ztB5clT2Jjmn9FA6MDX--3" target="ztB5clT2Jjmn9FA6MDX--4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ztB5clT2Jjmn9FA6MDX--3" value="configVB.py" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="160" width="120" height="80" as="geometry" />
+        <mxCell id="ztB5clT2Jjmn9FA6MDX--3" value="configVB.py" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="160" width="105" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="ztB5clT2Jjmn9FA6MDX--4" value="store_ps_dmm.py" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="280" width="120" height="80" as="geometry" />
+        <mxCell id="ztB5clT2Jjmn9FA6MDX--4" value="store_ps_dmm.py" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="280" width="105" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="mbTAtv-9PhQAtets-G_5-2" value="n&amp;nbsp;&lt;span style=&quot;animation-delay: -0.01ms !important; animation-duration: 0.01ms !important; transition-duration: 0ms !important;&quot;&gt;≤ 10&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="70" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mbTAtv-9PhQAtets-G_5-4" value="Servidor" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="210" y="50" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mbTAtv-9PhQAtets-G_5-5" value="Medições" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="440" y="185" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mbTAtv-9PhQAtets-G_5-6" value="Ficheiro externo" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="440" y="305" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
