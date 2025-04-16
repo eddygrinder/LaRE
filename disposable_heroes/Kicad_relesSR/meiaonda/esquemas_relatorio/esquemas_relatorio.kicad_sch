@@ -3715,7 +3715,6 @@
 		)
 	)
 	(symbol
-		(lib_name "power:AC")
 		(lib_id "power:AC")
 		(at 69.85 121.92 0)
 		(unit 1)
@@ -3944,7 +3943,6 @@
 		)
 	)
 	(symbol
-		(lib_name "power:AC")
 		(lib_id "power:AC")
 		(at 31.75 146.05 0)
 		(unit 1)
@@ -5709,6 +5707,7 @@
 		)
 	)
 	(symbol
+		(lib_name "vcc:vcc_lare")
 		(lib_id "vcc:vcc_lare")
 		(at 30.48 30.48 0)
 		(unit 1)
@@ -5717,8 +5716,8 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "df4a3c7a-dd83-4f97-8ce5-ccd03e0889ff")
-		(property "Reference" "Vcc"
-			(at 24.13 30.48 0)
+		(property "Reference" "Ucc"
+			(at 23.876 30.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5772,14 +5771,13 @@
 		(instances
 			(project ""
 				(path "/9fc877dc-cb99-45ed-8cdc-1feaa22a482c"
-					(reference "Vcc")
+					(reference "Ucc")
 					(unit 1)
 				)
 			)
 		)
 	)
 	(symbol
-		(lib_name "power:AC")
 		(lib_id "power:AC")
 		(at 69.85 146.05 0)
 		(unit 1)
@@ -5937,7 +5935,6 @@
 		)
 	)
 	(symbol
-		(lib_name "power:AC")
 		(lib_id "power:AC")
 		(at 31.75 121.92 0)
 		(unit 1)
