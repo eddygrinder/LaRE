@@ -123,7 +123,7 @@ def config_relays_vin ():
 def config_Relays(stringValue: str):
     # Envia a string para o Raspberry Pi
     # Endereço IP e porta do Raspberry Pi
-    HOST = '192.168.1.75'  # Substitua pelo endereço IP do Raspberry Pi
+    HOST = '192.168.1.77'  # Substitua pelo endereço IP do Raspberry Pi
     PORT = 12345  # Porta de escuta no Raspberry Pi 
     
         # Criar um socket TCP/IP

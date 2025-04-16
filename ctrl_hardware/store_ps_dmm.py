@@ -56,7 +56,8 @@ def voltage_index(voltage): # Recebe os valores de tensão e armazena no dicion�
 # Recebe um valor de tensão e o armazena no dicionário
     global voltage_measurements, voltage_ctrl_index, current_ctrl_index
     # Adicione o novo valor de tensão ao array
-    voltage_measurements = np.append(voltage_measurements, voltage)
+     # Adicionar o valor de tensão ao array, sem duplicar ou iniciar com valor '0' se necessário
+    voltage_measurements = np.append(voltage_measurements, voltage)  # Adiciona novos valores 
     print ("voltage_values: ", voltage_measurements)
     voltage_ctrl_index += 1 # Incrementa o índice a partit do 1 devido aos return's
     return voltage_ctrl_index, current_ctrl_index

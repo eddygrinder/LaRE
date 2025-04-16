@@ -149,17 +149,19 @@ def plot_graphic(current_measurements, voltage_measurements):
    # Cria os rótulos para os eixos x
     print ("current_measurements: ", current_measurements)
     x_labels = range(1, len(voltage_measurements) + 1)
-
+     # Começar a partir do índice 1, ou seja, a partir da segunda medição
+    voltage_measurements = voltage_measurements[1:]
+    current_measurements = current_measurements[1:]
     # Cria o gráfico
     #plt.plot(x_labels, current_measurements, label='Corrente (A)')
-    plt.plot(voltage_measurements, x_labels, label='V Vs I', marker = 'o')
+    plt.plot(voltage_measurements, current_measurements, label='V Vs I', marker = 'o')
     slope, intercept, r_value, p_value, std_err = stats.linregress(voltage_measurements, current_measurements)
     print ("slope: %f    intercept: %f" % (slope, intercept))
 
     plt.xlabel('Current')
     plt.ylabel('Voltage')
     plt.title('Gráfico de Tensão e Corrente')
-    plt.legend()
+    plt.legend().remove()
     plt.text(0, 0, f'Declive: {slope:.2f}', fontsize=12, color='red')
     plt.grid(True)
    # Verifica se o diretório "static/images" existe, se não, cria-o
