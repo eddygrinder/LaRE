@@ -21,8 +21,8 @@ def clear_index():
     global voltage_ctrl_index, current_ctrl_index, voltage_measurements, current_measurements
     voltage_ctrl_index = 0
     current_ctrl_index = 0
-    voltage_measurements = 0
-    current_measurements = 0
+    #voltage_measurements = 0
+    #current_measurements = 0
     
 def set_values(ps_value, dmm_value):
     global ps, dmm
@@ -49,8 +49,8 @@ def clear_values():
 
     voltage_ctrl_index = 0
     current_ctrl_index = 0
-    voltage_measurements = 0
-    current_measurements = 0
+    voltage_measurements = np.array([])  # Array vazio
+    current_measurements = np.array([])  # Array vazio
 
 def voltage_index(voltage): # Recebe os valores de tensão e armazena no dicionário
 # Recebe um valor de tensão e o armazena no dicionário

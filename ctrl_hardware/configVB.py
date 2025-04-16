@@ -75,11 +75,10 @@ def OK():
         
 def STOP():
     try: #Acho que este try não é preciso
-        print("STOPfoda-se")
         #Chama a função que desliga fonte de alimentação e multímetro
         virtualbench = store_ps_dmm.get_virtualbench()
         ps, dmm = store_ps_dmm.get_values()
-        store_ps_dmm.clear_index()
+        #store_ps_dmm.clear_index()
         if ps is not None and dmm is not None and virtualbench is not None: # Caso o utilizador clique no botão STOP várias vezes seguidas        
             #if all([ps, dmm, virtualbench]): VERIFICAR. Isso funciona porque None é avaliado como False em um contexto booleano.
             ps.enable_all_outputs(False)
@@ -146,23 +145,20 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str):
             return measurement_result
 
 def plot_graphic(current_measurements, voltage_measurements):
-   # Cria os rótulos para os eixos x
-    print ("current_measurements: ", current_measurements)
-    x_labels = range(1, len(voltage_measurements) + 1)
-     # Começar a partir do índice 1, ou seja, a partir da segunda medição
-    voltage_measurements = voltage_measurements[1:]
-    current_measurements = current_measurements[1:]
     # Cria o gráfico
-    #plt.plot(x_labels, current_measurements, label='Corrente (A)')
     plt.plot(voltage_measurements, current_measurements, label='V Vs I', marker = 'o')
     slope, intercept, r_value, p_value, std_err = stats.linregress(voltage_measurements, current_measurements)
     print ("slope: %f    intercept: %f" % (slope, intercept))
 
-    plt.xlabel('Current')
-    plt.ylabel('Voltage')
+    # Obter limites atuais do eixo
+    x_min, x_max = plt.xlim()
+    y_min, y_max = plt.ylim()
+
+    plt.xlabel('Corrente (mA)')
+    plt.ylabel('Tensão (V)')
     plt.title('Gráfico de Tensão e Corrente')
+    plt.text(x_min + 0.05*(x_max - x_min), y_max - 0.1*(y_max - y_min), f'Declive: {slope:.2f}', fontsize=12, color='red')
     plt.legend().remove()
-    plt.text(0, 0, f'Declive: {slope:.2f}', fontsize=12, color='red')
     plt.grid(True)
    # Verifica se o diretório "static/images" existe, se não, cria-o
     if not os.path.exists("webserver/website/static/images"):
