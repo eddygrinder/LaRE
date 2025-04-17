@@ -96,6 +96,10 @@ def config_meiaonda():
         configSTOP = request.args.get('desabilitar_parameter', 0, bool)
         print (Capacitor, Resistance, frequency, configOK, configSTOP)      
         
+        if configSTOP == True:
+            print("STOP")
+            mixed_signal_oscilloscope.STOP()
+        
         if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
             mixed_signal_oscilloscope.config_instruments_HalfWave(frequency, Resistance, Capacitor)
     except Exception as e:
