@@ -69,13 +69,13 @@ def config_relays_meiaonda (Resistance: int, Capacitance: int):
 
         case 1, 2:
             # Resistência = 1KOhm e Capacitância = 3.3uF
-            config_Relays("101101001") # Relés - K1...|K9 - R=1K e C=3.3uF
+            config_Relays("1011010010000") # Relés - K1...|K9 - R=1K e C=3.3uF
         case 2, 1:
             # Resistência = 10KOhm e Capacitância = 1uF
-            config_Relays("101100110") # Relés - K1...|K9 - R=10K e C=1uF
+            config_Relays("1011001100011") # Relés - K1...|K9 - R=10K e C=1uF
         case 2, 2:
             # Resistência = 10KOhm e Capacitância = 3.3uF
-            config_Relays("101100101") # Relés - K1...|K9 - R=10K e C=3.3uF
+            config_Relays("1011001010000") # Relés - K1...|K9 - R=10K e C=3.3uF
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 

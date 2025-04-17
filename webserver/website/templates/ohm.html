@@ -187,9 +187,7 @@ Remember to set the width: -->
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
       const url =
-      // Mudar isto  
-      "/config_VirtualBench?desabilitar_parameter=" +
-        booleanParameter.toString();
+            `/config_VirtualBench?desabilitar_parameter=${booleanParameter.toString()}`; 
       fetch(url);
       // Adicionando o recarregamento da página
       location.reload();

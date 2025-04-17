@@ -159,12 +159,12 @@ Remember to set the width: -->
       document.getElementById("selectC").disabled = false;
       document.getElementById("selectR").disabled = false;
       // Redirecionar para a rota com o parâmetro
-      //const booleanParameter = true;
-      //const url =
-      //  "/config_meiaonda?habilitar_parameter=" + booleanParameter.toString();
-      //fetch(url);
+      const booleanParameter = true;
+      const url = `/config_meiaonda?habilitar_parameter=${booleanParameter}`;
+      fetch(url);
     }
   </script>
+
   <script>
     // Acionar a função habilitarSeletores quando o botão "OK" for clicado
     document.querySelector(".ok").addEventListener("click", habilitarSeletores);
@@ -175,8 +175,8 @@ Remember to set the width: -->
       document.getElementById("selectC").disabled = true;
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
-      const url = "/config_meiaonda?reset=" + booleanParameter.toString();
-      fetch(url);
+      const url = `/config_meiaonda?desabilitar_parameter="${booleanParameter}`;
+       fetch(url);
     }
   </script>
   <script>

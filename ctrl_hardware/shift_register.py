@@ -1,116 +1,107 @@
-import gpiod
-from gpiod.line import Direction, Value
+#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-import time
+import random, socket, time
+#import os, sys, requests
 
-import warnings
-#warnings.filterwarnings("ignore")
 
-SER = 5              # GPIO 5 - SER/DS (serial data input, SPI data)
-RCLK = 6             # GPIO 6 - RCLK/STCP
-SRCLK = 13           # GPIO 13 - SRCLK/SHCP (storage register clock pin, SPI clock)
-OE = 19              # GPIO 19 - Enable/Disable do SR
-SRCLR = 26           # GPIO 26 - O registo de deslocamento � limpo (ACTIVO BAIXO)
 
-OFF = Value.INACTIVE
-ON = Value.ACTIVE
+def config_relays_meiaonda (Resistance: int, Capacitance: int):
+    match Resistance, Capacitance:
+        case 0, 0:
+            # colocar os relés a zero
+            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+        case 1, 1:
+            # Resistência = 1KOhm e Capacitância = 1uF
+            #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
+            config_Relays("1011010100000") # Relés - K1...|K9 - R=1K e C=1uF
 
-# Configuração para cada pino GPIO
-configs = {
-    SER: gpiod.LineSettings(
-        direction=Direction.OUTPUT, output_value=Value.ACTIVE
-    ),
-    RCLK: gpiod.LineSettings(
-        direction=Direction.OUTPUT, output_value=Value.ACTIVE
-    ),
-    SRCLK: gpiod.LineSettings(
-        direction=Direction.OUTPUT, output_value=Value.ACTIVE
-    ),
-    OE: gpiod.LineSettings(
-        direction=Direction.OUTPUT, output_value=Value.ACTIVE
-    ),
-    SRCLR: gpiod.LineSettings(
-        direction=Direction.OUTPUT, output_value=Value.ACTIVE
-    ),
-}
+        case 1, 2:
+            # Resistência = 1KOhm e Capacitância = 3.3uF
+            config_Relays("1011010010000") # Relés - K1...|K9 - R=1K e C=3.3uF
+        case 2, 1:
+            # Resistência = 10KOhm e Capacitância = 1uF
+            config_Relays("00000000") # Relés - K1...|K9 - R=10K e C=1uF
+        case 2, 2:
+            # Resistência = 10KOhm e Capacitância = 3.3uF
+            config_Relays("1011001010000") # Relés - K1...|K9 - R=10K e C=3.3uF
+        case _:
+            print("ERROR: Resistence or Capacitance outside values")
 
-# Solicitação das linhas GPIO
-request = gpiod.request_lines(
-    "/dev/gpiochip4",
-    consumer="controlo_GPIO's",
-    config=configs
-)
+def config_relays_ondacompleta (Resistance: int, Capacitance: int):
+    match Resistance, Capacitance:
+        case 0, 0:
+            # colocar os relés a zero
+            config_Relays("000000000000") #relés OBRIGATORIAMENTE desligados
+        case 1, 1:
+            # Resistência = 1KOhm e Capacitância = 1uF
+            #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
+            config_Relays("010011010000") # Relés - K1...|K9 - R=1K e C=1uF
 
-# Valor por defeito de espera nas operacoes do registo de deslocamento
-WaitTimeSR = 0.1
+        case 1, 2:
+            # Resistência = 1KOhm e Capacitância = 3.3uF
+            config_Relays("010010110000") # Relés - K1...|K9 - R=1K e C=3.3uF
+        case 2, 1:
+            # Resistência = 10KOhm e Capacitância = 1uF
+            config_Relays("010010101000") # Relés - K1...|K9 - R=10K e C=1uF
+        case 2, 2:
+            # Resistência = 10KOhm e Capacitância = 3.3uF
+            config_Relays("010011001000") # Relés - K1...|K9 - R=10K e C=3.3uF
+        case _:
+            print("ERROR: Resistence or Capacitance outside values")
 
-#####################################################
-# Tabela de verdade do Registo de Deslocamento
-# SER | SRCLK | 'SRCLR | RCLK |  'OE | Sa�das/Fun��es
-#  X      X       X       X       H    Q's inactivas
-#  X      X       X       X       L    Q'S activos
-#  X      X       L       X       X    SR limpo
-#  L    + et      H       X       X    0 no SR
-#  H    + et      H       X       X    1 no SR
-#  X      X       X     +et       X   dados out
-######################################################
+def config_relays_passaalto (Resistance: int, Capacitance: int):
+    match Resistance, Capacitance:
+        case 0, 0:
+            # colocar os relés a zero
+            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+        case 1, 1:
+            # Resistência = 1KOhm e Capacitância = 1uF
+            #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
+            config_Relays("100101000010") # Relés - K1...|K9 - R=1K e C=1uF
 
-# Limpa o registo de deslocamento
-request.set_value(SRCLR, OFF)
-time.sleep(WaitTimeSR)
-request.set_value(SRCLR, ON)
+        case 2, 1:
+            # Resistência = 1KOhm e Capacitância = 3.3uF
+            config_Relays("1001001000010") # Relés - K1...|K9 - R=1K e C=3.3uF
+        case _:
+            print("ERROR: Resistence or Capacitance outside values")
 
-# Enable do SR - sa�das sempre activas
-request.set_value(OE, OFF)
+def config_Relays(stringValue: str):
+    # Envia a string para o Raspberry Pi
+    # Endereço IP e porta do Raspberry Pi
+    HOST = '192.168.1.77'  # Substitua pelo endereço IP do Raspberry Pi
+    PORT = 12345  # Porta de escuta no Raspberry Pi 
+    
+        # Criar um socket TCP/IP
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        # Conectar-se ao servidor (Raspberry Pi)
+        s.connect((HOST, PORT))
+        
+        # Enviar a mensagem
+        s.sendall(stringValue.encode())
+        print("Mensagem enviada com sucesso.")
 
-# Fun��o que verifica e desloca os bits para armazenar no registo de deslocamento
-def SRoutput(checkshift):
-    print(checkshift)
-    for i in range(8):
-        shift = checkshift & 1
-        print(shift)
-
-        if shift == 1:
-            print ("UM")
-            WriteReg (ON, WaitTimeSR)
-        else:
-            print ("ZERO")
-            WriteReg(OFF, WaitTimeSR)
-        checkshift = checkshift >> 1
-    OutputReg()
-
-# Defini��o da fun��o que envia os dados para o registo de deslocamento,
-# segundo o algoritmo descrito em baixo
-
-### ALGORITMO ###
-# Enviar um bit para o pino SER/DS
-### Depois de enviado, � dado um impulso de clock (SRCLK/SHCP) e o bit armazenado nos registos
-###### ... um segundo bit � enviado, repetindo os dois passos em cima - � repetido at� estarem armazenados 8 bits
-######### Por ultimo � dado um impulso aos registos (RCLK/STCP) para obter os 8 bits na saida
-
-def WriteReg (WriteBit, WaitTimeSR):
-    request.set_value(SER, WriteBit) #GPIO.output (SER,WriteBit) # Envia o bit para o registo
-    time.sleep (WaitTimeSR) # Espera 100ms
-    request.set_value(SRCLK, ON) #GPIO.output(SRCLK,1)
-    time.sleep(WaitTimeSR)
-    request.set_value(SRCLK, OFF) #GPIO.output (SRCLK, 0)  # Clock - flanco POSITIVO
-
-# Funcao que limpa o registo
-def register_clear ():
-    request.set_value(SRCLK,OFF) #GPIO.output(SRCLK, 0)
-    time.sleep(WaitTimeSR) # espera 100ms
-    request.set_value(SRCLK,ON) #GPIO.output(SRCLK, 1)
-sadakdsa
-oksado
-oaskdo
-sdakoa
-asodkaods
-oskdosakdoasdoak
-
-# Armazenar o valor no registo
-def OutputReg ():
-    request.set_value(RCLK, OFF) #GPIO.output(RCLK, 0)
-    time.sleep(WaitTimeSR)
-    request.set_value(RCLK, ON) #GPIO.output(RCLK, 1)
-    time.sleep(10)
-    #request.release()
+       # Espera pela resposta do servidor
+        while True:
+            data = s.recv(1024)
+            if not data:
+                break
+            response = data.decode()
+            if response == 'True':  # Espera por uma confirmação específica do servidor
+                print("Confirmação recebida do servidor:", response)
+                break
+# Receber a resposta
+'''
+def relays_requests(stringValue: str):
+    # Envia a string para o Raspberry Pi
+    # Endereço IP e porta do Raspberry Pi
+    url = "http://192.168.1.71/endpoint"
+    string = stringValue
+    data = {"string": string}
+    # Envia a requisição usando o dicionário
+    response = requests.post(url, data)
+    if response.status_code == 200:
+        print("Requisição enviada com sucesso!")
+    else:
+        print("Erro ao enviar requisição:", response.status_code)
+'''
