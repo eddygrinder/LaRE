@@ -33,7 +33,7 @@ from matplotlib.ticker import EngFormatter
 import numpy as np
 
 import os, pickle, socket, time
-import store_ps_dmm, configRelays, shift_register
+import store_ps_dmm, configRelays
 
 
 # Falar do porquê da variável global e o porqê de iniciar a 1.0
@@ -50,7 +50,7 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
         # Waveform Configuration - Configuração do gerador de sinal
         #############################
         waveform_function = Waveform.SINE
-        amplitude = 5.0      # 10V
+        amplitude = 1.0      # 10V
         dc_offset = 0.0       # 0V
         duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
 
@@ -74,8 +74,7 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
         ps.configure_voltage_output(channel, voltage_level, current_limit)        
         
         configRelays.config_relays_meiaonda(0, 0) # Independentemente do seu estado, coloca os relés a zero
-        print("Configuração dos relés: ", Resistance, Capacitor)
-        #configRelays.config_relays_meiaonda(Resistance, Capacitor) # Configura os relés para a medição
+        configRelays.config_relays_meiaonda(Resistance, Capacitor) # Configura os relés para a medição
         
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
@@ -95,9 +94,7 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
 
         analog_data_size = len(analog_data)
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
-        shift_register.config_relays_meiaonda(2,1)
-        while True:
-            pass
+              
         plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, frequency)
         #print_digital_data(digital_data, digital_timestamps, 10)
               
@@ -597,3 +594,136 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
         print("Error/Warning %d occurred\n%s" % (e.status, e))
     finally:
         virtualbench.release()
+'''
+###############################################
+# Relays Configuration Zone
+###############################################
+
+def config_Relays(stringValue: str):
+    # Envia a string para o Raspberry Pi
+    # Endereço IP e porta do Raspberry Pi
+    HOST = '192.168.1.75'  # Substitua pelo endereço IP do Raspberry Pi
+    PORT = 12345  # Porta de escuta no Raspberry Pi 
+    
+        # Criar um socket TCP/IP
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        # Conectar-se ao servidor (Raspberry Pi)
+        s.connect((HOST, PORT))
+        
+        # Enviar a mensagem
+        s.sendall(stringValue.encode())
+        print("Mensagem enviada com sucesso.")
+
+       # Espera pela resposta do servidor
+        while True:
+            data = s.recv(1024)
+            if not data:
+                break
+            response = data.decode()
+            if response == 'True':  # Espera por uma confirmação específica do servidor
+                print("Confirmação recebida do servidor:", response)
+                break
+
+def config_relays_meiaonda (Resistance: int, Capacitance: int):
+    match Resistance, Capacitance:
+        case 0, 0:
+            # colocar os relés a zero
+            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+        case 1, 1:
+            # Resistência = 1KOhm e Capacitância = 1uF
+            #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
+            config_Relays("1011010100000") # Relés - K1...|K9 - R=1K e C=1uF
+
+        case 1, 2:
+            # Resistência = 1KOhm e Capacitância = 3.3uF
+            config_Relays("101101001") # Relés - K1...|K9 - R=1K e C=3.3uF
+        case 2, 1:
+            # Resistência = 10KOhm e Capacitância = 1uF
+            config_Relays("101100110") # Relés - K1...|K9 - R=10K e C=1uF
+        case 2, 2:
+            # Resistência = 10KOhm e Capacitância = 3.3uF
+            config_Relays("101100101") # Relés - K1...|K9 - R=10K e C=3.3uF
+        case _:
+            print("ERROR: Resistence or Capacitance outside values")
+'''
+
+def config_relays_PassFilter (Resistance: int, Capacitance: int, which_filter:str):
+    if which_filter == "HPF":
+        match Resistance, Capacitance:
+            case 0, 0:
+                # colocar os relés a zero
+                configRelays.config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+            case 1, 1:
+                # Resistência = 1KOhm e Capacitância = 1uF
+                configRelays.config_Relays("1001010000100") # Relés - K1...|K9 - R=1K e C=1uF
+
+            case 2, 1:
+                # Resistência = 1KOhm e Capacitância = 3.3uF
+                configRelays.config_Relays("1001001000100") # Relés - K1...|K9 - R=1K e C=3.3uF
+            case _:
+                print("ERROR: Resistence or Capacitance outside values")
+    elif which_filter == "LPF":
+        match Resistance, Capacitance:
+            case 0, 0:
+                # colocar os relés a zero
+                configRelays.config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+            case 1, 1:
+                # Resistência = 1KOhm e Capacitância = 1uF
+                configRelays.config_Relays("1001000101000") # Relés - K1...|K9 - R=1K e C=1uF
+
+            case 1, 2:
+                # Resistência = 1KOhm e Capacitância = 3.3uF
+                configRelays.config_Relays("1001000011000") # Relés - K1...|K9 - R=1K e C=3.3uF
+            case _:
+                print("ERROR: Resistence or Capacitance outside values")
+'''
+    try:
+        virtualbench = PyVirtualBench('VB8012-30A210F')
+        
+        #############################
+        # Waveform Configuration - Configuração do gerador de sinal
+        #############################
+        waveform_function = Waveform.SINE
+        amplitude = 10.0      # 10V
+        dc_offset = 0.0       # 0V
+        duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
+
+        # You will probably need to replace "myVirtualBench" with the name of your device.
+        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
+        # You can see the device's name in the VirtualBench Application under File->About
+        
+        fgen = virtualbench.acquire_function_generator()
+        fgen.configure_standard_waveform(waveform_function, amplitude, dc_offset, frequency, duty_cycle)
+        # Start driving the signal. The waveform will continue until Stop is called, even if you close the session.
+        fgen.run()
+        
+        #############################
+        # Power Supply Configuration
+        #############################
+        ps = virtualbench.acquire_power_supply()
+        channel = "ps/+25V"
+        voltage_level = 12.0
+        current_limit = 0.5 
+        ps.enable_all_outputs(True)
+        ps.configure_voltage_output(channel, voltage_level, current_limit)        
+        
+        config_relays_meiaonda(0, 0) # Independentemente do seu estado, coloca os relés a zero
+        config_relays_meiaonda(Resistance, Capacitance) # Configura os relés para a medição
+        
+        mso = virtualbench.acquire_mixed_signal_oscilloscope()
+
+        # Configure the acquisition using auto setup
+        mso.auto_setup()
+
+        # Query the configuration that was chosen to properly interpret the data.
+        sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
+        channels = mso.query_enabled_analog_channels()
+        channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
+        
+        # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
+        mso.run()       
+    except PyVirtualBenchException as e:
+        print("Error/Warning %d occurred\n%s" % (e.status, e))
+    finally:
+        virtualbench.release()
+'''
