@@ -72,7 +72,7 @@ def config_relays_meiaonda (Resistance: int, Capacitance: int):
             config_Relays("1011010010000") # Relés - K1...|K9 - R=1K e C=3.3uF
         case 2, 1:
             # Resistência = 10KOhm e Capacitância = 1uF
-            config_Relays("1000000000000") # Relés - K1...|K9 - R=10K e C=1uF
+            config_Relays("1011001100000") # Relés - K1...|K9 - R=10K e C=1uF
         case 2, 2:
             # Resistência = 10KOhm e Capacitância = 3.3uF
             config_Relays("1011001010000") # Relés - K1...|K9 - R=10K e C=3.3uF
@@ -101,21 +101,35 @@ def config_relays_ondacompleta (Resistance: int, Capacitance: int):
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 
-def config_relays_passaalto (Resistance: int, Capacitance: int):
-    match Resistance, Capacitance:
-        case 0, 0:
-            # colocar os relés a zero
-            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
-        case 1, 1:
-            # Resistência = 1KOhm e Capacitância = 1uF
-            #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
-            config_Relays("100101000010") # Relés - K1...|K9 - R=1K e C=1uF
+def config_relays_PassFilter (Resistance: int, Capacitance: int, which_filter:str):
+    if which_filter == "HPF":
+        match Resistance, Capacitance:
+            case 0, 0:
+                # colocar os relés a zero
+                config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+            case 1, 1:
+                # Resistência = 1KOhm e Capacitância = 1uF
+                config_Relays("1001010000100") # Relés - K1...|K9 - R=1K e C=1uF
 
-        case 2, 1:
-            # Resistência = 1KOhm e Capacitância = 3.3uF
-            config_Relays("1001001000010") # Relés - K1...|K9 - R=1K e C=3.3uF
-        case _:
-            print("ERROR: Resistence or Capacitance outside values")
+            case 2, 1:
+                # Resistência = 1KOhm e Capacitância = 3.3uF
+                config_Relays("1001001000100") # Relés - K1...|K9 - R=1K e C=3.3uF
+            case _:
+                print("ERROR: Resistence or Capacitance outside values")
+    elif which_filter == "LPF":
+        match Resistance, Capacitance:
+            case 0, 0:
+                # colocar os relés a zero
+                config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
+            case 1, 1:
+                # Resistência = 1KOhm e Capacitância = 1uF
+                config_Relays("1001000101000") # Relés - K1...|K9 - R=1K e C=1uF
+
+            case 1, 2:
+                # Resistência = 1KOhm e Capacitância = 3.3uF
+                config_Relays("1001000011000") # Relés - K1...|K9 - R=1K e C=3.3uF
+            case _:
+                print("ERROR: Resistence or Capacitance outside values")
 
 def config_relays_vin ():
     config_Relays("010011000000") # K12 Activo para ler vin

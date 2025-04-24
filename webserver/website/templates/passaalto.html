@@ -48,7 +48,7 @@ Remember to set the width: -->
     <div style="display: inline-block; width: 300px">
       <select id="selectC" disabled>
         <option value="0">Seleccionar Condensador [&microF]:</option>
-        <option value="1">1</option>
+        <option value="1">0.01</option>
       </select>
     </div>
 
@@ -56,11 +56,11 @@ Remember to set the width: -->
       <select id="selectR" disabled>
         <option value="0">Seleccionar R[KΩ]:</option>
         <option value="1">1</option>
-        <option value="2">10</option>
+        <option value="2">2.2</option>
       </select>
     </div>
     <p></p>
-    Valor da frequência entre 50 e 2000 Hz
+    Valor da frequência entre 500 e 5000 Hz
     <form id="form1">
       <input type="number" id="input_freq" name="input_freq" />
     </form>
@@ -211,8 +211,8 @@ Remember to set the width: -->
           Capacitor === "0" ||
           Resistance === "0" ||
           valorfreq === "" ||
-          valorfreq < 50 ||
-          valorfreq > 2000
+          valorfreq < 5 ||
+          valorfreq > 50000
         ) {
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
