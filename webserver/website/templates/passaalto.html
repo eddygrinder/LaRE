@@ -60,7 +60,7 @@ Remember to set the width: -->
       </select>
     </div>
     <p></p>
-    Valor da frequência entre 500 e 5000 Hz
+    Valor da frequência entre 500 e 80000 Hz
     <form id="form1">
       <input type="number" id="input_freq" name="input_freq" />
     </form>
@@ -151,7 +151,7 @@ Remember to set the width: -->
       event.preventDefault(); // Evite que o link seja seguido
 
       // Caminho da imagem que você deseja exibir
-      var imagePath = "../images/onda_completa.png";
+      var imagePath = "../images/filtro_passa-alto.png";
 
       // Crie um elemento de imagem
       var image = document.createElement("img");
@@ -212,7 +212,7 @@ Remember to set the width: -->
           Resistance === "0" ||
           valorfreq === "" ||
           valorfreq < 5 ||
-          valorfreq > 50000
+          valorfreq > 80000
         ) {
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos

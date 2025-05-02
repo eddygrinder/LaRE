@@ -95,7 +95,7 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
         analog_data_size = len(analog_data)
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
               
-        plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, frequency)
+        plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, graphtype='meiaonda')
         #print_digital_data(digital_data, digital_timestamps, 10)
               
         ps.enable_all_outputs(False) # Desliga a fonte de alimentação
@@ -107,12 +107,24 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
     finally:
         virtualbench.release()
 
-def plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, frequency):
+def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, graphtype:str):
+    
+    # Converte para array NumPy
+    analog_data = np.array(analog_data)
+    
     # Seleciona os elementos pares da lista analog_data
-    #analog_data_pares = analog_data[::2] # Onda de entrada
+    onda_entrada = analog_data[::2] # Onda de entrada
     # Seleciona os elementos ímpares da lista analog_data
-    #analog_data_impares = analog_data[1::2] # Onda retificada - saída
+    onda_saida = analog_data[1::2] # Onda retificada - saída
 
+    # Cálculo dos máximos com NumPy
+    max_entrada = np.max(onda_entrada)
+    max_saida = np.max(onda_saida)
+
+    # Índices dos máximos para obter também o tempo correspondente
+    idx_max_entrada = np.argmax(onda_entrada)
+    idx_max_saida = np.argmax(onda_saida)
+    
     # Cria os rótulos para os eixos x
     # Calcula os valores dos eixos x
     increment = 1/(frequency*number_of_analog_samples_acquired)
@@ -149,12 +161,22 @@ def plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, freque
     
     # Cria o gráfico
     # Cria o gráfico com duas curvas
-    plt.plot(x_values_increment, analog_data[0::2], label='Onde de entrada', marker=',')
-    plt.plot(x_values_increment, analog_data[1::2], label='Onda de saída', marker=',')
+    plt.plot(x_values_increment, onda_entrada, label='Onde de entrada', marker=',')
+    plt.plot(x_values_increment, onda_saida, label='Onda de saída', marker=',')
+    
+    # Mostrar os valores máximos no ponto correspondente
+    plt.text(x_values_increment[idx_max_entrada], max_entrada, f'{max_entrada:.2f} V', color='blue', fontsize=9, ha='left', va='top')
+    plt.text(x_values_increment[idx_max_saida], max_saida, f'{max_saida:.2f} V', color='orange', fontsize=9, ha='left', va='bottom')
     
     plt.xlabel('Time (Seg)')
     plt.ylabel('Voltage (V)')
-    plt.title('Rectificador onda completa')
+    
+    if graphtype == 'meiaonda':
+        plt.title('Rectificador onda meia')
+    elif graphtype == 'LPF':
+        plt.title('Filtro passa-baixo')
+    elif graphtype == 'HPF':
+        plt.title('Filtro passa-alto')   
 
      # Define os valores específicos para o eixo x (frequência) e rotaciona os rótulos
     plt.xticks(rotation=45)
@@ -179,7 +201,12 @@ def plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, freque
         os.makedirs("webserver/website/static/images")
 
     # Salva o gráfico como uma imagem dentro do diretório "static/images"
-    plt.savefig("webserver/website/static/images/meia_onda.png")
+    if graphtype == 'meiaonda':
+        plt.savefig("webserver/website/static/images/meia_onda.png")
+    elif graphtype == 'LPF':
+        plt.savefig("webserver/website/static/images/filtro_passa-baixo.png")
+    elif graphtype == 'HPF':
+        plt.savefig("webserver/website/static/images/filtro_passa-alto.png")
 
     # Limpa a figura
     plt.clf()
@@ -418,7 +445,7 @@ def config_instruments_PassFilters(frequency:float, Resistance:int, Capacitor:in
         analog_data_size = len(analog_data)
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
               
-        plot_graphic_meiaonda(analog_data, number_of_analog_samples_acquired, frequency)
+        plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, which_filter)
         #print_digital_data(digital_data, digital_timestamps, 10)
         
         ps.enable_all_outputs(False) # Desliga a fonte de alimentação
@@ -477,8 +504,11 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
         configRelays.config_relays_PassFilter(Resistance, Capacitor, which_filter) # Configura os relés para a medição
         if which_filter == "HPF":
             file_name = "webserver/website/static/images/bode_hpf.png"
+            plt.title('Diagrama de Bode - Passa-Alto')
+
         elif which_filter == "LPF":
             file_name = "webserver/website/static/images/bode_lpf.png"
+            plt.title('Diagrama de Bode - Passa-Baixo')
         
         #############################
         # Waveform Configuration - Configuração do gerador de sinal
@@ -526,17 +556,34 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
             # Armazene a frequência e o máximo correspondente
             max_vout_values.append(vout_max)
             mso.release()
-            time.sleep(0.05) # Aguarde 100ms antes de passar para a próxima frequência
+            time.sleep(0.05) # Aguarde 50ms antes de passar para a próxima frequência
         Av = np.array(max_vout_values)/vin
+        
+        # Procurar o índice do valor mais próximo de 0.707
+        idx_mais_proximo = np.argmin(np.abs(Av - 0.707))
+        # Obter a frequência correspondente
+        frequencia_corte_aprox = frequencies[idx_mais_proximo]
+        print(f"Frequência aproximada de corte (ganho ≈ 0.707): {frequencia_corte_aprox:.2f} Hz")
+        
         # Plotar o gráfico logarítmico
         plt.figure(figsize=(10, 6))
         plt.plot(frequencies, Av, '.-', label='Ganho de tensão')
 
+        # Adicionar linha vertical no gráfico
+        plt.axvline(x=frequencia_corte_aprox, color='red', linestyle='--', label=f'Frequência de corte ≈ {frequencia_corte_aprox:.1f} Hz')
+
+        # Anotar o ponto
+        plt.annotate(f'{frequencia_corte_aprox:.1f} Hz',
+             xy=(frequencia_corte_aprox, 0.707),
+             xytext=(frequencia_corte_aprox * 1.2, 0.75),
+             arrowprops=dict(arrowstyle='->', color='red'),
+             fontsize=10,
+             color='red')
+        
         plt.xscale('log')
         plt.xlabel('Frequência (Hz)')
         plt.ylabel('Av')
-        plt.title('Diagrama de Bode')
-        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+        plt.grid(True, which='both', ls='--', lw=0.5)
         plt.legend()
         plt.ylim(0, 1)
          # Adiciona a legenda ao gráfico
