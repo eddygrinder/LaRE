@@ -119,11 +119,15 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, grap
 
     # Cálculo dos máximos com NumPy
     max_entrada = np.max(onda_entrada)
+    min_saida = np.min(onda_saida)
     max_saida = np.max(onda_saida)
+    vripple= max_saida - min_saida # Ripple de saída
 
+    
     # Índices dos máximos para obter também o tempo correspondente
     idx_max_entrada = np.argmax(onda_entrada)
     idx_max_saida = np.argmax(onda_saida)
+    idx_min_saida = np.argmin(onda_saida)
     
     # Cria os rótulos para os eixos x
     # Calcula os valores dos eixos x
@@ -156,8 +160,12 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, grap
 
     frequency_trunc = round(frequency, 2)
     formatter_freq = EngFormatter(unit='Hz')
-    frequency_text = formatter_freq.format_data_short(frequency_trunc)  # Formate a frequência truncada usando o EngFormatter        
+    frequency_text = formatter_freq.format_data_short(frequency_trunc)  # Formate a frequência truncada usando o EngFormatter 
+    vripple_trunc = round(vripple, 2)
+    formatter_vripple = EngFormatter(unit='V')
+    vripple_text = formatter_vripple.format_data_short(vripple_trunc)  # Formate a frequência truncada usando o EngFormatter     
     plt.text(0, -4, 'f= ' + frequency_text, fontsize=12, color='red') 
+    plt.text(0, -5.5, 'vripple= ' + vripple_text, fontsize=12, color='red') 
     
     # Cria o gráfico
     # Cria o gráfico com duas curvas
@@ -167,12 +175,13 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, grap
     # Mostrar os valores máximos no ponto correspondente
     plt.text(x_values_increment[idx_max_entrada], max_entrada, f'{max_entrada:.2f} V', color='blue', fontsize=9, ha='left', va='top')
     plt.text(x_values_increment[idx_max_saida], max_saida, f'{max_saida:.2f} V', color='orange', fontsize=9, ha='left', va='bottom')
-    
+    plt.text(x_values_increment[idx_min_saida], min_saida, f'{min_saida:.2f} V', color='orange', fontsize=9, ha='left', va='bottom')
+
     plt.xlabel('Time (Seg)')
     plt.ylabel('Voltage (V)')
     
     if graphtype == 'meiaonda':
-        plt.title('Rectificador onda meia')
+        plt.title('Rectificador meia onda')
     elif graphtype == 'LPF':
         plt.title('Filtro passa-baixo')
     elif graphtype == 'HPF':
