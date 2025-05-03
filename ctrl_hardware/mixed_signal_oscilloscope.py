@@ -164,8 +164,10 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, grap
     vripple_trunc = round(vripple, 2)
     formatter_vripple = EngFormatter(unit='V')
     vripple_text = formatter_vripple.format_data_short(vripple_trunc)  # Formate a frequência truncada usando o EngFormatter     
-    plt.text(0, -4, 'f= ' + frequency_text, fontsize=12, color='red') 
-    plt.text(0, -5.5, 'vripple= ' + vripple_text, fontsize=12, color='red') 
+    if graphtype == 'HPF' or graphtype == 'LPF':
+        plt.text(0, -4, 'f= ' + frequency_text, fontsize=12, color='red') 
+    elif graphtype == 'meiaonda':
+        plt.text(0, -5.5, 'vripple= ' + vripple_text, fontsize=12, color='red') 
     
     # Cria o gráfico
     # Cria o gráfico com duas curvas
