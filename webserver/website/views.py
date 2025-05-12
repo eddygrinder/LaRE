@@ -139,6 +139,9 @@ def config_ondacompleta():
         #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
         #mixed_signal_oscilloscope.config_func_generatorMSO()      
                 
+        configRelays.config_relays_ondacompleta(0,0) # ACtivar reles para leitura vin ???
+        #configRelays.config_relays_vin() # Por aqui não funciona
+                
         mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
         time.sleep(1) # Verificar estes atrasos
         configRelays.config_relays_ondacompleta(Resistance, Capacitor)

@@ -241,16 +241,13 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)
         # Configura os relés para a medição
-        if onda_entrada == True: # A função foi chamada para medir a onda de entrada
-            configRelays.config_relays_vin()
-
+        
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
         # Configure the acquisition using auto setup
         mso.auto_setup()
         # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
-        mso.configure_analog_channel('VB8012-30A210F/mso/1', True, 1, 1, 1, 0)
-
+        #mso.configure_analog_channel('VB8012-30A210F/mso/1', True, 1, 1, 1, 0)
 
 
         ##################################
@@ -259,23 +256,24 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         # E DESACTIVADO COM A LINHA ACIMA
         ##################################
 
-
-
         # Query the configuration that was chosen to properly interpret the data.
         # POVAVELMENTE ISTO PODE SALTAR FORA - PARTE-SE DUM PRINCÍPIO QUE AMBAS AS PONTAS
         # ESTÃO SEMPRE LIGADAS AO VIRTUAL BENCH
         sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
         channels = mso.query_enabled_analog_channels()
         channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
-        
+        print("channels_enabled: ", channels_enabled)
         # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
         mso.run()
 
         # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
         analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
+        for i, val in enumerate(analog_data[:50]):
+            print(f"{i}: {val}")
+            
         analog_data_size = len(analog_data)
-        number_of_analog_samples_acquired = analog_data_size / analog_data_stride
-        print("Número de amostras: ", number_of_analog_samples_acquired)
+        #number_of_analog_samples_acquired = analog_data_size / analog_data_stride
+        #print("Número de amostras: ", number_of_analog_samples_acquired)
 
             # Definir taxa de amostragem manualmente
         sample_rate = 10000  # Hz (ex: 10 kHz)
@@ -289,7 +287,7 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
             plot_graphic_ondacompleta(analog_data, x_values_increment, 2)
         
         #print_digital_data(digital_data, digital_timestamps, 10)
-        #ps.enable_all_outputs(True)
+        ps.enable_all_outputs(False) # Desliga a fonte de alimentação
         ps.release()
         mso.release()
     except PyVirtualBenchException as e:
@@ -330,25 +328,32 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
     # Definir taxa de amostragem manualmente
     #sample_rate = 10000  # Hz (ex: 10 kHz)
     #x_values_increment = 1 / sample_rate  # 0.0001 s = 100 µs por amostra
-
+    
     # Canal 1: guarda Vin
-    if channel_number == 1:
+    if channel_number == 1:        
         print("Canal 1 ativo - a guardar dados")
-
         try:
             with open(pickle_file_path, 'wb') as f:
-                pickle.dump(analog_data[0::2], f)   # Vin
+                pickle.dump(analog_data[1::2], f)   # Vin
                 pickle.dump(x_values_increment, f)  # incremento
             print(f"Dados guardados em: {pickle_file_path}")
         except Exception as e:
             print("Erro ao guardar ficheiro pickle:", e)
 
-        plt.close()
+        #plt.close()
 
     # Canal 2: desenha Vin + Vout
     elif channel_number == 2:
+        
+        # Cálculo dos máximos com NumPy
+        # Seleciona os elementos pares da lista analog_data
+        onda_saida = analog_data[1::2] # Onda de entrada
+                
+        max_saida = np.max(onda_saida)
+        min_saida = np.min(onda_saida)
+        vripple= max_saida - min_saida # Ripple de saída
+        
         print("Canal 2 ativo - a desenhar gráfico")
-
         try:
             with open(pickle_file_path, 'rb') as f:
                 vin_data = pickle.load(f)
@@ -362,9 +367,14 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
 
             # Gráfico
             plt.figure(figsize=(10, 6))
-            plt.plot(tempo_vin, vin_data, label='Vin', marker=',')
+            #plt.plot(tempo_vin, vin_data, label='Vin', marker=',')
             plt.plot(tempo_vout, vout_data, label='Vout', marker=',')
 
+            vripple_trunc = round(vripple, 2)
+            formatter_vripple = EngFormatter(unit='V')
+            vripple_text = formatter_vripple.format_data_short(vripple_trunc)  # Formate a frequência truncada usando o EngFormatter     
+            plt.text(0, -4, 'f= ' + vripple_text, fontsize=12, color='red') 
+            
             # Eixos e legenda
             plt.xlabel('Time (s)')
             plt.ylabel('Voltage (V)')
