@@ -249,8 +249,7 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         # Configure the acquisition using auto setup
         mso.auto_setup()
         # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
-        mso.configure_analog_channel('VB8012-30A210F/mso/1', True, 1, 1, 1, 0)
-
+        mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 10, 1, 1, 0)
 
 
         ##################################
@@ -277,10 +276,11 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         number_of_analog_samples_acquired = analog_data_size / analog_data_stride
         print("Número de amostras: ", number_of_analog_samples_acquired)
 
-            # Definir taxa de amostragem manualmente
-        sample_rate = 10000  # Hz (ex: 10 kHz)
-        x_values_increment = 1 / sample_rate  # 0.0001 s = 100 µs por amostra
-        
+        frequency = 50 # Frequência da rede elétrica
+        increment = 1/(frequency*number_of_analog_samples_acquired)
+        x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired/2), increment))
+        print("comprimento_x_values: ", len(x_values_increment))
+
         if onda_entrada == True: # A função foi chamada para medir a onda de entrada. É atribuído o valor 1 ao canal 1 e 0 ao canal 2
             #channel_number = 1 # Somente para fazer a leitura do canal 1
             plot_graphic_ondacompleta(analog_data, x_values_increment, 1)
@@ -289,7 +289,6 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
             plot_graphic_ondacompleta(analog_data, x_values_increment, 2)
         
         #print_digital_data(digital_data, digital_timestamps, 10)
-        #ps.enable_all_outputs(True)
         ps.release()
         mso.release()
     except PyVirtualBenchException as e:
@@ -320,75 +319,82 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
     #####################################
 
 
-     # Parâmetros fixos
+     # Verifica se o diretório "static/images" existe, se não, cria-o
     images_dir = "webserver/website/static/images"
-    os.makedirs(images_dir, exist_ok=True)
-
+    if not os.path.exists(images_dir):
+        os.makedirs(images_dir)
+    
+      # Caminho completo do arquivo
     pickle_file_path = os.path.join(images_dir, "onda-completa.pickle")
     png_file_path = os.path.join(images_dir, "onda-completa.png")
 
-    # Definir taxa de amostragem manualmente
-    #sample_rate = 10000  # Hz (ex: 10 kHz)
-    #x_values_increment = 1 / sample_rate  # 0.0001 s = 100 µs por amostra
+    if channel_number == 1: # Apenas o canal 1 está activo
+         # Cria o gráfico
+        # Cria o gráfico com duas curvas
+        #x_values_increment = 2 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
+        #plt.plot(x_values_increment, analog_data[0::2], label='Onda de entrada', marker=',')
+        # Salva o gráfico atual em um arquivo
+        print("Número de amostras: ", len(analog_data[0::2]))
+        with open(pickle_file_path, 'wb') as f:
+            #pickle.dump(analog_data[0::2], f)
+            pickle.dump(analog_data[0::2], f)
+            pickle.dump(x_values_increment, f)
+        plt.close() # Fecha o gráfico para libertar recursos
+       
+    elif channel_number == 2: # Apenas o canal 2 está activo
+        # Cria o gráfico
+        # Cria o gráfico com duas curvas
+        #x_values_increment = 8 * x_values_increment # ALDRABICE!!! Será!? Ajustar a escala????
+        # Carregue o gráfico do arquivo pickle
+        with open(pickle_file_path, 'rb') as f:
+            data = pickle.load(f)
+            data_increment = pickle.load(f)
+            # Adicione o novo plot ao gráfico carregado
+        #plt.figure(fig.number)  # Certifique-se de que o novo plot seja adicionado à figura carregada
+            plt.plot(4*data_increment, data, label='Vin', marker=',')
+    
+        plt.plot(4*x_values_increment, analog_data[1::2], label='Vout', marker=',')
+        # A multiplicação do 4 é para ajustar o valor da escala e tem a ver com o cálculo do incremento e
+        # o facto de o VB ou a libraria gravar no mesmo array os valores dos dois canais
 
-    # Canal 1: guarda Vin
-    if channel_number == 1:
-        print("Canal 1 ativo - a guardar dados")
+        plt.legend()  # Adicione a legenda para ambos os plots
 
-        try:
-            with open(pickle_file_path, 'wb') as f:
-                pickle.dump(analog_data[0::2], f)   # Vin
-                pickle.dump(x_values_increment, f)  # incremento
-            print(f"Dados guardados em: {pickle_file_path}")
-        except Exception as e:
-            print("Erro ao guardar ficheiro pickle:", e)
+        frequency = 50 # Frequência da rede elétrica
+        formatter_freq = EngFormatter(unit='Hz')
+        frequency_text = formatter_freq.format_data_short(frequency)  # Formate a frequência truncada usando o EngFormatter        
+        plt.text(0, -4, 'f= ' + frequency_text, fontsize=12, color='red') 
 
+        plt.xlabel('Time (Seg)')
+        plt.ylabel('Voltage (V)')
+        plt.title('Rectificador onda completa')
+
+        # Define os valores específicos para o eixo x (frequência) e rotaciona os rótulos
+        plt.xticks(rotation=45)
+
+        # Define o EngFormatter para o eixo x
+        formatter0 = EngFormatter(unit='s')
+        plt.gca().xaxis.set_major_formatter(formatter0)
+
+        # Define os limites do eixo y para -5 a 5
+        plt.ylim(0, 15)
+
+        # Adiciona a legenda ao gráfico
+        plt.legend(loc='best')
+
+        plt.tight_layout()  # Ajusta automaticamente o layout do gráfico para evitar sobreposições
+
+        # Adiciona a grade ao gráfico
+        plt.grid(True)
+        # Salve o gráfico atualizado como uma imagem PNG
+        plt.savefig(png_file_path)
         plt.close()
+        # Apaga o arquivo pickle após o uso para evitar reutilização
+        os.remove(pickle_file_path)
+        # Renomeia o arquivo pickle após o uso
+        #os.remove(pickle_file_path, os.path.join(images_dir, "onda-completa.pickle"))
 
-    # Canal 2: desenha Vin + Vout
-    elif channel_number == 2:
-        print("Canal 2 ativo - a desenhar gráfico")
 
-        try:
-            with open(pickle_file_path, 'rb') as f:
-                vin_data = pickle.load(f)
-                vin_increment = pickle.load(f)
-
-            # Cria vetores de tempo
-            vout_data = analog_data[1::2]
-
-            tempo_vin = [i * vin_increment for i in range(len(vin_data))]
-            tempo_vout = [i * vin_increment for i in range(len(vout_data))]
-
-            # Gráfico
-            plt.figure(figsize=(10, 6))
-            plt.plot(tempo_vin, vin_data, label='Vin', marker=',')
-            plt.plot(tempo_vout, vout_data, label='Vout', marker=',')
-
-            # Eixos e legenda
-            plt.xlabel('Time (s)')
-            plt.ylabel('Voltage (V)')
-            plt.title('Rectificador onda completa')
-            plt.xticks(rotation=45)
-            plt.ylim(0, 15)
-            plt.grid(True)
-            plt.legend(loc='best')
-
-            # Escalas
-            plt.gca().xaxis.set_major_formatter(EngFormatter(unit='s'))
-            freq_text = EngFormatter(unit='Hz').format_data_short(60)
-            plt.text(tempo_vout[0], -2, f'f = {freq_text}', fontsize=12, color='red')
-
-            plt.tight_layout()
-            plt.savefig(png_file_path)
-            print(f"Gráfico salvo em: {png_file_path}")
-            plt.close()
-
-            # Limpeza
-            os.remove(pickle_file_path)
-
-        except Exception as e:
-            print("Erro ao gerar gráfico:", e)
+        #FUNCIONA CM OS DOIS CANAIS LIGADOS
         
 def config_instruments_PassFilters(frequency:float, Resistance:int, Capacitor:int, which_filter:str):
     try:

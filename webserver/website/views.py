@@ -4,6 +4,9 @@ from .models import Note
 from . import db
 import json, time
 import os, sys, subprocess
+import store_ps_dmm
+from pyvirtualbench import PyVirtualBench, PyVirtualBenchException
+
 # Adiciona o diretório do projeto ao caminho de busca de módulos do Python
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
@@ -117,7 +120,7 @@ def config_ondacompleta():
         Resistance = request.args.get('R', 0, int)
         # Colocar os relés a zero
        
-        frequency = 60
+        #frequency = 60
         # devido ao problema de massas da rectificação de onda completa, a onda de entrada tem de ser medida primeiro
         # e só depois a onda de saída - PROBLEMA DE MASSAS. Os gráficos têm de ser desenhados independentemente.
         # Os relés activos consoante o caso.
@@ -134,29 +137,26 @@ def config_ondacompleta():
 
         # DESTA FORMA FUNCIONA A ONDA DE ENTRADA - PONTO
         #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
-        mixed_signal_oscilloscope.config_func_generatorMSO()
-        configRelays.config_relays_vin()
-        time.sleep(2) # Verificar estes atrasos
-
+        #mixed_signal_oscilloscope.config_func_generatorMSO()      
+                
         mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
-        time.sleep(2) # Verificar estes atrasos
-
+        time.sleep(1) # Verificar estes atrasos
         configRelays.config_relays_ondacompleta(Resistance, Capacitor)
+        
         time.sleep(2) # Verificar estes atrasos
 
         mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=False, onda_saida=True)
-
 
         #mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
                     
             # Execute o comando diretamente
             # Explicar porque se usou este comando
             #os.system('python ctrl_hardware/mixed_signal_oscilloscope.py')
+        
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
     finally:
-        # Independentemente de uma exceção ocorrer ou não, renderiza o template
         return render_template("ondacompleta.html", user=current_user)
     
 @views.route('/config_filters', methods=['GET', 'POST'])

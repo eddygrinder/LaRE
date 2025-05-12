@@ -87,3 +87,11 @@ def get_values_mso():
 def clear_values_mso():
     global mso
     mso = None
+    
+def set_values_completa(ps_completa, vb_completa): # guarda os valores de ps onda completa
+    global ps_onda_completa, vb_onda_completa
+    ps_onda_completa = ps_completa
+    vb_onda_completa = vb_completa
+
+def get_values_completa():
+    return ps_onda_completa, vb_onda_completa
