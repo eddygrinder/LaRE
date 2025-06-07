@@ -247,7 +247,7 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         # Configure the acquisition using auto setup
         mso.auto_setup()
         # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
-        #mso.configure_analog_channel('VB8012-30A210F/mso/1', True, 1, 1, 1, 0)
+        mso.configure_analog_channel('VB8012-30A210F/mso/1', True, 1, 1, 1, 0)
 
 
         ##################################
@@ -268,8 +268,8 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
 
         # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
         analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
-        for i, val in enumerate(analog_data[:50]):
-            print(f"{i}: {val}")
+        #for i, val in enumerate(analog_data[:50]):
+        #    print(f"{i}: {val}")
             
         analog_data_size = len(analog_data)
         #number_of_analog_samples_acquired = analog_data_size / analog_data_stride
@@ -367,7 +367,7 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
 
             # Gráfico
             plt.figure(figsize=(10, 6))
-            #plt.plot(tempo_vin, vin_data, label='Vin', marker=',')
+            plt.plot(tempo_vin, vin_data, label='Vin', marker=',')
             plt.plot(tempo_vout, vout_data, label='Vout', marker=',')
 
             vripple_trunc = round(vripple, 2)
