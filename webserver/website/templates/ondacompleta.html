@@ -46,19 +46,21 @@
 
     <!-- Surround the select box within a "custom-select" DIV element.
 Remember to set the width: -->
-     <div style="display: inline-block; width: 300px">
+  
+
+    <div style="display: inline-block; width: 200px">
+      <select id="selectR" disabled>
+        <option value="0">Seleccionar R[KΩ]:</option>
+        <option value="1">1</option>
+        <option value="2">2.2</option>
+      </select>
+    </div>
+
+<div style="display: inline-block; width: 300px">
       <select id="selectC" disabled>
         <option value="0">Seleccionar Condensador [&microF]:</option>
         <option value="1">100</option>
         <option value="2">4.7</option>
-      </select>
-    </div>
-
-    <div style="display: inline-block; width: 200px">
-      <select id="selectR" disabled>
-        <option value="0">Seleccionar R[Ω]:</option>
-        <option value="1">1</option>
-        <option value="2">2.2</option>
       </select>
     </div>
 
@@ -197,7 +199,7 @@ Remember to set the width: -->
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-        const url = "/config_ondacompleta?&C=" + Capacitor + "&R=" + Resistance;
+        const url = "/config_ondacompleta?&R=" + Resistance + "&C=" + Capacitor;
         fetch(url);
       });
   </script>

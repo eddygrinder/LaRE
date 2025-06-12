@@ -83,21 +83,20 @@ def config_relays_ondacompleta (Resistance: int, Capacitance: int):
     match Resistance, Capacitance:
         case 0, 0:
             # colocar os relés a zero
-            config_Relays("0100100000000") #relés OBRIGATORIAMENTE desligados
+            config_Relays("0000000000000") #relés OBRIGATORIAMENTE desligados
         case 1, 1:
-            # Resistência = 1KOhm e Capacitância = 1uF
-            #config_Relays("010101101") # Relés - K1...|K9 - R=1K e C=1uF
-            config_Relays("0100110100000") # Relés - K1...|K9 - R=1K e C=1uF
+            # Resistência = 1KOhm e Capacitância = 100uF
+            config_Relays("0100110100000") # Relés - K6 e K8 - R=1K e C=100uF
 
         case 1, 2:
-            # Resistência = 1KOhm e Capacitância = 3.3uF
-            config_Relays("0100101100000") # Relés - K1...|K9 - R=1K e C=3.3uF
+            # Resistência = 2.2KOhm e Capacitância = 4.7uF
+            config_Relays("0100110010000") # Relés - K6 e K9 - R=2.2K e C=4.7uF
         case 2, 1:
-            # Resistência = 10KOhm e Capacitância = 1uF
-            config_Relays("0100101010000") # Relés - K1...|K9 - R=10K e C=1uF
+            # Resistência = 2.2KOhm e Capacitância = 100uF
+            config_Relays("0100101100000") # Relés - K7 e K8 - R=2.2K e C=100uF
         case 2, 2:
-            # Resistência = 10KOhm e Capacitância = 3.3uF
-            config_Relays("0100110010000") # Relés - K1...|K9 - R=10K e C=3.3uF
+            # Resistência = 2.2KOhm e Capacitância = 4.7uF
+            config_Relays("0100101010000") # Relés - K7 e K9 - R=2.2K e C=4.7uF
         case _:
             print("ERROR: Resistence or Capacitance outside values")
 

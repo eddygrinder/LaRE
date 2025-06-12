@@ -76,7 +76,7 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)        
         
-        configRelays.config_relays_meiaonda(0, 0) # Independentemente do seu estado, coloca os relés a zero
+        configRelays.config_relays_meiaonda(0, 0) # Independentemente do seu estado, coloca os relés a zero                          
         configRelays.config_relays_meiaonda(Resistance, Capacitor) # Configura os relés para a medição
         
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
@@ -226,10 +226,10 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, grap
     plt.clf()
 
 
-def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
+def config_mso_ondacompleta(Resistance:int, Capacitor:int):
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')        
-
+        
         #############################
         # Power Supply Configuration
         #############################
@@ -242,13 +242,17 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
         ps.configure_voltage_output(channel, voltage_level, current_limit)
         # Configura os relés para a medição
         
+        #if onda_entrada == True: # A função foi chamada para medir a onda de entrada
+        #    configRelays.config_relays_vin() # Independentemente do seu estado, coloca os relés a zero  
+        #onda_saida == True: # A função foi chamada para medir a onda de saída
+        configRelays.config_relays_ondacompleta(Resistance, Capacitor) # Configura os relés para a medição
+        
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
         # Configure the acquisition using auto setup
         mso.auto_setup()
         # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
-        mso.configure_analog_channel('VB8012-30A210F/mso/1', True, 1, 1, 1, 0)
-
+        #mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 10, 1, 1, 0)
 
         ##################################
         # AO QUE PARECE PARA QUE DESTA FORMA A LEITURA SEJA FEITA CORRETAMENTE
@@ -268,23 +272,16 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
 
         # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
         analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
-        #for i, val in enumerate(analog_data[:50]):
-        #    print(f"{i}: {val}")
-            
+                   
         analog_data_size = len(analog_data)
         #number_of_analog_samples_acquired = analog_data_size / analog_data_stride
         #print("Número de amostras: ", number_of_analog_samples_acquired)
 
-            # Definir taxa de amostragem manualmente
+        # Definir taxa de amostragem manualmente
         sample_rate = 10000  # Hz (ex: 10 kHz)
         x_values_increment = 1 / sample_rate  # 0.0001 s = 100 µs por amostra
         
-        if onda_entrada == True: # A função foi chamada para medir a onda de entrada. É atribuído o valor 1 ao canal 1 e 0 ao canal 2
-            #channel_number = 1 # Somente para fazer a leitura do canal 1
-            plot_graphic_ondacompleta(analog_data, x_values_increment, 1)
-        if onda_saida == True: # A função foi chamada para medir a onda de saída
-            #channel_number = 2 # Somente para fazer a leitura do canal 2
-            plot_graphic_ondacompleta(analog_data, x_values_increment, 2)
+        plot_graphic_ondacompleta(analog_data, x_values_increment)
         
         #print_digital_data(digital_data, digital_timestamps, 10)
         ps.enable_all_outputs(False) # Desliga a fonte de alimentação
@@ -295,7 +292,7 @@ def config_mso_ondacompleta(onda_entrada:bool, onda_saida:bool):
     finally:
         virtualbench.release()
 
-def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
+def plot_graphic_ondacompleta(analog_data, x_values_increment):
     # Seleciona os elementos pares da lista analog_data
     #analog_data_pares = analog_data[::2] # Onda de entrada
     # Seleciona os elementos ímpares da lista analog_data
@@ -322,83 +319,61 @@ def plot_graphic_ondacompleta(analog_data, x_values_increment, channel_number):
     images_dir = "webserver/website/static/images"
     os.makedirs(images_dir, exist_ok=True)
 
-    pickle_file_path = os.path.join(images_dir, "onda-completa.pickle")
     png_file_path = os.path.join(images_dir, "onda-completa.png")
 
     # Definir taxa de amostragem manualmente
     #sample_rate = 10000  # Hz (ex: 10 kHz)
-    #x_values_increment = 1 / sample_rate  # 0.0001 s = 100 µs por amostra
-    
-    # Canal 1: guarda Vin
-    if channel_number == 1:        
-        print("Canal 1 ativo - a guardar dados")
-        try:
-            with open(pickle_file_path, 'wb') as f:
-                pickle.dump(analog_data[1::2], f)   # Vin
-                pickle.dump(x_values_increment, f)  # incremento
-            print(f"Dados guardados em: {pickle_file_path}")
-        except Exception as e:
-            print("Erro ao guardar ficheiro pickle:", e)
-
-        #plt.close()
-
-    # Canal 2: desenha Vin + Vout
-    elif channel_number == 2:
+    x_values_increment = 1 / 10000  # 0.0001 s = 100 µs por amostra
+   
         
-        # Cálculo dos máximos com NumPy
-        # Seleciona os elementos pares da lista analog_data
-        onda_saida = analog_data[1::2] # Onda de entrada
-                
-        max_saida = np.max(onda_saida)
-        min_saida = np.min(onda_saida)
-        vripple= max_saida - min_saida # Ripple de saída
-        
-        print("Canal 2 ativo - a desenhar gráfico")
-        try:
-            with open(pickle_file_path, 'rb') as f:
-                vin_data = pickle.load(f)
-                vin_increment = pickle.load(f)
+    # Cálculo dos máximos com NumPy
+    # Seleciona os elementos pares da lista analog_data
+    vout_data = analog_data[1::2]
 
-            # Cria vetores de tempo
-            vout_data = analog_data[1::2]
-
-            tempo_vin = [i * vin_increment for i in range(len(vin_data))]
-            tempo_vout = [i * vin_increment for i in range(len(vout_data))]
-
-            # Gráfico
-            plt.figure(figsize=(10, 6))
-            plt.plot(tempo_vin, vin_data, label='Vin', marker=',')
-            plt.plot(tempo_vout, vout_data, label='Vout', marker=',')
-
-            vripple_trunc = round(vripple, 2)
-            formatter_vripple = EngFormatter(unit='V')
-            vripple_text = formatter_vripple.format_data_short(vripple_trunc)  # Formate a frequência truncada usando o EngFormatter     
-            plt.text(0, -4, 'f= ' + vripple_text, fontsize=12, color='red') 
             
-            # Eixos e legenda
-            plt.xlabel('Time (s)')
-            plt.ylabel('Voltage (V)')
-            plt.title('Rectificador onda completa')
-            plt.xticks(rotation=45)
-            plt.ylim(0, 15)
-            plt.grid(True)
-            plt.legend(loc='best')
+    max_saida = np.max(vout_data)
+    min_saida = np.min(vout_data)
+    vripple= max_saida - min_saida # Ripple de saída
+    
+    print("Canal 2 ativo - a desenhar gráfico")
+    try:
+        # Cria vetores de tempo
+        #vout_data = analog_data[1::2]
 
-            # Escalas
-            plt.gca().xaxis.set_major_formatter(EngFormatter(unit='s'))
-            freq_text = EngFormatter(unit='Hz').format_data_short(60)
-            plt.text(tempo_vout[0], -2, f'f = {freq_text}', fontsize=12, color='red')
+        tempo_vout = [i * x_values_increment for i in range(len(vout_data))]
 
-            plt.tight_layout()
-            plt.savefig(png_file_path)
-            print(f"Gráfico salvo em: {png_file_path}")
-            plt.close()
+        # Gráfico
+        plt.figure(figsize=(10, 6))
+        #plt.plot(tempo_vin, vin_data, label='Vin', marker=',')
+        plt.plot(tempo_vout, vout_data, label='Vout', marker=',')
 
-            # Limpeza
-            os.remove(pickle_file_path)
+        vripple_trunc = round(vripple, 2)
+        formatter_vripple = EngFormatter(unit='V')
+        vripple_text = formatter_vripple.format_data_short(vripple_trunc)  # Formate a frequência truncada usando o EngFormatter     
+        plt.text(0, -4, 'f= ' + vripple_text, fontsize=12, color='red') 
+        
+        # Eixos e legenda
+        plt.xlabel('Time (s)')
+        plt.ylabel('Voltage (V)')
+        plt.title('Rectificador onda completa')
+        plt.xticks(rotation=45)
+        plt.ylim(-7, 7)
+        plt.grid(True)
+        plt.legend(loc='best')
 
-        except Exception as e:
-            print("Erro ao gerar gráfico:", e)
+        # Escalas
+        plt.gca().xaxis.set_major_formatter(EngFormatter(unit='s'))
+        freq_text = EngFormatter(unit='Hz').format_data_short(60)
+        plt.text(tempo_vout[0], -2, f'f = {freq_text}', fontsize=12, color='red')
+
+        plt.tight_layout()
+        plt.savefig(png_file_path)
+        print(f"Gráfico salvo em: {png_file_path}")
+        plt.close()
+
+
+    except Exception as e:
+        print("Erro ao gerar gráfico:", e)
         
 def config_instruments_PassFilters(frequency:float, Resistance:int, Capacitor:int, which_filter:str):
     try:

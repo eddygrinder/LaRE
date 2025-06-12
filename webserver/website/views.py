@@ -139,19 +139,13 @@ def config_ondacompleta():
         #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
         #mixed_signal_oscilloscope.config_func_generatorMSO()      
                 
-        configRelays.config_relays_ondacompleta(0,0) # Não estão alimentados os relés, não há onda! BURRRRRRRRRRRRRO!!!
+        #configRelays.config_relays_ondacompleta(0,0) # Não estão alimentados os relés, não há onda! BURRRRRRRRRRRRRO!!!
         #configRelays.config_relays_vin() # Por aqui não funciona
                 
-        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=True, onda_saida=False)
+        print(Resistance, Capacitor)
+        mixed_signal_oscilloscope.config_mso_ondacompleta(Resistance, Capacitor)
         time.sleep(1) # Verificar estes atrasos
-        configRelays.config_relays_ondacompleta(Resistance, Capacitor)
-        
-        time.sleep(2) # Verificar estes atrasos
-
-        mixed_signal_oscilloscope.config_mso_ondacompleta(onda_entrada=False, onda_saida=True)
-
-        #mixed_signal_oscilloscope.config_signal_oscilloscope(frequency)
-                    
+                            
             # Execute o comando diretamente
             # Explicar porque se usou este comando
             #os.system('python ctrl_hardware/mixed_signal_oscilloscope.py')
