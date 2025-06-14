@@ -141,8 +141,6 @@ def config_ondacompleta():
                 
         #configRelays.config_relays_ondacompleta(0,0) # Não estão alimentados os relés, não há onda! BURRRRRRRRRRRRRO!!!
         #configRelays.config_relays_vin() # Por aqui não funciona
-                
-        print(Resistance, Capacitor)
         mixed_signal_oscilloscope.config_mso_ondacompleta(Resistance, Capacitor)
         time.sleep(1) # Verificar estes atrasos
                             

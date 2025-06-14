@@ -53,7 +53,7 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
         # Waveform Configuration - Configuração do gerador de sinal
         #############################
         waveform_function = Waveform.SINE
-        amplitude = 10.0      # 10V
+        amplitude = 14      # 10V
         dc_offset = 0.0       # 0V
         duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
 
@@ -200,7 +200,7 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, grap
     plt.gca().xaxis.set_major_formatter(formatter0)
 
     # Define os limites do eixo y para -5 a 5
-    plt.ylim(-6, 6)
+    plt.ylim(-8, 8)
 
     # Adiciona a legenda ao gráfico
     plt.legend(loc='best')
@@ -240,50 +240,69 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
         current_limit = 0.5 
         ps.enable_all_outputs(True)
         ps.configure_voltage_output(channel, voltage_level, current_limit)
-        # Configura os relés para a medição
-        
-        #if onda_entrada == True: # A função foi chamada para medir a onda de entrada
-        #    configRelays.config_relays_vin() # Independentemente do seu estado, coloca os relés a zero  
-        #onda_saida == True: # A função foi chamada para medir a onda de saída
-        configRelays.config_relays_ondacompleta(Resistance, Capacitor) # Configura os relés para a medição
-        
+            
+        configRelays.config_relays_vin() # Independentemente do seu estado, coloca os relés a zero 
+                
         mso = virtualbench.acquire_mixed_signal_oscilloscope()
 
         # Configure the acquisition using auto setup
         mso.auto_setup()
-        # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
-        #mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 10, 1, 1, 0)
-
+ 
         ##################################
         # AO QUE PARECE PARA QUE DESTA FORMA A LEITURA SEJA FEITA CORRETAMENTE
         # É NECESSÁRIO QUE O CANAL 1 ESTEJA LIGADO DIRETAMENTE AO CANAL DOIS
         # E DESACTIVADO COM A LINHA ACIMA
         ##################################
-
-        # Query the configuration that was chosen to properly interpret the data.
-        # POVAVELMENTE ISTO PODE SALTAR FORA - PARTE-SE DUM PRINCÍPIO QUE AMBAS AS PONTAS
-        # ESTÃO SEMPRE LIGADAS AO VIRTUAL BENCH
-        sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
-        channels = mso.query_enabled_analog_channels()
-        channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
-        print("channels_enabled: ", channels_enabled)
+                 
+        # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
+        # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
+        mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 5, 1, 1, 0)
         # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
         mso.run()
-
-        # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
-        analog_data, analog_data_stride, analog_t0, digital_data, digital_timestamps, digital_t0, trigger_timestamp, trigger_reason = mso.read_analog_digital_u64()
-                   
-        analog_data_size = len(analog_data)
-        #number_of_analog_samples_acquired = analog_data_size / analog_data_stride
-        #print("Número de amostras: ", number_of_analog_samples_acquired)
-
-        # Definir taxa de amostragem manualmente
-        sample_rate = 10000  # Hz (ex: 10 kHz)
-        x_values_increment = 1 / sample_rate  # 0.0001 s = 100 µs por amostra
         
-        plot_graphic_ondacompleta(analog_data, x_values_increment)
+        analog_data_in, analog_data_stride, _, *_ = mso.read_analog_digital_u64()
+        analog_data_size = len(analog_data_in)
+        number_of_analog_samples_acquired = analog_data_size / analog_data_stride
+        freq_detectada = estimar_frequencia(number_of_analog_samples_acquired)
+                
+        #print("Dados adquiridos do canal 1: ", analog_data_in)        
+        mso.stop() # Para a aquisição antes de ler o segundo canal
+             
+        # ==== MEDIÇÃO DA SAÍDA ====
+        configRelays.config_relays_ondacompleta(Resistance, Capacitor) # Configura os relés para a medição
+        #mso.auto_setup() # Reconfigura o MSO para a medição da saída
+        mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 5, 1, 1, 0)
+        mso.run() # Reinicia a aquisição para o segundo canal
+        analog_data_out, _, *_ = mso.read_analog_digital_u64()
+        mso.stop() # Para a aquisição
+
+        # ==== CÁLCULO DE RIPPLE ====
+        max_saida = np.max(analog_data_out)
+        min_saida = np.min(analog_data_out)
+        vripple = max_saida - min_saida
+        vripple_text = EngFormatter(unit='V').format_data_short(round(vripple, 2))
+        freq_text = EngFormatter(unit='Hz').format_data_short(120)
         
-        #print_digital_data(digital_data, digital_timestamps, 10)
+         # Define o EngFormatter para o eixo x
+        formatter0 = EngFormatter(unit='ms')
+        plt.gca().xaxis.set_major_formatter(formatter0)
+        
+        # ==== PLOT ====
+       
+        plt.figure(figsize=(10, 5))
+        plt.plot(freq_detectada, analog_data_in, label="Onda de entrada", linestyle='-', color='blue', marker=None)
+        plt.plot(freq_detectada, analog_data_out, label="Onda rectificada", linestyle='-', color='orange')
+        plt.title("Rectificação Onda Completa")
+        plt.text(0, 2, f'Ripple: {vripple_text}', fontsize=12, color='red')
+        plt.text(0, 1.5, f'f = {freq_text}', fontsize=12, color='red')
+        plt.xlabel("Tempo (ms)")
+        plt.ylabel("Tensão (V)")
+        plt.legend()
+        plt.ylim(-2, 7)
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig("webserver/website/static/images/onda-completa.png")
+
         ps.enable_all_outputs(False) # Desliga a fonte de alimentação
         ps.release()
         mso.release()
@@ -291,6 +310,12 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
         print("Error/Warning %d occurred\n%s" % (e.status, e))
     finally:
         virtualbench.release()
+
+def estimar_frequencia(number_of_analog_samples_acquired):
+    increment = 1/(120*number_of_analog_samples_acquired)
+    x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment)) 
+    x_values_increment = 5 * x_values_increment * 1000 # ms
+    return x_values_increment
 
 def plot_graphic_ondacompleta(analog_data, x_values_increment):
     # Seleciona os elementos pares da lista analog_data
