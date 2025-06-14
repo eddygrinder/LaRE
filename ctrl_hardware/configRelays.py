@@ -65,7 +65,6 @@ def config_relays_meiaonda (Resistance: int, Capacitance: int):
         case 1, 1:
             # Resistência = 1KOhm e Capacitância = 1uF
             config_Relays("1011010100000") # Relés - K1...|K9 - R=1K e C=1uF
-
         case 1, 2:
             # Resistência = 1KOhm e Capacitância = 3.3uF
             config_Relays("1011010010000") # Relés - K1...|K9 - R=1K e C=3.3uF
@@ -84,17 +83,12 @@ def config_relays_ondacompleta (Resistance: int, Capacitance: int):
             # colocar os relés a zero
             config_Relays("0000000000000")
         case 1, 1:
-            print(Resistance, Capacitance)
             config_Relays("0100110100000") # Relés - K6 e K8 - R=1K e C=4.7uF
-
         case 1, 2:
-            print(Resistance, Capacitance)
             config_Relays("0100110010000") # Relés - K6 e K9 - R=1K e C=100uF
         case 2, 1:
-            print(Resistance, Capacitance)
             config_Relays("0100101100000") # Relés - K7 e K8 - R=2.2K e C=4.7uF
         case 2, 2:
-            print(Resistance, Capacitance)
             config_Relays("0100101010000") # Relés - K7 e K9 - R=2.2K e C=100uF
         case _:
             print("ERROR: Resistence or Capacitance outside values")

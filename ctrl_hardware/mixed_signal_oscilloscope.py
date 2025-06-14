@@ -86,9 +86,10 @@ def config_instruments_HalfWave(frequency:float, Resistance:int, Capacitor:int):
 
         # Query the configuration that was chosen to properly interpret the data.
         sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
+
         channels = mso.query_enabled_analog_channels()
         channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
-        
+            
         # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
         mso.run()       
         
@@ -255,8 +256,11 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
         ##################################
                  
         # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
-        # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2	
+        # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2
+	
         mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 5, 1, 1, 0)
+        mso.configure_analog_channel('VB8012-30A210F/mso/2', True, 5, 1, 1, 1)
+
         # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
         mso.run()
         
@@ -270,17 +274,22 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
              
         # ==== MEDIÇÃO DA SAÍDA ====
         configRelays.config_relays_ondacompleta(Resistance, Capacitor) # Configura os relés para a medição
-        #mso.auto_setup() # Reconfigura o MSO para a medição da saída
-        mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 5, 1, 1, 0)
+
         mso.run() # Reinicia a aquisição para o segundo canal
         analog_data_out, _, *_ = mso.read_analog_digital_u64()
         mso.stop() # Para a aquisição
 
+         # Converte para array NumPy
+        analog_data_out = np.array(analog_data_out)
+        
         # ==== CÁLCULO DE RIPPLE ====
         max_saida = np.max(analog_data_out)
         min_saida = np.min(analog_data_out)
         vripple = max_saida - min_saida
-        vripple_text = EngFormatter(unit='V').format_data_short(round(vripple, 2))
+        if vripple < 1:
+            vripple_text = EngFormatter(unit='V').format_data_short(round(vripple, 5))
+        else:
+            vripple_text = EngFormatter(unit='V').format_data_short(round(vripple, 2))
         freq_text = EngFormatter(unit='Hz').format_data_short(120)
         
          # Define o EngFormatter para o eixo x
@@ -298,7 +307,7 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
         plt.xlabel("Tempo (ms)")
         plt.ylabel("Tensão (V)")
         plt.legend()
-        plt.ylim(-2, 7)
+        plt.ylim(-1, 6)
         plt.grid(True)
         plt.tight_layout()
         plt.savefig("webserver/website/static/images/onda-completa.png")

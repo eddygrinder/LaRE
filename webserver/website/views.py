@@ -97,10 +97,8 @@ def config_meiaonda():
         frequency = request.args.get('f', 0, float)
         configOK = request.args.get('habilitar_parameter', 0, bool)
         configSTOP = request.args.get('desabilitar_parameter', 0, bool)
-        print (Capacitor, Resistance, frequency, configOK, configSTOP)      
         
         if configSTOP == True:
-            print("STOP")
             mixed_signal_oscilloscope.STOP()
         
         if frequency != 0: #Acontece se o utilizador carregar no OK, é enviado o valor da frequência=0
@@ -142,7 +140,6 @@ def config_ondacompleta():
         #configRelays.config_relays_ondacompleta(0,0) # Não estão alimentados os relés, não há onda! BURRRRRRRRRRRRRO!!!
         #configRelays.config_relays_vin() # Por aqui não funciona
         mixed_signal_oscilloscope.config_mso_ondacompleta(Resistance, Capacitor)
-        time.sleep(1) # Verificar estes atrasos
                             
             # Execute o comando diretamente
             # Explicar porque se usou este comando
