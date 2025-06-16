@@ -31,12 +31,14 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib.ticker import EngFormatter
 import numpy as np
+#from scipy.ndimage import uniform_filter1d
+from scipy.signal import savgol_filter
+#from scipy.signal import butter, filtfilt
+
+
 
 import os, pickle, socket, time
 import store_ps_dmm, configRelays
-
-import csv
-
 
 
 # Falar do porquê da variável global e o porqê de iniciar a 1.0
@@ -280,7 +282,18 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
         mso.stop() # Para a aquisição
 
          # Converte para array NumPy
-        analog_data_out = np.array(analog_data_out)
+
+        data_filtrado = savgol_filter(analog_data_out, window_length=11, polyorder=2) # Filtro Savitzky-Golay
+        analog_data_out = np.array(data_filtrado)
+        
+        #Filtro passa-baixo com SciPy (digital real)
+        #b, a = butter(N=2, Wn=0.1)  # ordem 2, frequência de corte normalizada
+        #data_filtrado = filtfilt(b, a, analog_data_out)
+        
+        # uniform_filter1d
+        #data_filtrado = uniform_filter1d(analog_data_out, size=5)      
+        #analog_data_out = np.array(data_filtrado)
+        
         
         # ==== CÁLCULO DE RIPPLE ====
         max_saida = np.max(analog_data_out)
@@ -290,7 +303,7 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
             vripple_text = EngFormatter(unit='V').format_data_short(round(vripple, 5))
         else:
             vripple_text = EngFormatter(unit='V').format_data_short(round(vripple, 2))
-        freq_text = EngFormatter(unit='Hz').format_data_short(120)
+        freq_text = EngFormatter(unit='Hz').format_data_short(100)
         
          # Define o EngFormatter para o eixo x
         formatter0 = EngFormatter(unit='ms')
@@ -311,7 +324,8 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
         plt.grid(True)
         plt.tight_layout()
         plt.savefig("webserver/website/static/images/onda-completa.png")
-
+        plt.close()
+        
         ps.enable_all_outputs(False) # Desliga a fonte de alimentação
         ps.release()
         mso.release()
@@ -321,9 +335,9 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
         virtualbench.release()
 
 def estimar_frequencia(number_of_analog_samples_acquired):
-    increment = 1/(120*number_of_analog_samples_acquired)
+    increment = 1/(100*number_of_analog_samples_acquired)
     x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment)) 
-    x_values_increment = 5 * x_values_increment * 1000 # ms
+    x_values_increment = 4 * x_values_increment * 1000 # ms
     return x_values_increment
 
 def plot_graphic_ondacompleta(analog_data, x_values_increment):
