@@ -1,10 +1,6 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="{{ url_for('static', filename='styles.css') }}"
-/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
 <link rel="icon" type="image/x-icon" href="../images/logo.ico" />
 <h1>
   <img src="../images/logo.jpg" width="30%" />
@@ -65,27 +61,28 @@ Remember to set the width: -->
       <input type="number" id="input_freq" name="input_freq" />
     </form>
 
-  <div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
-  <hr class="linha-separador">
-  <p></p>
-      <b>Instruções</b>
-      <p></p>
-      <ul>
-        <li>Seleccione o Condensador - C e a Resistência - R;</li>
-        <li>Introduza o valor da frequência;</li>
-        <li>Efectue as medições e visualize os gráficos.</li>
-      </ul>   
-    </div>
-  
+    <div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
+    <hr class="linha-separador">
+    <p></p>
+    <b>Instruções</b>
+    <p></p>
+    <ul>
+      <li>Seleccione o Condensador - C e a Resistência - R;</li>
+      <li>Introduza o valor da frequência;</li>
+      <li>Efectue as medições e visualize os gráficos.</li>
+    </ul>
+  </div>
 
   <div class="column right">
-    <a href="#" class="next round" id="measureRipple"
-      ><b>Efectuar as medições</b> &raquo;
+    <a href="#" class="next round" id="measureRipple"><b>Efectuar as medições</b> &raquo;
     </a><br>
     <a href="#" class="next round" id="showgraph"><b>Gráfico</b> &raquo; </a><br>
-    <a href="#" class="next round" id="bodediagram"
-      ><b>Diagrama de Bode</b> &raquo;
-    </a>
+    <a href="#" class="next round" id="bodediagram"><b>Diagrama de Bode</b> &raquo; </a><br>
+    <a href="#" class="next round" id="showgraphBode"><b>Gráfico</b> &raquo; </a><br>
+    <!-- Indicador de estado para o Diagrama de Bode -->
+    <div id="bode-status" style="font-weight:bold; margin:5px 0; color:#555;">
+      🟡 Aguardando geração do gráfico...
+    </div>
     <div class="spacing_FPA"></div>
     <img src="../images/circuito_PA_OSC.png" width="100%" />
   </div>
@@ -233,7 +230,7 @@ Remember to set the width: -->
   <script>
     document
       .getElementById("bodediagram")
-      .addEventListener("click", function () {
+      .addEventListener("click", async function () {
         // Obter valores dos selects
         const Capacitor = document.getElementById("selectC").value;
         const Resistance = document.getElementById("selectR").value;
@@ -244,10 +241,51 @@ Remember to set the width: -->
           alert("Verifique os valores inseridos!");
           return; // Interrompe a execução se valores forem inválidos
         }
+        // Mostra sinal de estado ao utilizador
+        const statusDiv = document.getElementById("bode-status");
+        statusDiv.textContent = "🔴 A gerar gráfico...";
+        statusDiv.style.color = "red";
+
         // Enviar requisição AJAX para a rota /ctrl_VirtualBench
         const url = `/get_bodediagram?filter_type=${filter_type}&C=${Capacitor}&R=${Resistance}`;
-        fetch(url);
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+
+          if (data.status === "ok") {
+            statusDiv.textContent = "🟢 Gráfico pronto! Pode agora visualizaro o gráfico'.";
+            statusDiv.style.color = "green";
+          } else {
+            statusDiv.textContent = "⚠️ Erro ao gerar gráfico!";
+            statusDiv.style.color = "orange";
+          }
+        } catch (error) {
+          console.error(error);
+          statusDiv.textContent = "❌ Erro de comunicação com o servidor!";
+          statusDiv.style.color = "orange";
+        }
       });
+  </script>
+
+  <script>
+    // Obtenha a referência ao link
+    var showGraphLink = document.getElementById("showgraphBode");
+
+    // Adicione um manipulador de eventos de clique ao link
+    showGraphLink.addEventListener("click", function (event) {
+      event.preventDefault(); // Evite que o link seja seguido
+
+      // Caminho da imagem que você deseja exibir
+      var imagePath = "../images/bode_hpf.png";
+
+      // Crie um elemento de imagem
+      var image = document.createElement("img");
+      image.src = imagePath; // Defina o atributo src para o caminho da imagem
+
+      // Abra a imagem em uma nova janela
+      window.open(imagePath, "_blank");
+    });
   </script>
 
   <script>

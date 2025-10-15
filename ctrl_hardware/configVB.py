@@ -112,6 +112,7 @@ def test_parameters(Vcc:int, R:int, measure_parameter:str):
             #############################
             channel = "ps/+6V"
             voltage_level = Vcc
+            print("Vcc = ", Vcc)
             current_limit = 0.5 
             ps, dmm = store_ps_dmm.get_values()
             ps.enable_all_outputs(True)   

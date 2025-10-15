@@ -184,9 +184,8 @@ def get_bodediagram():
         which_filter = request.args.get('filter_type', 0, str)
         print(Capacitor, Resistance, which_filter)
         mixed_signal_oscilloscope.bode_graphic_Filters(Resistance, Capacitor, which_filter)
+        return jsonify({'status': 'ok'})
+    
     except Exception as e:
-        print(e)
-        return jsonify({'measurement_result': 'ERROR'})
-    finally:
-        # Independentemente de uma exceção ocorrer ou não, renderiza o template
-        return render_template("passaalto.html", user=current_user)
+        print("Erro:", e)
+        return jsonify({'status': 'error', 'message': str(e)})
