@@ -1,10 +1,23 @@
+<!--
+  ======================================================
+  Nome do ficheiro: home.html
+  Projeto: LaRE - Laboratório Remoto Expansível
+  Autor: Eduardo Ramalhadeiro
+  Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+  Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+  Data de criação: 15/10/2025
+  Última atualização: 15/10/2025
+  Descrição: Página inicial
+  Fontes:  https://www.youtube.com/watch?v=dam0GPOAvVI
+  Licença:  GPL-3.0 (GNU General Public License, versão 3), https://www.gnu.org/licenses/gpl-3.0.html
+  Direitos de autor: Copyright (c) 2023-2024 Eduardo Ramalhadeiro
+  Contacto: 1210171@isep.ipp.pt
+  ======================================================
+-->
+
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="{{ url_for('static', filename='styles.css') }}"
-/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
 <link rel="icon" type="image/x-icon" href="../images/logo.ico" />
 <h1>
   <img src="../images/logo.jpg" width="30%" />

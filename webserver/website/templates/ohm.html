@@ -1,10 +1,23 @@
+<!--
+  ======================================================
+  Nome do ficheiro: ohm.html
+  Projeto: LaRE - Laboratório Remoto Expansível
+  Autor: Eduardo Ramalhadeiro
+  Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+  Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+  Data de criação: 15/10/2025
+  Última atualização: 15/10/2025
+  Descrição: Página web para o estudo da Lei de Ohm
+  Fontes:  https://www.freecodecamp.org | https://www.w3schools.com
+  Licença:  GPL-3.0 (GNU General Public License, versão 3), https://www.gnu.org/licenses/gpl-3.0.html
+  Direitos de autor: Copyright (c) 2023-2024 Eduardo Ramalhadeiro
+  Contacto: 1210171@isep.ipp.pt
+  ======================================================
+-->
+
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="{{ url_for('static', filename='styles.css') }}"
-/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
 <link rel="icon" type="image/x-icon" href="../images/logo.ico" />
 <h1>
   <img src="../images/logo.jpg" width="30%" />
@@ -67,30 +80,29 @@ Remember to set the width: -->
         <option value="3">1.5</option>
       </select>
     </div>
-<p></p>
-<div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
-<hr class="linha-separador">
-<p></p>
+    <p></p>
+    <div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
+    <hr class="linha-separador">
+    <p></p>
     <b>Instruções:</b>
     <p></p>
     <ul>
       <li>Seleccione uma Resistência - R;
-        <li> Para cada valor de Vcc efectue <b>uma</b> medição de <b>tensão</b> e <b>corrente</b>;</li>
+      <li> Para cada valor de Vcc efectue <b>uma</b> medição de <b>tensão</b> e <b>corrente</b>;</li>
       <li>Visualize o gráfico.</li>
-    </ul>   
+    </ul>
   </div>
   <div class="column right">
-    <a href="#" class="next round" id="measureVoltage" data-parameter="voltage"
-      ><b>Medir Tensão</b> &raquo;
+    <a href="#" class="next round" id="measureVoltage" data-parameter="voltage"><b>Medir Tensão</b> &raquo;
     </a>
     <p id="voltage-measure"></p>
     <p></p>
-    <a href="#" class="next round" id="measureCurrent" data-parameter="current"
-      ><b>Medir Corrente</b> &raquo;
+    <a href="#" class="next round" id="measureCurrent" data-parameter="current"><b>Medir Corrente</b> &raquo;
     </a>
     <p id="current-measure"></p>
     <p></p>
-    <a href="#" class="next round" id="showgraph"; style="display: block; margin-bottom: 1cm;"><b>Gráfico</b> &raquo; </a>
+    <a href="#" class="next round" id="showgraph" ; style="display: block; margin-bottom: 1cm;"><b>Gráfico</b> &raquo;
+    </a>
     <p></p>
     <div class="spacing"></div>
     <img src="../images/circuit_R1_volt-amp.png" width="85%" />
@@ -179,7 +191,7 @@ Remember to set the width: -->
     // Acionar a função habilitarSeletores quando o botão "OK" for clicado
     document.querySelector(".ok").addEventListener("click", habilitarSeletores);
   </script>
-  
+
   <script>
     function desabilitarSeletores() {
       // Desabilitar os seletores
@@ -187,13 +199,13 @@ Remember to set the width: -->
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
       const url =
-            `/config_VirtualBench?desabilitar_parameter=${booleanParameter.toString()}`; 
+        `/config_VirtualBench?desabilitar_parameter=${booleanParameter.toString()}`;
       fetch(url);
       // Adicionando o recarregamento da página
       location.reload();
     }
   </script>
-  
+
   <script>
     // Acionar a função deshabilitarSeletores quando o botão "STOP" for clicado
     document

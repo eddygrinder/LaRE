@@ -1,10 +1,23 @@
+<!--
+  ======================================================
+  Nome do ficheiro: meiaonda .html
+  Projeto: LaRE - Laboratório Remoto Expansível
+  Autor: Eduardo Ramalhadeiro
+  Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+  Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+  Data de criação: 15/10/2025
+  Última atualização: 15/10/2025
+  Descrição: Página web para o estudo do rectificador de meia onda
+  Fontes:  https://www.freecodecamp.org | https://www.w3schools.com
+  Licença:  GPL-3.0 (GNU General Public License, versão 3), https://www.gnu.org/licenses/gpl-3.0.html
+  Direitos de autor: Copyright (c) 2023-2024 Eduardo Ramalhadeiro
+  Contacto: 1210171@isep.ipp.pt
+  ======================================================
+-->
+
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="{{ url_for('static', filename='styles.css') }}"
-/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
 <link rel="icon" type="image/x-icon" href="../images/logo.ico" />
 <h1>
   <img src="../images/logo.jpg" width="30%" />
@@ -34,7 +47,7 @@
     </button>
   </div>
 
-    <div class="column middle">
+  <div class="column middle">
     <h2>MEIA ONDA</h2>
     <p>
       Clique <b>OK</b> para iniciar as medições, <b>STOP</b> para interromper a experiência.
@@ -67,21 +80,20 @@ Remember to set the width: -->
     </form>
     <p></p>
     <p></p>
-<div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
-<hr class="linha-separador">
-<p></p>
+    <div style="margin-bottom: 50px;"></div> <!-- Espaço de 20px -->
+    <hr class="linha-separador">
+    <p></p>
     <b>Instruções</b>
     <p></p>
     <ul>
       <li>Seleccione o Condensador - C e a Resistência - R;</li>
       <li>Introduza o valor da frequência;</li>
       <li>Efectue as medições e visualize o gráfico.</li>
-    </ul>   
+    </ul>
   </div>
 
   <div class="column right">
-    <a href="#" class="next round" id="measureRipple"
-      ><b>Efectuar as medições</b> &raquo;
+    <a href="#" class="next round" id="measureRipple"><b>Efectuar as medições</b> &raquo;
     </a><br>
     <a href="#" class="next round" id="showgraph"><b>Gráfico</b> &raquo; </a>
     <p></p>
@@ -176,7 +188,7 @@ Remember to set the width: -->
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
       const url = `/config_meiaonda?desabilitar_parameter="${booleanParameter}`;
-       fetch(url);
+      fetch(url);
     }
   </script>
   <script>

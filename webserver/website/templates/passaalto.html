@@ -1,3 +1,20 @@
+<!--
+  ======================================================
+  Nome do ficheiro: passaalto.html
+  Projeto: LaRE - Laboratório Remoto Expansível
+  Autor: Eduardo Ramalhadeiro
+  Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+  Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+  Data de criação: 15/10/2025
+  Última atualização: 15/10/2025
+  Descrição: Página web para o estudo dos filtros passa-alto
+  Fontes:  https://www.freecodecamp.org | https://www.w3schools.com
+  Licença:  GPL-3.0 (GNU General Public License, versão 3), https://www.gnu.org/licenses/gpl-3.0.html
+  Direitos de autor: Copyright (c) 2023-2024 Eduardo Ramalhadeiro
+  Contacto: 1210171@isep.ipp.pt
+  ======================================================
+-->
+
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
@@ -164,11 +181,6 @@ Remember to set the width: -->
     function habilitarSeletores() {
       document.getElementById("selectC").disabled = false;
       document.getElementById("selectR").disabled = false;
-      // Redirecionar para a rota com o parâmetro
-      //const booleanParameter = true;
-      //const url =
-      //  "/config_meiaonda?habilitar_parameter=" + booleanParameter.toString();
-      //fetch(url);
     }
   </script>
   <script>
@@ -181,9 +193,6 @@ Remember to set the width: -->
       document.getElementById("selectC").disabled = true;
       document.getElementById("selectR").disabled = true;
       const booleanParameter = true;
-      //const url =
-      //  "/config_meiaonda?desabilitar_parameter=" + booleanParameter.toString();
-      //fetch(url);
     }
   </script>
   <script>
@@ -215,13 +224,10 @@ Remember to set the width: -->
           return; // Interrompe a execução se valores forem inválidos
         }
         // Enviar requisição AJAX para a rota / colocar a rota certa
-        // uSO dp template literals para incluir os valores das variáveis diretamente na URL de forma mais legível e correta.
+        // uso de template literals para incluir os valores das variáveis diretamente na URL de forma mais legível e correta.
         // https://www.freecodecamp.org/news/template-literals-in-javascript/
         // https://www.w3schools.com/js/js_string_templates.asp
 
-        // ************************************************
-        // VERIFICAR NAS OUTRAS PÁGINAS!!!
-        // ************************************************
         const url = `/config_filters?filter_type=${filter_type}&C=${Capacitor}&R=${Resistance}&f=${valorfreq}`;
         fetch(url);
       });
@@ -394,58 +400,4 @@ Remember to set the width: -->
     document.addEventListener("click", closeAllSelect);
   </script>
   {% endblock %}
-
-  <!-- SCRIPTS CEMETERY
-
-
-<script>
-  document.getElementById("botaoOK").addEventListener("click", function () {
-    // Obter valores dos selects
-    const Vcc = document.getElementById("selectC").value;
-    const Resistance = document.getElementById("selectR").value;
-
-    // Validar valores antes do fetch
-    if (Vcc === "0" || Resistance === "0") {
-      alert("Tem de seleccionar valores diferentes de zero para Vcc e R!");
-      return; // Interrompe a execução se valores forem inválidos
-    }
-
-    // Enviar requisição AJAX para a rota /ctrl_VirtualBench
-    fetch("/config_VirtualBench?Vcc=" + Vcc + "&R=" + Resistance);
-
-    // Condição para verificar se o elemento existe
-    const botaoOK = document.getElementById("botaoOK");
-
-    if (botaoOK) {
-      botaoOK.addEventListener("click", function () {});
-    } else {
-      console.error("Element with ID 'botaoOK' not found!");
-    }
-  });
-</script>
-
-
-<script>
-    /* When the user clicks on the button, 
-  toggle between hiding and showing the dropdown content */
-    function myFunction() {
-      document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function (event) {
-      if (!event.target.matches(".dropbtn")) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains("show")) {
-            openDropdown.classList.remove("show");
-          }
-        }
-      }
-    };
-  </script>
-
- -->
 </div>
