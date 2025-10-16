@@ -22,4 +22,5 @@ Additional information: http://armstrap.org/2015/07/27/pyvirtualbench-controllin
 * [Python >= 3.4](https://www.python.org/downloads/).  You will need 32-bit Python support to work with the NI-provided drivers.
 
 ## Dependencies
-Refer to the requirements.txt file: pip install -r requirements.txt
+Refer to the requirements.txt file: 
+pip install -r requirements.txt

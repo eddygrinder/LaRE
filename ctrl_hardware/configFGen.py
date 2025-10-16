@@ -1,5 +1,20 @@
 #! /usr/bin/env python3
 
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: configFGen.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+ Contacto: 1210171@isep.ipp.pt
+
+ Descrição:
+ Este ficheiro configura o gerador de sinals (Function Generator) do VirtualBench
+===============================================================================
+"""
+
 # The MIT License (MIT)
 #
 # Copyright (c) 2016 Charles Armstrap <charles@armstrap.org>

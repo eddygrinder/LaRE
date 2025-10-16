@@ -1,3 +1,21 @@
+#! /usr/bin/env python3
+
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: main.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+
+ Descrição:
+Ponto de entrada da aplicação Flask para o Laboratório Remoto Expansível (LaRE). 
+nicializa a aplicação, configura o servidor Waitress e define rotas para o 
+acesso a imagens estáticas.
+===============================================================================
+"""
+
 import os, sys, socket
 
 ctrl_hardware_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'ctrl_hardware'))

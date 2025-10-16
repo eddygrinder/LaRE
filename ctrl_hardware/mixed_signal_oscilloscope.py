@@ -1,5 +1,21 @@
 #! /usr/bin/env python3
-# -*- coding: utf-8 -*-
+
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: mixed_signal_oscilloscope.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+ Contacto: 1210171@isep.ipp.pt
+
+ Descrição:
+ Este ficheiro adapta funções da biblioteca pyVirtualBench (Armstrap) para o 
+ projeto LaRE, permitindo o controlo de hardware no laboratório remoto desenvolvido 
+ para fins educativos.
+===============================================================================
+"""
 
 # The MIT License (MIT)
 #
@@ -139,31 +155,9 @@ def plot_graphic(analog_data, number_of_analog_samples_acquired, frequency, grap
     # Calcula os valores dos eixos x
     increment = 1/(frequency*number_of_analog_samples_acquired)
 
-        
-    '''
-    ATENÇÃO!!!!
-    O CÁLCULO DO INCREMENTO DEVE ESTAR FORA DOS IF'S
-    '''
-
-    '''
-    DOIS CANAIS: ARMAZENA NA ESTRUTURA OS VALORES DO CANAL UM E DOIS, LOGO, O INCREMENTO TEM DE 
-    
-    Número de amostras [number_of_analog_samples_acquired] = 1002
-    Número de valores na estrutura [len(analog_data)] = 2004
-    
-    '''
     x_values_increment = np.cumsum(np.full(int(number_of_analog_samples_acquired), increment)) 
     x_values_increment = 4 * x_values_increment # ALDRABICE!!! Será?! Ajustar a escala????
-    #x_values = len(analog_data)/2 # São armazenados os valores dos dois canais, então, por cada canal é metade
-
-
-    # Armazena o par frequência, tensão no array, logo, o resultado de len(analog_data) é o dobro de number_of_analog_samples_acquired
-    # print("Número de amostras: ", len(analog_data)) = 2004
-    # print("Número de amostras adquiridas: ", number_of_analog_samples_acquired) = 1002
-    # frequency_values = frequency_values/2 # Armazena os valores de ambos os canais no array - divide por 2 para obter a frequência correta
-    # Armazena o par frequência, tensão no array, logo, o resultado de len(analog_data) é o dobro de number_of_analog_samples_acquired
-    #length = len(analog_data) = 2004, se a frequência for 200Hz.
-
+    
     frequency_trunc = round(frequency, 2)
     formatter_freq = EngFormatter(unit='Hz')
     frequency_text = formatter_freq.format_data_short(frequency_trunc)  # Formate a frequência truncada usando o EngFormatter 
@@ -250,16 +244,7 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
 
         # Configure the acquisition using auto setup
         mso.auto_setup()
- 
-        ##################################
-        # AO QUE PARECE PARA QUE DESTA FORMA A LEITURA SEJA FEITA CORRETAMENTE
-        # É NECESSÁRIO QUE O CANAL 1 ESTEJA LIGADO DIRETAMENTE AO CANAL DOIS
-        # E DESACTIVADO COM A LINHA ACIMA
-        ##################################
-                 
-        # Read the data by first querying how big the data needs to be, allocating the memory, and finally performing the read.
-        # cANAL 1 - DESACTIVADO PAA PODER LER SÓ O CANAL 2
-	
+         	
         mso.configure_analog_channel('VB8012-30A210F/mso/1', False, 5, 1, 1, 0)
         mso.configure_analog_channel('VB8012-30A210F/mso/2', True, 5, 1, 1, 1)
 
@@ -284,16 +269,7 @@ def config_mso_ondacompleta(Resistance:int, Capacitor:int):
          # Converte para array NumPy
 
         data_filtrado = savgol_filter(analog_data_out, window_length=11, polyorder=2) # Filtro Savitzky-Golay
-        analog_data_out = np.array(data_filtrado)
-        
-        #Filtro passa-baixo com SciPy (digital real)
-        #b, a = butter(N=2, Wn=0.1)  # ordem 2, frequência de corte normalizada
-        #data_filtrado = filtfilt(b, a, analog_data_out)
-        
-        # uniform_filter1d
-        #data_filtrado = uniform_filter1d(analog_data_out, size=5)      
-        #analog_data_out = np.array(data_filtrado)
-        
+        analog_data_out = np.array(data_filtrado)      
         
         # ==== CÁLCULO DE RIPPLE ====
         max_saida = np.max(analog_data_out)
@@ -340,29 +316,7 @@ def estimar_frequencia(number_of_analog_samples_acquired):
     x_values_increment = 4 * x_values_increment * 1000 # ms
     return x_values_increment
 
-def plot_graphic_ondacompleta(analog_data, x_values_increment):
-    # Seleciona os elementos pares da lista analog_data
-    #analog_data_pares = analog_data[::2] # Onda de entrada
-    # Seleciona os elementos ímpares da lista analog_data
-    #analog_data_impares = analog_data[1::2] # Onda retificada - saída
-
-    # ATENÇÃO!!!!
-    # Como os dois canais estão activos, analog_data contém os valores dos dois canais.
-    # Como se pretende desenhar os gráficos de cada canal separadamente, é necessário dividir o array analog_data
-    # Neste caso o número de elementos do gráfico é metade do número de elementos de analog_data
-    # No cálculo dos x_values_increment este valor tem de satisfazer esta condição.
-    # Portanto, o número de elementos de x_values_increment = analog_data[0::2]
-
-    # Cria os rótulos para os eixos x
-    # Calcula os valores dos eixos x
-
-    #####################################
-    # 06/06 - FUNCIONA SÓ COM O CANAL 1 LIGADO
-    # APARENTEMENTE NÃO FUNCIONA SÓ COM O CANAL 2 LIGADO
-    #  O NÚMERO DE AMSOSTRAS SÓ É IGUAL QUANDO ESTÁ O CANAL UM LIGADO
-    #####################################
-
-
+def plot_graphic_ondacompleta(analog_data, x_values_increment):  
      # Parâmetros fixos
     images_dir = "webserver/website/static/images"
     os.makedirs(images_dir, exist_ok=True)
@@ -489,26 +443,7 @@ def config_instruments_PassFilters(frequency:float, Resistance:int, Capacitor:in
         virtualbench.release()
 
 def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
-    try:
-        
-        '''
-        Explicação das Modificações
-        Gerar Frequências com np.logspace:
-
-        np.logspace(np.log10(start_freq), np.log10(stop_freq), num=num_points) gera num_points frequências logaritmicamente espaçadas entre start_freq e stop_freq.
-        Iterar sobre as Frequências:
-
-        Em vez de calcular cada frequência dentro do loop, você itera diretamente sobre as frequências geradas por np.logspace.
-        Coleção de Máximos:
-
-        Você coleta os valores máximos correspondentes às frequências geradas no loop.
-        Vantagens
-        Simplicidade: O código é mais direto e legível.
-        Performance: Usar np.logspace pode ser mais eficiente do que calcular manualmente cada frequência dentro de um loop.
-        Manutenção: É mais fácil ajustar a faixa de frequências alterando os parâmetros de np.logspace.
-        Usar np.logspace é geralmente uma abordagem melhor para gerar uma série de frequências logarítmicas, especialmente quando a simplicidade e a eficiência são desejáveis.
-        '''
-                
+    try:                        
         # Defina o número de pontos por década e a faixa de frequências
         points_per_decade = 5 #Padrão ISO 12 pontos por década
         start_freq = 50  # Frequência inicial
@@ -549,10 +484,6 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
         vin = 5.0
         dc_offset = 0.0       # 0V
         duty_cycle = 50.0     # 50% (Used for Square and Triangle waveforms)
-
-        # You will probably need to replace "myVirtualBench" with the name of your device.
-        # By default, the device name is the model number and serial number separated by a hyphen; e.g., "VB8012-309738A".
-        # You can see the device's name in the VirtualBench Application under File->About
         
         fgen = virtualbench.acquire_function_generator()
         fgen.run()
@@ -570,12 +501,7 @@ def bode_graphic_Filters(Resistance:int, Capacitor:int, which_filter:str):
             ########################################################
             # POSE-SE RETIRAR PARA ACELARAR O PROCESSO DE CONSTRUÇÃO DO GRÁFICO
             ########################################################
-            
-            # Query the configuration that was chosen to properly interpret the data.
-            #sample_rate, acquisition_time, pretrigger_time, sampling_mode = mso.query_timing()
-            #channels = mso.query_enabled_analog_channels()
-            #channels_enabled, number_of_channels = virtualbench.collapse_channel_string(channels)
-            
+
             # Start the acquisition.  Auto triggering is enabled to catch a misconfigured trigger condition.
             mso.run() 
             

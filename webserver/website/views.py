@@ -116,35 +116,7 @@ def config_ondacompleta():
     try:
         Capacitor = request.args.get('C', 0, int)
         Resistance = request.args.get('R', 0, int)
-        # Colocar os relés a zero
-       
-        #frequency = 60
-        # devido ao problema de massas da rectificação de onda completa, a onda de entrada tem de ser medida primeiro
-        # e só depois a onda de saída - PROBLEMA DE MASSAS. Os gráficos têm de ser desenhados independentemente.
-        # Os relés activos consoante o caso.
-        ############################################################
-        # Activar os respectivos relés para a medição da onda de entrada
-        # Relés - K1...|K9 - 000000000
-        ############################################################
-        #mixed_signal_oscilloscope.config_func_generator(frequency)
-        # O VB detecta os dois canais CH1 e CH2, não há possibilidade, por software, de desligar um dos canais
-        # O que se pode fazer é desligar o canal fisicamente
-        # A leitura é armazenada no array analog_data[1::2] - canal 2 e analog_data[0::2] - canal 1
-        # Como é feita a leitura se os dois canais forem chamados, um a um?
-        # Os valores mantêm-se ou terá de ser feita uma nova leitura?
-
-        # DESTA FORMA FUNCIONA A ONDA DE ENTRADA - PONTO
-        #configRelays.config_relays_ondacompleta(0, 0) NÃO GERA A ONDA DE SAÍDA COLOCANDO OS RELÉS A ZERO
-        #mixed_signal_oscilloscope.config_func_generatorMSO()      
-                
-        #configRelays.config_relays_ondacompleta(0,0) # Não estão alimentados os relés, não há onda! BURRRRRRRRRRRRRO!!!
-        #configRelays.config_relays_vin() # Por aqui não funciona
-        mixed_signal_oscilloscope.config_mso_ondacompleta(Resistance, Capacitor)
-                            
-            # Execute o comando diretamente
-            # Explicar porque se usou este comando
-            #os.system('python ctrl_hardware/mixed_signal_oscilloscope.py')
-        
+        mixed_signal_oscilloscope.config_mso_ondacompleta(Resistance, Capacitor)      
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})

@@ -1,5 +1,22 @@
 #! /usr/bin/env python3
 
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: configVB.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+ Contacto: 1210171@isep.ipp.pt
+
+ Descrição:
+ Este ficheiro adapta funções da biblioteca pyVirtualBench (Armstrap) para o 
+ projeto LaRE, permitindo o controlo de hardware no laboratório remoto desenvolvido 
+ para fins educativos.
+===============================================================================
+"""
+
 # The MIT License (MIT)
 #
 # Copyright (c) 2016 Charles Armstrap <charles@armstrap.org>
@@ -50,7 +67,6 @@ from pyvirtualbench import PyVirtualBench, PyVirtualBenchException, DmmFunction
 def OK():
     try:
         virtualbench = PyVirtualBench('VB8012-30A210F')
-
         # Caso o utilizador carregue primeiro no RESET e depois no OK
         # Se o utilizado carregar primeiro no RESET, o valor de virtualbench é None
         store_ps_dmm.set_virtualbench(virtualbench)
@@ -72,13 +88,12 @@ def OK():
         print("Error/Warning %d occurred\n%s" % (e.status, e))
         
 def STOP():
-    try: #Acho que este try não é preciso
+    try: 
         #Chama a função que desliga fonte de alimentação e multímetro
         virtualbench = store_ps_dmm.get_virtualbench()
         ps, dmm = store_ps_dmm.get_values()
         #store_ps_dmm.clear_index()
         if ps is not None and dmm is not None and virtualbench is not None: # Caso o utilizador clique no botão STOP várias vezes seguidas        
-            #if all([ps, dmm, virtualbench]): VERIFICAR. Isso funciona porque None é avaliado como False em um contexto booleano.
             ps.enable_all_outputs(False)
             ps.release()
             dmm.release()
@@ -168,5 +183,3 @@ def plot_graphic(current_measurements, voltage_measurements):
 
     # Limpa a figura
     plt.clf()
-
-    #192.168.1.79
