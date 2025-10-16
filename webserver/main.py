@@ -3,7 +3,6 @@ import os, sys, socket
 ctrl_hardware_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'ctrl_hardware'))
 sys.path.append(ctrl_hardware_path)
 
-#from controlVB import read_Vcc_R
 from website import create_app
 from flask import send_from_directory
 from waitress import serve
