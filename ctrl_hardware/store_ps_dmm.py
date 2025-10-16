@@ -1,3 +1,20 @@
+#! /usr/bin/env python3
+
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: store_ps_dmm.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+ Contacto: 1210171@isep.ipp.pt
+
+ Descrição:
+ Armazenamento de variáveis globais para partilha entre scripts
+===============================================================================
+"""
+
 ##################################
 # Dois scripts diferentes não conseguem aceder aos mesmos valores e variáveis 
 # porque cada script tem o seu próprio espaço de nomes. (memória)

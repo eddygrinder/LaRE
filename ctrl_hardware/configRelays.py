@@ -1,6 +1,23 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: configRelays.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+ Contacto: 1210171@isep.ipp.pt
+
+ Descrição:
+ Este ficheiro configura o envio da trama de bits para controlo dos relés via
+ socket TCP/IP, permitindo o controlo de hardware no laboratório remoto desenvolvido
+===============================================================================
+"""
+
+
 import random, socket, time
 #import os, sys, requests
 
@@ -150,18 +167,3 @@ def config_Relays(stringValue: str):
             if response == 'True':  # Espera por uma confirmação específica do servidor
                 print("Confirmação recebida do servidor:", response)
                 break
-# Receber a resposta
-'''
-def relays_requests(stringValue: str):
-    # Envia a string para o Raspberry Pi
-    # Endereço IP e porta do Raspberry Pi
-    url = "http://192.168.1.71/endpoint"
-    string = stringValue
-    data = {"string": string}
-    # Envia a requisição usando o dicionário
-    response = requests.post(url, data)
-    if response.status_code == 200:
-        print("Requisição enviada com sucesso!")
-    else:
-        print("Erro ao enviar requisição:", response.status_code)
-'''
