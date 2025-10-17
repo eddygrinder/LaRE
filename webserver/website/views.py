@@ -5,7 +5,7 @@ from . import db
 import json, time
 import os, sys, subprocess
 import store_ps_dmm
-from pyvirtualbench import PyVirtualBench, PyVirtualBenchException
+#from pyvirtualbench import PyVirtualBench, PyVirtualBenchException
 
 # Adiciona o diretório do projeto ao caminho de busca de módulos do Python
 current_dir = os.path.dirname(__file__)
