@@ -22,11 +22,11 @@ Communication between the PC and Raspberry Pi is handled via **network sockets**
 
 
 ## Helpful Resources
-Flask base structure simplified and adapted to suit the project’s requirements.
-* Some of the Flask features were inspired by a YouTube tutorial, which served as a reference for understanding the basic setup of routes, templates, and frontend communication - https://www.youtube.com/watch?v=dam0GPOAvVI
-* https://flask.palletsprojects.com/en/stable/
-* The pyVirtualBench library can be found here: https://github.com/armstrap/armstrap-pyvirtualbench
-* Additional information: http://armstrap.org/2015/07/27/pyvirtualbench-controlling-five-instruments-from-a-single-python-application/
+* [YouTube – Tech With Tim Flask Tutorial](https://www.youtube.com/watch?v=dam0GPOAvVI)  
+* [Flask Official Documentation](https://flask.palletsprojects.com/en/stable/)  
+* [pyVirtualBench Library (Armstrap)](https://github.com/armstrap/armstrap-pyvirtualbench)  
+* [Armstrap Blog Post](http://armstrap.org/2015/07/27/pyvirtualbench-controlling-five-instruments-from-a-single-python-application/)
+
 
 ## Requirements (Windows Only)
 * [NI VirtualBench hardware](http://www.ni.com/virtualbench/)
