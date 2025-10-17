@@ -76,12 +76,9 @@ def config_VirtualBench():
             configVB.STOP()
             measurement_result = 0
         else:    
-            configRelays.config_relays_ohm(Resistance, measure_parameter)# isto pode ser modificado, só é chamado uma vez
-            time.sleep(0.3)
-            measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter) #isto pode ser modificado - verificar
-            # tem de ser, uma vez que os relés são desligados
-            #configRelays.config_relays_ohm(0, measure_parameter) # atenção a este "0" - verificar
-            # fica "0" é para desligar os relés
+            configRelays.config_relays_ohm(Resistance, measure_parameter)
+            time.sleep(0.2)
+            measurement_result = configVB.test_parameters(Vcc, Resistance, measure_parameter)
     except Exception as e:
         print(e)
         return jsonify({'measurement_result': 'ERROR'})
