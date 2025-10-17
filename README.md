@@ -50,22 +50,3 @@ Eduardo Ramalhadeiro
 Master’s in Electrical and Computer Engineering – Automation and Systems
 Instituto Politécnico do Porto (ISEP)
 © 2025
-
-## Optional (if published online)
-
-If you plan to publish this project on GitHub or another open-source repository, you may include badges and a brief summary at the top of this README file to make it more informative and professional.
-
-Example:
-
-```markdown
-# LaRE – Expandable Remote Laboratory
-
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![Status](https://img.shields.io/badge/Status-Research%20Project-orange.svg)]()
-[![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)]()
-
-LaRE (Expandable Remote Laboratory) is an open-source remote electronics laboratory,
-developed as part of a Master's Dissertation in Electrical and Computer Engineering (Automation and Systems).
-It provides a free and modular alternative to VISIR, using Python (Flask), Raspberry Pi 5,
-and the NI VirtualBench (VB-8012) for circuit measurement and control.
