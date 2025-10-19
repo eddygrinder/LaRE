@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
+<link rel="icon" type="image/x-icon" href="../images/logo.ico" />
+<h1>
+  <img src="../images/logo.jpg" width="30%" />
+
+  <img src="../images/logo_20230106.png" width="25%" align="right" />
+</h1>
+
+<div class="info-box p-4 shadow-sm rounded bg-white">
+  <h2>Objetivo</h2>
+  <p>Esta experiência permite verificar a <strong>Lei de Ohm</strong>, relacionando a <strong>tensão (V)</strong>
+    aplicada a um resistor com a <strong>corrente (I)</strong> que o percorre.</p>
+
+  <h2>Funcionamento</h2>
+  <p>O sistema utiliza um <strong>VirtualBench</strong> para gerar tensão e medir corrente e tensão no circuito. Toda
+    a interação é feita através desta página web.</p>
+
+  <h2>Controlo da Experiência</h2>
+  <ul>
+    <li><strong>🟢 OK:</strong> indica habilitação das opções (botão apenas visual).</li>
+    <li><strong>🔴 STOP:</strong> indica desativação do sistema (botão apenas visual).</li>
+  </ul>
+  <p><strong>Deve clicar sempre em STOP antes de sair da página.</strong></p>
+
+  <h2>Procedimento</h2>
+  <ol>
+    <li>Clique em <strong>OK</strong> para iniciar.</li>
+    <li>Selecione uma tensão entre <strong>1 V e 5 V</strong>.</li>
+    <li>Meça a <strong>tensão e a corrente</strong> (a ordem não importa).</li>
+    <li>Repita para todas as tensões disponíveis.</li>
+    <li>Visualize o gráfico durante ou no final da experiência.</li>
+    <li>Quando terminar, clique em <strong>STOP</strong> para finalizar e libertar o VirtualBench.</li>
+  </ol>
+
+  <h2>Resumo rápido</h2>
+  <table class="table table-bordered mt-3">
+    <tr>
+      <th>Ação</th>
+      <th>Descrição</th>
+    </tr>
+    <tr>
+      <td>OK</td>
+      <td>Indica início da experiência (apenas visual)</td>
+    </tr>
+    <tr>
+      <td>STOP</td>
+      <td>Indica término/reset (apenas visual)</td>
+    </tr>
+    <tr>
+      <td>1–5 V</td>
+      <td>Tensões a testar</td>
+    </tr>
+    <tr>
+      <td>Par (V, I)</td>
+      <td>Deve ser medido para cada tensão</td>
+    </tr>
+    <tr>
+      <td>Gráfico</td>
+      <td>Pode ser visto durante ou no final</td>
+    </tr>
+    <tr>
+      <td>Antes de sair</td>
+      <td>Clicar sempre em STOP</td>
+    </tr>
+  </table>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<!-- Botões apenas visuais, sem funcionalidade -->
+<script>
+  // Apenas para manter aparência de interação visual
+  const btnOK = document.getElementById("btnOK");
+  const btnSTOP = document.getElementById("btnSTOP");
+
+  btnOK.addEventListener("click", () => {
+    btnOK.classList.add("disabled");
+    btnSTOP.classList.remove("disabled");
+    alert("Sistema habilitado. Botão OK clicado (apenas visual).");
+  });
+
+  btnSTOP.addEventListener("click", () => {
+    btnSTOP.classList.add("disabled");
+    btnOK.classList.remove("disabled");
+    alert("Sistema desativado. Botão STOP clicado (apenas visual).");
+  });
+
+  // Estado inicial
+  btnSTOP.classList.add("disabled");
+</script>
+{% endblock %}

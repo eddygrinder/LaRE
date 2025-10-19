@@ -26,6 +26,11 @@ def home():
 def pagina_seguinte():
     return render_template("ohm.html", user=current_user)
 
+@views.route("/ohm_ajuda", methods=['GET', 'POST'])
+@login_required
+def ohm_ajuda():
+    return render_template("ohm_ajuda.html", user=current_user)  # também na pasta templates
+
 @views.route("/meiaonda")
 @login_required
 def meiaonda():

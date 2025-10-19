@@ -101,12 +101,17 @@ Remember to set the width: -->
     </a>
     <p id="current-measure"></p>
     <p></p>
-    <a href="#" class="next round" id="showgraph" ; style="display: block; margin-bottom: 1cm;"><b>Gráfico</b> &raquo;
+    <a href="#" class="next round" id="showgraph"><b>Gráfico</b> &raquo;
     </a>
     <p></p>
+    <!-- Remover comentário para aceder à página de ajuda -->
+    <!--<a href="{{ url_for('views.ohm_ajuda') }}" target="_blank" class="ajuda"
+      style="display: block; margin-bottom: 1cm;">
+      <b>Ajuda</b> &raquo;
+    </a>-->
+
     <div class="spacing"></div>
     <img src="../images/circuit_R1_volt-amp.png" width="85%" />
-
 
   </div>
 
@@ -116,6 +121,17 @@ Remember to set the width: -->
   <!----------------------------------------->
   <!-- Scripts zone -->
   <!----------------------------------------->
+
+  <script>
+    document.getElementById("ajuda").addEventListener("click", function (e) {
+      e.preventDefault(); // impede o link padrão
+      window.open(
+        "{{ url_for('views.ohm_ajuda') }}", // link da rota Flask
+        "AjudaJanela",
+        "width=800,height=600,resizable=yes,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,left=200,top=100"
+      );
+    });
+  </script>
 
   <script>
     function menuprincipal() {
