@@ -1,3 +1,20 @@
+#! /usr/bin/env python3
+
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: __init__.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+
+ Descrição:
+Marca este diretório como um pacote Python e pode incluir inicialização
+de módulos ou configurações do pacote.
+===============================================================================
+"""
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path

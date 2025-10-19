@@ -1,3 +1,21 @@
+#! /usr/bin/env python3
+
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: views.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+
+ Descrição:
+Contém as funções e classes responsáveis por processar pedidos HTTP,
+gerir a lógica de apresentação e renderizar templates do lado do servidor
+para a aplicação web.
+===============================================================================
+"""
+
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
 from .models import Note

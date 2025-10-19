@@ -1,3 +1,20 @@
+#! /usr/bin/env python3
+
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: models.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+
+ Descrição:
+Define as classes de modelo da aplicação, representando as tabelas da base de dados
+e a sua estrutura, relações e comportamento associado.
+===============================================================================
+"""
+
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func

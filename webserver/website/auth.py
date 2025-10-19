@@ -1,3 +1,20 @@
+#! /usr/bin/env python3
+
+"""
+===============================================================================
+ Projeto: LaRE - Laboratório Remoto Expansível
+ Ficheiro: auth.py
+ Autor: Eduardo Ramalhadeiro
+ Instituição: Instituto Superior de Engenharia do Porto (ISEP)
+ Curso: Mestrado em Engenharia Eletrotécnica e de Computadores
+ Data: Outubro de 2025
+
+ Descrição:
+Gerencia a autenticação e autorização de utilizadores,
+incluindo login, logout, registo e verificação de permissões.
+===============================================================================
+"""
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
